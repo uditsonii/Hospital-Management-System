@@ -1,17 +1,22 @@
-import React from 'react'
-import OPDRegistration from './pages/OPDRegistration'
-import Index from '../routes/Index';
-import Sidebar from '../PatientDashboard/Sidebar';
-import Register from '../Register/Register';
-import MainDashboard from '../PatientDashboard/MainDashboard';
-import { BrowserRouter } from 'react-router-dom';
-import DoctorRegister from '../Register/DoctorRegister';
-const App = () => {
+ Feature-home
+import Footer from "../../../src/components/Footer";
+import Navbar from "./components/NavbarH";
+import AnimatedRoutes from "./routes/AnimatedRoutes";
+import React from "react";
+import { BrowserRouter as Router } from "react-router-dom";
+function App() {
   return (
-    <>
- <Index/>
-    </>
-  )
+    <Router>
+      <div className="flex flex-col min-h-screen">
+        <Navbar />
+        <main className="flex-grow">
+          {/* Uncomment below to use routes */}
+          <AnimatedRoutes />
+          {/* <Mainpanel /> */}
+        </main>
+        <Footer />
+      </div>
+    </Router>
+  );
 }
-
 export default App;
