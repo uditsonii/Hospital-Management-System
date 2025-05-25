@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
-import Sidebar from './Sidebar';
+import React, { useEffect, useState } from 'react';
 import PatientPanel from './PatientPanel';
+import Sidebar from './Sidebar';
 import Navbar from './Navbar';
 
 const MainDashboard = () => {

@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import Sidebar from './Sidebar';
 
 const BookAppointment = () => {
   const [form, setForm] = useState({
@@ -29,6 +30,8 @@ const BookAppointment = () => {
       });
   };
   return (
+        <div className="min-h-screen flex bg-gray-100">
+      <Sidebar isOpen={isSidebarOpen} toggleSidebar={toggleSidebar} />
     <div className="max-w-2xl mx-auto ml-100 mt-10 p-8 bg-white rounded-xl shadow-lg border border-blue-100">
       <h2 className="text-3xl font-bold text-blue-500 mb-6 text-center">📅 Book an Appointment</h2>
 
@@ -110,6 +113,7 @@ const BookAppointment = () => {
         </button>
       </form>
     </div>
+     </div>
   );
 };
 

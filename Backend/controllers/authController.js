@@ -95,6 +95,7 @@ const loginUser = async (req, res) => {
       return res.send({
         status: 200,
         message: "Login Successfully",
+        user,
         token: token,
       });
     }

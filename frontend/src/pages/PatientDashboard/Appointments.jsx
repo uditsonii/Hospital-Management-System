@@ -1,5 +1,6 @@
 import React from 'react';
 import { FaCalendarAlt } from 'react-icons/fa';
+import Sidebar from './Sidebar';
 
 const upcomingAppointments = [
   { id: 1, doctor: 'Dr. Smith', date: '2025-06-05', time: '10:30 AM', status: 'Confirmed' },
@@ -13,6 +14,8 @@ const statusColors = {
 export default function Appointments() {
   const today = new Date().toLocaleDateString(undefined, { year: 'numeric', month: 'long', day: 'numeric' });
   return (
+        <div className="min-h-screen flex bg-gray-100">
+      <Sidebar isOpen={isSidebarOpen} toggleSidebar={toggleSidebar} />
     <div className="ml-64 p-8 min-h-screen bg-gray-50">
       <div className="flex flex-col sm:flex-row justify-between items-center mb-8 border-b border-gray-300 pb-4">
         <div className="flex items-center gap-3">
@@ -46,5 +49,6 @@ export default function Appointments() {
         ))}
       </div>
     </div>
+     </div>
   );
 }

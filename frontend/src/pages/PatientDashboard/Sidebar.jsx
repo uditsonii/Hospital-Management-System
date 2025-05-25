@@ -21,10 +21,10 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
           </div>
           <nav className="flex flex-col p-4 space-y-3">
             <SidebarLink icon="🏠" label="Dashboard" to="/" />
-            <SidebarLink icon="📅" label="Upcoming Appointments" to="/appointments" />
-            <SidebarLink icon="🧪" label="Lab Reports" to="/lab-reports" />
-            <SidebarLink icon="🧾" label="Medical History" to="/medical-history" />
-           <SidebarLink icon="📅" label="Book Appointment" to="/book-appointment" />
+            <SidebarLink icon="📅" label="Upcoming Appointments" to="/patient-dashboard/appointments" />
+            <SidebarLink icon="🧪" label="Lab Reports" to="/patient-dashboard/lab-reports" />
+            <SidebarLink icon="🧾" label="Medical History" to="/patient-dashboard/medical-history" />
+           <SidebarLink icon="📅" label="Book Appointment" to="/patient-dashboard/book-appointment" />
           </nav>
         </div>
        

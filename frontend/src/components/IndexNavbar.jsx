@@ -1,9 +1,9 @@
-// src/components/Navbar.jsx
+// src/components/IndexNavbar.jsx
 import React, { useState } from 'react';
 import { Link, NavLink } from 'react-router-dom';
 import { FaHeartbeat, FaBars, FaTimes } from 'react-icons/fa';
 
-const Navbar = () => {
+const IndexNavbar = () => {
   const [isOpen, setIsOpen] = useState(false);
 
   const navLinkClass = ({ isActive }) =>
@@ -72,4 +72,4 @@ const Navbar = () => {
   );
 };
 
-export default Navbar;
+export default IndexNavbar;

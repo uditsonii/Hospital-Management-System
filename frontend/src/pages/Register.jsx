@@ -1,132 +1,169 @@
-// src/pages/Register.jsx
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
-import PageContainer from '../components/PageContainer';
-import FormInput from '../components/FormInput';
-import { FaUserPlus } from 'react-icons/fa';
+import React, { useState } from "react";
+import { motion } from "framer-motion";
+import { Link } from "react-router-dom";
 
-const Register = () => {
-  const [formData, setFormData] = useState({
-    name: '',
-    mobile: '',
-    password: '',
-    confirmPassword: '',
+const Register = ({ addUser }) => {
+  const [form, setForm] = useState({
+    name: "",
+    mobile_no: "",
+    gname: "",
+    password: "",
+    confirmPassword: "",
+    age: "",
+    gender: "",
   });
-  const [error, setError] = useState('');
-  const [success, setSuccess] = useState('');
-
 
   const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-    setError('');
-    setSuccess('');
+    setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    setError('');
-    setSuccess('');
+    if (form.password !== form.confirmPassword) {
+      alert("❌ Passwords do not match!");
+      return;
+    }
+    // alert('✅ User registered successfully!');
+    // setForm({
+    //   name: '',
+    //   mobile_no: '',
+    //   gname: '',
+    //   password: '',
+    //   confirmPassword: '',
+    //   age: '',
+    //   gender: '',
+    // });
 
-    if (!formData.name || !formData.mobile || !formData.password || !formData.confirmPassword) {
-      setError('All fields are required.');
-      return;
+    try {
+      const option = {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(form),
+      };
+      const res = await fetch("http://localhost:8000/register", option);
+
+      const data = await res.json();
+      if (res.ok) {
+        alert("Registered successfully!");
+      } else {
+        alert("Registration failed: ", data.message);
+      }
+    } catch (error) {
+      console.error("Error:", err);
+      alert("Something went wrong.");
     }
-    if (!/^\d{10}$/.test(formData.mobile)) {
-        setError('Please enter a valid 10-digit mobile number.');
-        return;
-    }
-    if (formData.password.length < 6) {
-        setError('Password must be at least 6 characters long.');
-        return;
-    }
-    if (formData.password !== formData.confirmPassword) {
-      setError('Passwords do not match.');
-      return;
-    }
-    
-    console.log('Register Data:', formData);
-    // Add actual registration logic here (e.g., API call)
-    setSuccess('Registration successful! You can now log in.');
-    // alert('Registration functionality placeholder. Check console for data.');
-    // On successful registration, redirect or show success message
   };
 
   return (
-    <PageContainer>
-      <div className="flex items-center justify-center py-12">
-        <div className="w-full max-w-md bg-[var(--card-bg)] p-8 md:p-10 rounded-xl shadow-2xl">
-          <div className="text-center mb-8">
-            <FaUserPlus className="mx-auto h-12 w-auto text-[var(--accent-start)]" />
-            <h2 className="mt-6 text-3xl font-extrabold text-gradient-accent">
-              Create Your Account
-            </h2>
-            <p className="mt-2 text-sm text-slate-600">
-              Already have an account?{' '}
-              <Link to="/login" className="font-medium text-[var(--primary-start)] hover:text-[var(--primary-end)] transition-colors duration-[var(--transition-speed)]">
-                Sign in
-              </Link>
-            </p>
-          </div>
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-100 via-blue-200 to-blue-300 p-6">
+      <motion.form
+        onSubmit={handleSubmit}
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+        className="w-full max-w-md bg-white rounded-2xl shadow-lg p-8"
+      >
+        <h2 className="text-2xl font-bold text-center text-blue-700 mb-6">
+          🏥 Patient Registration
+        </h2>
 
-          {error && (
-            <div className="mb-4 p-3 rounded-md bg-red-100 text-red-700 border border-red-300 text-sm">
-              {error}
-            </div>
-          )}
-          {success && (
-            <div className="mb-4 p-3 rounded-md bg-green-100 text-green-700 border border-green-300 text-sm">
-              {success} <Link to="/login" className="font-bold underline">Login now</Link>.
-            </div>
-          )}
+        <div className="flex flex-col gap-4">
+          <input
+            name="name"
+            placeholder="👤 Full Name"
+            value={form.name}
+            onChange={handleChange}
+            required
+            className="px-3 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
+          />
 
-          <form onSubmit={handleSubmit} className="space-y-6">
-            <FormInput
-              id="name"
-              label="Full Name"
-              value={formData.name}
-              onChange={handleChange}
-              placeholder="Your Full Name"
-              required
-            />
-            <FormInput
-              id="mobile"
-              label="Mobile Number"
-              type="tel"
-              value={formData.mobile}
-              onChange={handleChange}
-              placeholder="10-digit mobile number"
-              required
-            />
-            <FormInput
-              id="password"
-              label="Password"
-              type="password"
-              value={formData.password}
-              onChange={handleChange}
-              placeholder="Create a Password"
-              required
-            />
-            <FormInput
-              id="confirmPassword"
-              label="Confirm Password"
-              type="password"
-              value={formData.confirmPassword}
-              onChange={handleChange}
-              placeholder="Confirm Your Password"
-              required
-            />
-            <div>
-              <button
-                type="submit"
-                className="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-[var(--text-light)] bg-gradient-to-r from-[var(--accent-start)] to-[var(--accent-end)] hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[var(--accent-start)] transition-all duration-[var(--transition-speed)] transform hover:scale-105"
-              >
-                Register
-              </button>
-            </div>
-          </form>
+          <input
+            name="mobile_no"
+            placeholder="📱 Mobile Number"
+            value={form.mobile_no}
+            onChange={handleChange}
+            required
+            className="px-3 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
+          />
+
+          <input
+            name="gname"
+            placeholder="👪 Guardian's Name"
+            value={form.gname}
+            onChange={handleChange}
+            required
+            className="px-3 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
+          />
+
+          <input
+            name="password"
+            type="password"
+            placeholder="🔒 Password"
+            value={form.password}
+            onChange={handleChange}
+            required
+            className="px-3 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
+          />
+
+          <input
+            name="confirmPassword"
+            type="password"
+            placeholder="🔑 Confirm Password"
+            value={form.confirmPassword}
+            onChange={handleChange}
+            required
+            className="px-3 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
+          />
+
+          <input
+            name="age"
+            type="number"
+            placeholder="🎂 Age"
+            value={form.age}
+            onChange={handleChange}
+            required
+            className="px-3 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
+          />
+
+          <select
+            name="gender"
+            value={form.gender}
+            onChange={handleChange}
+            required
+            className="px-3 py-2 text-sm border border-gray-300 rounded-lg bg-white text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-400"
+          >
+            <option value="" disabled>
+              ⚧️ Select Gender
+            </option>
+            <option value="male">♂️ Male</option>
+            <option value="female">♀️ Female</option>
+            <option value="other">⚧️ Other</option>
+          </select>
         </div>
-      </div>
-    </PageContainer>
+
+        <motion.button
+          whileHover={{ scale: 1.03 }}
+          whileTap={{ scale: 0.97 }}
+          type="submit"
+          className="mt-6 w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2.5 rounded-lg shadow-md transition"
+        >
+          📝 Register
+        </motion.button>
+
+        <p className="text-center text-sm text-gray-600 mt-4">
+          Already have an account?{" "}
+          {/* <a href="/main" className="text-blue-600 underline hover:text-blue-800">
+            Login
+          </a> */}
+          <Link
+            to={"/login"}
+            className="text-blue-600 underline hover:text-blue-800"
+          >
+            Login
+          </Link>
+        </p>
+      </motion.form>
+    </div>
   );
 };
 

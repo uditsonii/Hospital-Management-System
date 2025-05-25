@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import Sidebar from '../components/doctorpanel/Sidebar';
-import Navbar from '../components/doctorpanel/Navbar';
+import Sidebar from '.Sidebar';
+import Navbar from '.Navbar';
 
 const MainDashboard = () => {
   const [isSidebarOpen, setSidebarOpen] = useState(false);
