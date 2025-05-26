@@ -9,6 +9,7 @@ const Dashboard = () => {
     const userData = localStorage.getItem("user");
 
     if (!userData) {
+      console.log('fallback in case user not found!')
       navigate("/login");
     }
 
