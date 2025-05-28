@@ -1,3 +1,4 @@
+import Logout from '../../components/Logout';
 import React, { useState } from 'react';
 
 const Navbar = () => {
@@ -30,12 +31,13 @@ const Navbar = () => {
             >
               Profile
             </a>
-            <button
+            {/* <button
               className="block w-full text-left px-4 py-2 text-sm hover:bg-gray-100"
               onClick={() => alert('Logged out')}
             >
               Logout
-            </button>
+            </button> */}
+            <Logout />
           </div>
         )}
       </div>

@@ -50,16 +50,18 @@ const Login = () => {
       const res = await fetch("http://localhost:8000/login", option);
 
       const data = await res.json();
+      // const data = await res.text();
+      console.log('response: ', data)
       console.log("token: ", data.token);
       if (res.ok) {
-        console.log('daata ', data);
+        console.log("daata ", data);
         localStorage.setItem("token", data.token);
         localStorage.setItem("user", JSON.stringify(data.user));
-        console.log(data.user)
+        console.log(data.user);
         alert("Login Successfully");
         navigate("/dashboard");
       } else {
-        alert("Login Failed: ", data.message);
+        alert("Invalid Credentials: ", data.message);
       }
     } catch (error) {
       console.error("Error:", error);

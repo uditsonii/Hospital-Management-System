@@ -23,7 +23,6 @@ export default function MainDashboard(props)  {
           </button>
         </div>
 
-        {/* Navbar */}
         <Navbar />
 
         {/* Dashboard Content */}

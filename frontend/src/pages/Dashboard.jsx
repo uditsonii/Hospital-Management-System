@@ -11,6 +11,7 @@ const Dashboard = () => {
     if (!userData) {
       console.log('fallback in case user not found!')
       navigate("/login");
+      return;
     }
 
     try {

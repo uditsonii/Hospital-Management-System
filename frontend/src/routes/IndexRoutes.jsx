@@ -1,5 +1,5 @@
 import React from 'react';
-import { Routes, Route, useLocation } from 'react-router-dom';
+import { Routes, Route, useLocation, Navigate } from 'react-router-dom';
 import Home from '../pages/Home';
 import AboutUs from '../pages/AboutUs';
 import ContactUs from '../pages/ContactUs';
@@ -17,12 +17,13 @@ import DoctorDashboardRoute from './DoctorDashboardRoute';
 
 const IndexRoutes = () => {
   const location = useLocation();
+  const user = JSON.parse(localStorage.getItem('user'));
   return (
     <Routes location={location} key={location.pathname}>
       <Route path="/" element={<Home />} />
       <Route path="/about" element={<AboutUs />} />
       <Route path="/contact" element={<ContactUs />} />
-      <Route path="/login" element={<Login />} />
+      <Route path="/login" element={user ? <Navigate to='/dashboard' /> : <Login />} />
       <Route path="/login/admin" element={<Login2 />} />
       <Route path="/register" element={<Register />} />
       <Route path="/opd" element={<PatientOPD />} />

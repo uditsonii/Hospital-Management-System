@@ -1,7 +1,7 @@
 import Sidebar from './Sidebar';
 import { FaFlask, FaCalendarAlt, FaNotesMedical, FaMoneyBillWave } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 export default function Dashboard() {
   const d = new Date();
   const year = d.getFullYear();
@@ -14,13 +14,23 @@ export default function Dashboard() {
   const pastVisits = [1, 2, 3];
   const payments = [1, 2];
 
+  const [userName, setUserName] = useState('Patient');
+  useEffect(() => {
+    const user = JSON.parse(localStorage.getItem('user'));
+  
+    if (user) {
+      setUserName(user.name);
+    }
+  }, [])
+  
+ 
   return (
     <div className="flex min-h-screen bg-gray-50">
       <Sidebar />
       <div className="flex-1 p-8">
         <div className="mb-10">
           <h1 className="text-5xl font-bold text-gray-800 flex items-center gap-2">
-            👋 Welcome Back, Patient!
+            👋 Welcome Back, {userName}!
           </h1><br></br>
           <p className="text-gray-600 mt-2 ml-9 text-lg">Here's your health summary at a glance.</p>
         </div>
