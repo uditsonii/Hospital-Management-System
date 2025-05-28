@@ -3,7 +3,7 @@ const cors = require("cors");
 const { connectDB } = require("./models/db.js");
 const verifyToken = require("./middleware/authMiddleware.js");
 const routes = require("./routes/checkJWT.js");
-const authRoute = require("./routes/authroute.js");
+const authRoute = require("./routes/authRoute.js");
 
 require("dotenv").config();
 

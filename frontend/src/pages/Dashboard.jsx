@@ -7,7 +7,6 @@ const Dashboard = () => {
 
   useEffect(() => {
     const userData = localStorage.getItem("user");
-
     if (!userData) {
       navigate("/login");
     }
