@@ -1,8 +1,7 @@
-import React, { useState } from 'react';
-import Sidebar from '.Sidebar';
-import Navbar from '.Navbar';
-
-const MainDashboard = () => {
+import React,{useState} from 'react'
+import Sidebar from './Sidebar';
+import Navbar from './Navbar.jsx';
+export default function MainDashboard(props)  {
   const [isSidebarOpen, setSidebarOpen] = useState(false);
 
   const toggleSidebar = () => setSidebarOpen(!isSidebarOpen);
@@ -52,5 +51,3 @@ const MainDashboard = () => {
     </div>
   );
 };
-
-export default MainDashboard;

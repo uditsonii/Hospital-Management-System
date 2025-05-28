@@ -55,6 +55,7 @@ const Login = () => {
         console.log('daata ', data);
         localStorage.setItem("token", data.token);
         localStorage.setItem("user", JSON.stringify(data.user));
+        console.log(data.user)
         alert("Login Successfully");
         navigate("/dashboard");
       } else {

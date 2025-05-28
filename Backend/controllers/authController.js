@@ -121,17 +121,18 @@ const loginUser = async (req, res) => {
         status: 200,
         message: "Doctor Login Successfully",
         token: token,
+        user
       });
     }
   }
-  else{
-    return res.status(401).json({message: "Access Denied , Invalid Role"});
+  else {
+    return res.status(401).json({ message: "Access Denied , Invalid Role" });
   }
 };
 
 const loginManagement = async (req, res) => {
-  const {name, password} = req.body;
-  
+  const { name, password } = req.body;
+
   const user = await db().findOne({ name });
   if (user.role === "admin") {
     if (!user) {
@@ -176,8 +177,8 @@ const loginManagement = async (req, res) => {
       });
     }
   }
-  else{
-    return res.status(401).json({message: "Access Denied , Invalid Role"});
+  else {
+    return res.status(401).json({ message: "Access Denied , Invalid Role" });
   }
 }
 
@@ -335,6 +336,47 @@ const updatePatientProfile = async (req, res) => {
 
 
 
+const bookAppointment = async (req, res) => {
+  try {
+    const { name, doctor, date, purpose } = req.body
+    if (!name || !doctor || !date) {
+      return res.status(400).send({
+        status: 400,
+        message: "Please provide all information to proceed "
+      })
+    }
+    let db = await getDB();
+    let collection = db.collection('appointments')
+    let result =await collection.insertOne({
+      name,
+      doctor,
+      date,
+      purpose,
+       createdAt: new Date()
+    })
+if(!result.acknowledged){
+  console.log("problem while booking appointment in db")
+  return res.status(500).send({
+    status:500,
+    message:"appointement data not stored due to internal server error",
+    insertId:result.insertedId,
+  })
+}
+return res.status(200).send({
+  status:200,
+  message:"appointment booked Successfully",
+  appointmentId:result.insertedId,
+})
+
+  } catch (error) {
+    console.log("error catched while booking appointment to db in authController.js line 325")
+    return res.status(500).send({
+      status: 500,
+      message: "Internal server error while booking appointment",
+      error: error.message
+    });
+  }
+}
 module.exports = {
   registerUser,
   loginUser,
@@ -343,5 +385,4 @@ module.exports = {
   checkJWT,
   roleAdmin,
   roleOPD,
-  updatePatientProfile
 };
