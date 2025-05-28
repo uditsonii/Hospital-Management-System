@@ -7,7 +7,6 @@ const Dashboard = () => {
 
   useEffect(() => {
     const userData = localStorage.getItem("user");
-
     if (!userData) {
       console.log('fallback in case user not found!')
       navigate("/login");

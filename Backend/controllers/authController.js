@@ -1,7 +1,10 @@
 const bcrypt = require("bcrypt");
 const { getDB } = require("../models/db");
 const jwt = require("jsonwebtoken");
+const { ObjectId } = require("mongodb");
 require("dotenv").config();
+
+
 
 const db = () => getDB().collection("register");
 
@@ -70,7 +73,6 @@ const registerUser = async (req, res) => {
     });
   }
 };
-
 // doctor + user or patient
 const loginUser = async (req, res) => {
   // const db = getDB();
@@ -294,6 +296,48 @@ const roleOPD = async (req, res) => {
   }
 };
 
+const updatePatientProfile = async (req, res) => {
+  const db = getDB();
+  const userId = req.params.id;
+
+  try {
+    console.log("✅ Received ID:", userId);
+    const id = new ObjectId(userId);
+    console.log("🔍 Parsed ObjectId:", id);
+    const updateFields = {
+      name: req.body.name,
+      age: req.body.age,
+      gender: req.body.gender,
+      mobile_no: req.body.mobile_no,
+      gname: req.body.gname,
+    };
+
+    // Only hash and include password if it's provided
+    if (req.body.password && req.body.password.trim() !== "") {
+      console.log("🔐 Hashing new password...");
+      updateFields.password = await bcrypt.hash(req.body.password, 10);
+    }
+
+    console.log("🛠️ Fields to Update:", updateFields);
+
+    const result = await db.collection("register").updateOne(
+      { _id: id },
+      { $set: updateFields }
+    );
+
+    console.log("🧾 MongoDB Result:", result);
+
+    if (result.modifiedCount === 0) {
+      return res.status(404).json({ message: "User not found or data unchanged" });
+    }
+
+    res.status(200).json({ message: "Profile updated successfully" });
+
+  } catch (error) {
+    res.status(500).json({ message: "Internal server error", error: error.message });
+  }
+};
+
 // logout
 const logout = (req, res) => {
   // nothing to be do because we use jwt not session
@@ -352,6 +396,8 @@ module.exports = {
   checkJWT,
   roleAdmin,
   roleOPD,
+  updatePatientProfile,
+  bookAppointment
   logout,
   bookAppointment,
 };

@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
-
+import IndexNavbar from "../components/IndexNavbar";
+import Footer from "../components/Footer";
 const Register = ({ addUser }) => {
   const [form, setForm] = useState({
     name: "",
@@ -23,16 +24,7 @@ const Register = ({ addUser }) => {
       alert("❌ Passwords do not match!");
       return;
     }
-    // alert('✅ User registered successfully!');
-    // setForm({
-    //   name: '',
-    //   mobile_no: '',
-    //   gname: '',
-    //   password: '',
-    //   confirmPassword: '',
-    //   age: '',
-    //   gender: '',
-    // });
+    
 
     try {
       const option = {
@@ -48,14 +40,17 @@ const Register = ({ addUser }) => {
       } else {
         alert("Registration failed: ", data.message);
       }
-    } catch (error) {
+    } catch (err) {
       console.error("Error:", err);
       alert("Something went wrong.");
     }
   };
 
   return (
+    <div>
+       <IndexNavbar />
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-100 via-blue-200 to-blue-300 p-6">
+      
       <motion.form
         onSubmit={handleSubmit}
         initial={{ opacity: 0, y: -20 }}
@@ -163,6 +158,8 @@ const Register = ({ addUser }) => {
           </Link>
         </p>
       </motion.form>
+    </div>
+    <Footer/>
     </div>
   );
 };

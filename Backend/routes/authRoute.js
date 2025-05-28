@@ -1,4 +1,5 @@
 const express = require('express');
+const {registerUser, loginUser, doctorRegistration, loginManagement,updatePatientProfile,bookAppointment} = require('../controllers/authController')
 const {registerUser, loginUser, doctorRegistration, loginManagement, bookAppointment, logout} = require('../controllers/authController')
 
 const authRoute = express.Router();
@@ -6,6 +7,9 @@ const authRoute = express.Router();
 //patient
 authRoute.post('/register', registerUser);
 authRoute.post('/login', loginUser);
+authRoute.post('/login/admin', loginManagement)
+authRoute.put('/profile/:id',updatePatientProfile)
+authRoute.post('/book-appointments',bookAppointment)
 authRoute.post('/login/admin', loginManagement);
 authRoute.post('/logout', logout);
 authRoute.post('/bookappointment', bookAppointment);

@@ -6,12 +6,13 @@ import BookAppointment from "../pages/PatientDashboard/BookAppointment";
 import React from "react";
 import MainDashboard from "../pages/PatientDashboard/MainDashboard";
 import AuthCheck from "../components/AuthCheck";
+import PatientProfile from "../pages/PatientDashboard/PatientProfile";
 
 const PatientDashboardRoutes = () => {
   return (
     <Routes>
       <Route
-        path=""
+        path="/"
         element={
           <AuthCheck>
             <MainDashboard />
@@ -19,7 +20,7 @@ const PatientDashboardRoutes = () => {
         }
       />
       <Route
-        path="lab-reports"
+        path="/lab-reports"
         element={
           <AuthCheck>
             <LabReports />
@@ -27,7 +28,7 @@ const PatientDashboardRoutes = () => {
         }
       />
       <Route
-        path="medical-history"
+        path="/medical-history"
         element={
           <AuthCheck>
             <MedicalHistory />
@@ -35,7 +36,7 @@ const PatientDashboardRoutes = () => {
         }
       />
       <Route
-        path="appointments"
+        path="/appointments"
         element={
           <AuthCheck>
             <Appointments />
@@ -43,13 +44,14 @@ const PatientDashboardRoutes = () => {
         }
       />
       <Route
-        path="book-appointment"
+        path="/book-appointment"
         element={
           <AuthCheck>
             <BookAppointment />
           </AuthCheck>
         }
       />
+      <Route path="/profile/:id" element={<AuthCheck><PatientProfile/></AuthCheck>} />
     </Routes>
   );
 };

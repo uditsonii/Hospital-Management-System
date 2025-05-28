@@ -1,8 +1,10 @@
 import Sidebar from './Sidebar';
 import { FaFlask, FaCalendarAlt, FaNotesMedical, FaMoneyBillWave } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
-import React, { useEffect, useState } from 'react';
+import React from 'react';
+import { useEffect, useState } from 'react';
 export default function Dashboard() {
+  const [userData, setUser] = useState(null);
   const d = new Date();
   const year = d.getFullYear();
   const month = d.getMonth() + 1;
@@ -14,29 +16,26 @@ export default function Dashboard() {
   const pastVisits = [1, 2, 3];
   const payments = [1, 2];
 
-  const [userName, setUserName] = useState('Patient');
-  useEffect(() => {
-    const user = JSON.parse(localStorage.getItem('user'));
-  
-    if (user) {
-      setUserName(user.name);
+    useEffect(() => {
+    const userData = localStorage.getItem('user');
+    if (userData) {
+      setUser(JSON.parse(userData));
     }
-  }, [])
-  
- 
+  }, []);
+
   return (
     <div className="flex min-h-screen bg-gray-50">
       <Sidebar />
       <div className="flex-1 p-8">
         <div className="mb-10">
           <h1 className="text-5xl font-bold text-gray-800 flex items-center gap-2">
-            👋 Welcome Back, {userName}!
+            👋 Welcome Back, {userData?.name || 'User'}!
           </h1><br></br>
           <p className="text-gray-600 mt-2 ml-9 text-lg">Here's your health summary at a glance.</p>
         </div>
 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 mb-12 text-center">
 
-          <Link to="/appointments"  className="relative bg-white p-6
+          <Link to="/patient-dashboard/appointments"  className="relative bg-white p-6
     rounded-2xl
     shadow-lg
     hover:shadow-2xl
@@ -54,7 +53,7 @@ export default function Dashboard() {
               </div>
             </div>
           </Link>
-          <Link to="/lab-reports" className="bg-white p-6 rounded-2xl shadow-md hover:shadow-xl hover:scale-105 transition-transform cursor-pointer w-[300]">
+          <Link to="/patient-dashboard/lab-reports" className="bg-white p-6 rounded-2xl shadow-md hover:shadow-xl hover:scale-105 transition-transform cursor-pointer w-[300]">
             <div className="flex items-center gap-4">
               <FaFlask className="text-green-500 text-4xl" />
               <div>
@@ -63,7 +62,7 @@ export default function Dashboard() {
               </div>
             </div>
           </Link>
-          <Link to="/medical-history" className="bg-white p-6 rounded-2xl shadow-md hover:shadow-xl hover:scale-105 transition-transform cursor-pointer">
+          <Link to="/patient-dashboard/medical-history" className="bg-white p-6 rounded-2xl shadow-md hover:shadow-xl hover:scale-105 transition-transform cursor-pointer">
             <div className="flex items-center gap-4">
               <FaNotesMedical className="text-purple-500 text-4xl" />
               <div>
