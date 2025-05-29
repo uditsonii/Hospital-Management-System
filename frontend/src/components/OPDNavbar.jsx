@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-const Navbar = () => {
+const OPDNavbar = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [profileMenuOpen, setProfileMenuOpen] = useState(false);
 
@@ -150,4 +150,4 @@ const Navbar = () => {
   );
 };
 
-export default Navbar;
+export default OPDNavbar;

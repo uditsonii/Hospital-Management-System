@@ -4,8 +4,6 @@ const jwt = require("jsonwebtoken");
 const { ObjectId } = require("mongodb");
 require("dotenv").config();
 
-
-
 const db = () => getDB().collection("register");
 
 //patient
@@ -397,7 +395,7 @@ module.exports = {
   roleAdmin,
   roleOPD,
   updatePatientProfile,
-  bookAppointment
+  bookAppointment,
   logout,
   bookAppointment,
 };

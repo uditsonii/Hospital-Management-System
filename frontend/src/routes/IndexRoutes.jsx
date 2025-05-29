@@ -12,6 +12,7 @@ import NotFound from '../pages/NotFound';
 import Dashboard from '../pages/Dashboard';
 import PatientDashboardRoutes from './PatientDashboardRoutes';
 import DoctorDashboardRoute from './DoctorDashboardRoute';
+import OPDSystemRoute from './OPDSystemRoute';
 
 
 
@@ -36,6 +37,9 @@ const IndexRoutes = () => {
 
       {/* Doctor routes */}
       <Route path='/doctor-dashboard/*' element={<DoctorDashboardRoute />} />
+
+      {/* OPD Routes */}
+      <Route path='/opd/*' element={<OPDSystemRoute />} />
     </Routes>
   );
 };

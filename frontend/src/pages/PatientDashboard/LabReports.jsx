@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import Sidebar from './Sidebar';
-import { Menu } from 'lucide-react';
+// import { Menu } from 'lucide-react';
 
 const labReports = [
   {
