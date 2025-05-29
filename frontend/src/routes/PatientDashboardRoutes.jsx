@@ -7,6 +7,7 @@ import React from "react";
 import MainDashboard from "../pages/PatientDashboard/MainDashboard";
 import AuthCheck from "../components/AuthCheck";
 import PatientProfile from "../pages/PatientDashboard/PatientProfile";
+import ProfilePage from "../pages/PatientDashboard/ProfilePage";
 
 const PatientDashboardRoutes = () => {
   return (
@@ -52,6 +53,16 @@ const PatientDashboardRoutes = () => {
         }
       />
       <Route path="/profile/:id" element={<AuthCheck><PatientProfile/></AuthCheck>} />
+       <Route
+        path="/book-appointment"
+        element={
+          <AuthCheck>
+            <BookAppointment />
+          </AuthCheck>
+        }/>
+          <Route path="/profile" element={<AuthCheck><ProfilePage/></AuthCheck>}></Route>
+      
+      
     </Routes>
   );
 };

@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import Sidebar from './Sidebar';
-import { Menu } from 'lucide-react';
+import Navbar from './Navbar';
 
 const labReports = [
   {
-   reportName: 'Complete Blood Count (CBC)',
+    reportName: 'Complete Blood Count (CBC)',
     doctor: 'Dr. Neha Verma',
     date: '2025-05-15',
     status: 'Available',
@@ -32,7 +32,7 @@ const statusColors = {
 };
 
 export default function LabReports() {
-  const [isSidebarOpen, setSidebarOpen] = useState(false); // ✅ Moved inside functio
+  const [isSidebarOpen, setSidebarOpen] = useState(false);
   const toggleSidebar = () => setSidebarOpen(!isSidebarOpen);
 
   return (
@@ -41,24 +41,14 @@ export default function LabReports() {
       <Sidebar isOpen={isSidebarOpen} toggleSidebar={toggleSidebar} />
 
       {/* Main Content */}
-      <div className="flex-1 p-4 md:ml-64">
-        {/* Top bar toggle (mobile only) */}
-        <div className="md:hidden mb-4">
-          <button
-            onClick={toggleSidebar}
-            className="bg-blue-600 text-white px-4 py-2 rounded"
-          >
-            ☰
-          </button>
-        </div>
-
+      <div className="flex-1 md:ml-64">
+        {/* Navbar */}
+        <Navbar toggleSidebar={toggleSidebar} />
 
         {/* Main Section */}
         <div className="p-6 md:p-10 bg-blue-50 min-h-screen">
           <div className="max-w-7xl mx-auto text-center mb-10">
-            <h2 className="text-4xl font-extrabold text-sky-700">
-              🧪 Lab Reports
-            </h2>
+            <h2 className="text-4xl font-extrabold text-sky-700">🧪 Lab Reports</h2>
             <p className="text-sky-600 mt-2 text-base md:text-lg">
               Check your recent diagnostics and test results below.
             </p>

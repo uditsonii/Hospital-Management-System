@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-
+import ProfilePage from './ProfilePage';
 const Navbar = ({ toggleSidebar }) => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const user = JSON.parse(localStorage.getItem('user')) || {};
@@ -40,9 +40,8 @@ const Navbar = ({ toggleSidebar }) => {
               onMouseLeave={() => setDropdownOpen(false)}
             >
               <Link
-                to={`profile/${userId}`}
-                className="block px-4 py-2 text-sm hover:bg-gray-100"
-              >
+                to="/patient-dashboard/profile"
+                className="block px-4 py-2 text-sm hover:bg-gray-100" >
                 Profile
               </Link>
              
