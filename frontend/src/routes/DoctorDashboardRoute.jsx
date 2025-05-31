@@ -10,7 +10,8 @@ const DoctorDashboardRoute = () => {
       <Sidebar />
       <Navbar />
       <Routes>
-        <Route path="/" element={<MainDashboard />} />
+        <Route path="/" element={
+          <AuthCheck><MainDashboard /></AuthCheck>} />
         {/* Add more nested routes below as needed */}
         {/* <Route path="appointments" element={<Appointments />} /> */}
       </Routes>

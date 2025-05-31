@@ -41,7 +41,7 @@ const registerUser = async (req, res) => {
     // const userExist = await db
     //   .collection("register")
     //   .findOne({ name, mobile_no });
-    const userExist = await db().findOne({ name, mobile_no });
+    const userExist = await db().findOne({ name, mobile_no, gender });
     if (userExist) {
       return res.status(400).json({ message: "User Already exists" });
     }
@@ -199,7 +199,7 @@ const loginManagement = async (req, res) => {
       const option = {
         expiresIn: "1d",
       };
-      const token = jwt.sign(user, process.env.JWT_SECRET, option);
+      // const token = jwt.sign(user, process.env.JWT_SECRET, option);
 
       return res.send({
         status: 200,
