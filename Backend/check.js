@@ -34,4 +34,6 @@ app.listen(port, () => {
   console.log(`Example app listening on port ${port}`);
 });
 
-console.log(Math.random());
+const now = new Date();
+const time = now.getTime().toString().slice(-4);
+console.log(time);

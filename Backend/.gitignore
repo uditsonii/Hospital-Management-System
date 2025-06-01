@@ -12,7 +12,7 @@ node_modules
 dist
 dist-ssr
 *.local
-check
+check.js
 
 
 # Editor directories and files
