@@ -11,7 +11,7 @@ import ForgotPassword from '../pages/ForgotPassword';
 import NotFound from '../pages/NotFound';
 import Dashboard from '../pages/Dashboard';
 import PatientDashboardRoutes from './PatientDashboardRoutes';
-import DoctorDashboardRoute from './DoctorDashboardRoute';
+import DoctorDashboardRoutes from './DoctorDashboardRoute';
 import OPDSystemRoute from './OPDSystemRoute';
 
 
@@ -36,7 +36,7 @@ const IndexRoutes = () => {
       <Route path='/patient-dashboard/*' element={<PatientDashboardRoutes />} />
 
       {/* Doctor routes */}
-      <Route path='/doctor-dashboard/*' element={<DoctorDashboardRoute />} />
+      <Route path='/doctor-dashboard/*' element={<DoctorDashboardRoutes />} />
 
       {/* OPD Routes */}
       <Route path='/opd/*' element={<OPDSystemRoute />} />
