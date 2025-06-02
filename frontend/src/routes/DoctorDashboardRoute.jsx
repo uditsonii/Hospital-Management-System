@@ -26,4 +26,4 @@ const DoctorDashboardRoutes = () => (
   </Routes>
 );
 
-export default DoctorDashboardRoutes;
+export default DoctorDashboardRoute;

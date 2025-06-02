@@ -1,7 +1,6 @@
 import Logout from '../../components/Logout';
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import ProfilePage from './ProfilePage';
 const Navbar = ({ toggleSidebar }) => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const user = JSON.parse(localStorage.getItem('user')) || {};
@@ -41,14 +40,18 @@ const Navbar = ({ toggleSidebar }) => {
               onMouseLeave={() => setDropdownOpen(false)}
             >
               <Link
-                to={`profile/${userId}`}
+                to={`/profile`}
                 className="block px-4 py-2 text-sm hover:bg-gray-100"
               >
                 Profile
               </Link>
-             
+
+              <button
+                className="block w-full text-left px-4 py-2 text-sm hover:bg-gray-100"
+                onClick={() => alert('Logged out')}
+              >
                 Logout
-           
+              </button>
             </div>
           )}
         </div>
