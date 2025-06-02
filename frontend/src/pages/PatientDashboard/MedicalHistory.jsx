@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import Sidebar from './Sidebar';
-
+import Navbar from  './Navbar'
 const medicalHistory = [
   {
     reason: "Fever and Cold",
@@ -30,57 +30,49 @@ const MedicalHistory = () => {
   const toggleSidebar = () => setSidebarOpen(!isSidebarOpen);
 
   return (
-    <div className="min-h-screen flex bg-gray-50">
+  <div className="min-h-screen flex bg-gray-50">
       {/* Sidebar */}
       <Sidebar isOpen={isSidebarOpen} toggleSidebar={toggleSidebar} />
 
-      {/* Main content area */}
-      <div className="flex-1 flex flex-col w-full md:ml-64">
-        {/* Mobile Toggle Button */}
-        <div className="md:hidden p-4">
-          <button
-            onClick={toggleSidebar}
-            className="bg-blue-600 text-white px-4 py-2 rounded"
-          >
-            ☰
-          </button>
-        </div>
+      {/* Main Content */}
+      <div className="flex-1 md:ml-64">
+        {/* Navbar */}
+        <Navbar toggleSidebar={toggleSidebar} />
 
-        {/* Page Header */}
-        <div className="p-4 sm:p-6 md:p-10">
-          <h2 className="text-4xl font-extrabold text-sky-700 mb-4 text-center md:text-left">
+        {/* Header */}
+        <div className="p-6 md:p-10">
+          <h2 className="text-4xl font-extrabold text-sky-800 mb-4 text-center md:text-left">
             🩺 Medical History
           </h2>
-          <p className="text-sky-600 text-center md:text-left text-lg mb-10">
-            View your complete medical history below.
+          <p className="text-lg text-sky-600 mb-8 text-center md:text-left">
+            Track your past appointments and medical notes.
           </p>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
+          {/* Strips */}
+          <div className="space-y-6">
             {medicalHistory.map((visit, index) => (
               <div
                 key={index}
-                className="bg-white rounded-3xl shadow-md border border-blue-100 p-6 hover:shadow-lg transition-shadow duration-300"
+                className="relative bg-white rounded-2xl shadow-lg border-l-4 border-sky-500 p-6 hover:shadow-xl transition-shadow"
               >
-                <div className="flex items-center justify-between mb-5">
-                  <h3 className="text-xl font-semibold text-sky-800">
+                {/* Top Row: Reason and Doctor */}
+                <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-4">
+                  <h3 className="text-2xl font-semibold text-sky-800">
                     {visit.reason || "General Visit"}
                   </h3>
-                  <span className="text-sm text-sky-500">
-                    {new Date(visit.date).toLocaleDateString()}
-                  </span>
+                  <p className="text-sky-500 font-medium text-sm mt-2 md:mt-0">
+                    👨‍⚕️ <span className="text-sky-700">{visit.doctorName}</span>
+                  </p>
                 </div>
 
-                <div className="space-y-3 text-sky-700 text-sm leading-relaxed">
-                  <p>
-                    <strong className="text-sky-900">👨‍⚕️ Doctor:</strong> {visit.doctorName}
-                  </p>
+                {/* Details */}
+                <div className="text-sky-700 text-[15px] space-y-2">
                   <p>
                     <strong className="text-sky-900">📅 Date & Time:</strong>{" "}
                     {new Date(visit.date).toLocaleString()}
                   </p>
                   <p>
-                    <strong className="text-sky-900">📝 Notes:</strong>{" "}
-                    {visit.notes || "No notes provided"}
+                    <strong className="text-sky-900">📝 Notes:</strong> {visit.notes || "No notes provided"}
                   </p>
                   {visit.prescription && (
                     <p>
