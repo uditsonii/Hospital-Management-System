@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import Logout from "./Logout";
 
 const OPDNavbar = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -174,12 +175,13 @@ const OPDNavbar = () => {
                     </a>
                   </li>
                   <li>
-                    <a
+                    {/* <a
                       href="#"
                       className="block px-4 py-2 text-sm dark:text-gray-200"
                     >
                       Sign out
-                    </a>
+                    </a> */}
+                    <Logout />
                   </li>
                 </ul>
               </div>

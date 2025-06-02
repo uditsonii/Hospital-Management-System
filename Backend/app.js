@@ -14,11 +14,13 @@ app.use(express.json()); //middelware
 app.use(cors());
 
 //routes
-app.use("/", authRoute);
-app.use("/", verifyToken, routes);
-app.use("/api/doctor", doctorRoutes); // doctor panel API
 app.use("/opd", opdRoutes) // opd panel routes
-app.get("/", (req, res) => res.send("Hospital Management"));
+
+app.use("/", authRoute);
+// app.use("/", verifyToken, routes);
+app.use("/", routes);
+app.use("/api/doctor", doctorRoutes); // doctor panel API
+app.get("/test", (req, res) => res.send("Hospital Management"));
 
 connectDB()
   .then(() => {
