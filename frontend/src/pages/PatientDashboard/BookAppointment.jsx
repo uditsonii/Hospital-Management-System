@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import Sidebar from './Sidebar';
-
+import Navbar from './Navbar';
 const BookAppointment = () => {
   const [form, setForm] = useState({
     name: '',
@@ -39,18 +39,10 @@ const BookAppointment = () => {
       <Sidebar isOpen={isSidebarOpen} toggleSidebar={toggleSidebar} />
 
       {/* Main Content */}
-      <div className="flex-1 p-4 md:ml-64">
-        {/* Top bar toggle (mobile only) */}
-        <div className="md:hidden mb-4">
-          <button
-            onClick={toggleSidebar}
-            className="bg-blue-600 text-white px-4 py-2 rounded"
-          >
-            ☰
-          </button>
-        </div>
-
-        <div className="max-w-lg mx-auto bg-white rounded-xl shadow-lg border border-blue-100 p-8">
+      <div className="flex-1 md:ml-64">
+        {/* Navbar */}
+        <Navbar toggleSidebar={toggleSidebar} />
+        <div className="max-w-lg mx-auto bg-white rounded-xl shadow-lg border border-blue-100 p-8 mt-10">
           <h2 className="text-3xl font-bold text-blue-500 mb-6 text-center">
             📅 Book an Appointment
           </h2>
