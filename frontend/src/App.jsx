@@ -4,9 +4,11 @@ import { BrowserRouter, BrowserRouter as Router } from "react-router-dom";
 import PatientDashboardRoutes from "./routes/PatientDashboardRoutes";
 import Mainpanel from "./pages/DoctorsDashboard/Mainpanel";
 import DoctorAppointments from "./pages/DoctorsDashboard/DoctorAppointments";
+import MainDashboard from "./pages/DoctorsDashboard/Mainpanel";
+import DoctorDashboardRoutes from "./routes/DoctorDashboardRoute";
 function App() {
   return (
-<Mainpanel/>);
+<IndexRoutes/>);
 }
 export default App;
 

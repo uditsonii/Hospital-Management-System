@@ -26,19 +26,20 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
 
           {/* Navigation Links */}
           <nav className="flex flex-col p-6 space-y-4 text-gray-800 text-lg">
-            <SidebarLink icon="🏠" label="Dashboard" to="/doctor-dashboard/" />
-            <SidebarLink icon="👥" label="My Patients" to="/doctor-dashboard/patients" />
-            <SidebarLink icon="📅" label="Appointments" to="/doctor-dashboard/appointments" />
-            <SidebarLink icon="📝" label="Prescriptions" to="/doctor-dashboard/prescriptions" />
-            <SidebarLink icon="🧪" label="Lab Reports" to="/doctor-dashboard/lab-reports" />
-            <SidebarLink icon="📊" label="Analytics" to="/doctor-dashboard/analytics" />
-            <SidebarLink icon="👤" label="Profile" to="/doctor-dashboard/profile" />
+           <SidebarLink icon="🏠" label="Dashboard" to="/" />
+          <SidebarLink icon="👥" label="My Patients" to="/patients" />
+          <SidebarLink icon="📅" label="Appointments" to="/appointments" />
+          <SidebarLink icon="📝" label="Prescriptions" to="/prescriptions" />
+          <SidebarLink icon="🧪" label="Lab Reports" to="/lab-reports" />
+          <SidebarLink icon="📊" label="Analytics" to="/analytics" />
+          <SidebarLink icon="👤" label="Profile" to="/profile" />
+
           </nav>
         </div>
 
         {/* Optional Footer */}
         <div className="p-6 border-t text-base text-gray-600 text-center">
-          &copy; {new Date().getFullYear()} MedPortal
+          &copy; {new Date().getFullYear()} Jeevan Jyoti Hospital. All rights reserved.
         </div>
       </aside>
     </>
