@@ -4,7 +4,9 @@ import { BrowserRouter, BrowserRouter as Router } from "react-router-dom";
 import PatientDashboardRoutes from "./routes/PatientDashboardRoutes";
 function App() {
   return (
-<IndexRoutes/>);
+    <Router>
+<IndexRoutes/>
+</Router>);
 }
 export default App;
 
