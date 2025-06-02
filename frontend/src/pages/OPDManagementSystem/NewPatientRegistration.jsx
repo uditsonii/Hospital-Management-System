@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import OPDNavbar from "../../components/OPDNavbar";
 import { User, FileText, RefreshCcw, Save, RefreshCw } from "lucide-react";
+import { Link } from "react-router-dom";
 
 const NewPatientRegistration = () => {
   const [formData, setFormData] = useState({
@@ -17,31 +18,34 @@ const NewPatientRegistration = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleInputChange = (e) => {
-    const {name, value} = e.target;
-    setFormData(data => ({
-        ...data, [name] : value
+    const { name, value } = e.target;
+    setFormData((data) => ({
+      ...data,
+      [name]: value,
     }));
-  }
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsSubmitting(true);
 
     try {
-      const res = await fetch("http://localhost:8000/opd/register", {
-        method: "post",
+      const res = await fetch("http://localhost:8000/opd/register-new-patient", {
+        method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),
       });
 
+      const data = await res.json();
       if (!res.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
+        throw new Error(
+          data.message || "Registration failed. Please try again."
+        );
       }
 
-      const data = await res.json();
-      console.log("PID", data.pid);
-
       // Show pid number
+      console.log(`${data.patient.name} PID is : ${data.patient.pid}`);
+
       alert(`Patient registered successfully & PID: ${data.patient.pid}`);
       resetForm(); //clear the form
     } catch (error) {
@@ -73,15 +77,24 @@ const NewPatientRegistration = () => {
           <div className="max-w-4xl rounded-xl shadow-lg overflow-hidden">
             {/* OPD Header */}
             <div className="bg-gradient-to-r from-blue-600 to-indigo-600 px-6 py-8 text-white">
-              <div className="flex items-center space-x-3">
-                <FileText className="h-8 w-8" />
-                <div>
-                  <h1 className="text-3xl font-bold">OPD Registration</h1>
-                  <p className="text-blue-100 mt-1">
-                    OutPatient Department - Patient Registration Form
-                  </p>
+              <div className="flex items-center justify-around">
+                <div className="flex items-center space-x-3">
+                  <FileText className="h-8 w-8 text-white" />
+                  <div>
+                    <h1 className="text-3xl font-bold text-white">
+                      OPD Registration
+                    </h1>
+                    <p className="text-blue-100 mt-1">
+                      OutPatient Department - Patient Registration Form
+                    </p>
+                  </div>
                 </div>
-                <span>Back</span>
+                <Link to="/opd/fill-slip">
+                  <div className="text-white font-medium border-solid border-2 bg-sky-500 hover:bg-sky-600 rounded-lg p-3">
+                    Back
+                  </div>
+                  {/* <button className="text-white font-medium border-solid border-2 bg-sky-500 hover:bg-sky-600 rounded-lg p-3">Add New Patient</button> */}
+                </Link>
               </div>
             </div>
             <form

@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { BiLogOutCircle } from "react-icons/bi";
 
 const Sidebar = ({ isOpen, toggleSidebar }) => {
   return (
@@ -25,6 +26,7 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
             <SidebarLink icon="🧪" label="Lab Reports" to="/patient-dashboard/lab-reports" />
             <SidebarLink icon="🧾" label="Medical History" to="/patient-dashboard/medical-history" />
            <SidebarLink icon="📅" label="Book Appointment" to="/patient-dashboard/book-appointment" />
+           <SidebarLink icon={ <BiLogOutCircle />} label="Log Out" to="/" />
           </nav>
         </div>
       </aside>

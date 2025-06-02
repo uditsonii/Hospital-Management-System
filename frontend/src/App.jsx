@@ -1,10 +1,12 @@
 import React from "react";
 import IndexRoutes from "./routes/IndexRoutes";
-import { BrowserRouter, BrowserRouter as Router } from "react-router-dom";
-import PatientDashboardRoutes from "./routes/PatientDashboardRoutes";
+import { BrowserRouter as Router } from "react-router-dom";
 function App() {
   return (
-<IndexRoutes/>);
+    
+      <IndexRoutes />
+
+  );
 }
 export default App;
 

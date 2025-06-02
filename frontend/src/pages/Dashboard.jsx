@@ -26,7 +26,7 @@ const Dashboard = () => {
       } else if (parsedUser.role === "admin") {
         navigate("/admin");
       } else if (parsedUser.role === "opd") {
-        navigate("/opd");
+        navigate("/opd/fill-slip");
       } else {
         navigate("/unauthorized");
       }
