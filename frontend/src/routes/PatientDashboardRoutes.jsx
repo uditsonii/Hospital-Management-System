@@ -54,13 +54,6 @@ const PatientDashboardRoutes = () => {
       />
       <Route path="/profile/:id" element={<AuthCheck><PatientProfile/></AuthCheck>} />
       
-       <Route
-        path="/book-appointment"
-        element={
-          <AuthCheck>
-            <BookAppointment />
-          </AuthCheck>
-        }/>
           <Route path="/profile" element={<AuthCheck><ProfilePage/></AuthCheck>}></Route>
       
       
