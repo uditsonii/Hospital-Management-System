@@ -9,8 +9,10 @@ const DoctorAppointments = () => {
     const fetchAppointments = async () => {
       try {
         setLoading(true);
+
         const res = await fetch("http://localhost:8000/appointments");
         const data = await res.json();
+
         setAppointments(data.appointments || []);
         setError(null);
       } catch (err) {

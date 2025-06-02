@@ -41,18 +41,14 @@ const Navbar = ({ toggleSidebar }) => {
               onMouseLeave={() => setDropdownOpen(false)}
             >
               <Link
-                to={`profile/`}
+                to={`profile/${userId}`}
                 className="block px-4 py-2 text-sm hover:bg-gray-100"
               >
                 Profile
               </Link>
-
-              <button
-                className="block w-full text-left px-4 py-2 text-sm hover:bg-gray-100"
-                onClick={() => alert('Logged out')}
-              >
+             
                 Logout
-              </button>
+           
             </div>
           )}
         </div>

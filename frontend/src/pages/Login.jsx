@@ -20,13 +20,12 @@ const Login = () => {
   };
   const handleSubmit = async (e) => {
     e.preventDefault();
+
     if (!formData.name || !formData.mobile_no || !formData.password) {
       setError("Mobile number and password are required.");
       return;
-    } 
-
-   // Basic mobile number validation (10 digits)
-   
+    }
+    // Basic mobile number validation (10 digits)
     if (!/^\d{10}$/.test(formData.mobile_no)) {
       setError("Please enter a valid 10-digit mobile number.");
       return;
@@ -108,7 +107,6 @@ const Login = () => {
                 value={formData.mobile_no}
                 onChange={handleChange}
                 placeholder="10-digit mobile number"
-                required
               />
               <FormInput
                 id="password"

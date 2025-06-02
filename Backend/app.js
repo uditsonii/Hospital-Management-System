@@ -4,6 +4,8 @@ const { connectDB } = require("./models/db.js");
 const verifyToken = require("./middleware/authMiddleware.js");
 const routes = require("./routes/checkJWT.js");
 const authRoute = require("./routes/authRoute.js");
+const opdRoutes = require("./routes/opdRoute.js");
+const doctorRoutes = require("./routes/doctorRoutes.js");
 
 require("dotenv").config();
 
@@ -12,10 +14,13 @@ app.use(express.json()); //middelware
 app.use(cors());
 
 //routes
-app.use("/", authRoute);
-app.use("/", verifyToken, routes);
+app.use("/opd", opdRoutes) // opd panel routes
 
-app.get("/", (req, res) => res.send("Hospital Management"));
+app.use("/", authRoute);
+// app.use("/", verifyToken, routes);
+app.use("/", routes);
+app.use("/api/doctor", doctorRoutes); // doctor panel API
+app.get("/test", (req, res) => res.send("Hospital Management"));
 
 connectDB()
   .then(() => {

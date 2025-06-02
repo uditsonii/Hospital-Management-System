@@ -12,7 +12,6 @@ import NotFound from '../pages/NotFound';
 import Dashboard from '../pages/Dashboard';
 import PatientDashboardRoutes from './PatientDashboardRoutes';
 import DoctorDashboardRoute from './DoctorDashboardRoute';
-import OPDSystemRoute from './OPDSystemRoute';
 
 
 
@@ -24,9 +23,11 @@ const IndexRoutes = () => {
       <Route path="/" element={<Home />} />
       <Route path="/about" element={<AboutUs />} />
       <Route path="/contact" element={<ContactUs />} />
-      <Route path="/login" element={user ? <Navigate to='/dashboard' /> : <Login />} />
+      <Route path="/login" element={<Login />} />
       <Route path="/login/admin" element={<Login2 />} />
       <Route path="/register" element={<Register />} />
+      <Route path="/login" element={user ? <Navigate to='/dashboard' /> : <Login />} />
+      {/* <Route path="/login/admin" element={<Login2 />} /> */}
       <Route path="/opd" element={<PatientOPD />} />
       <Route path="/forgot-password" element={<ForgotPassword />} />
       <Route path='/dashboard' element={<Dashboard />} />
@@ -37,9 +38,6 @@ const IndexRoutes = () => {
 
       {/* Doctor routes */}
       <Route path='/doctor-dashboard/*' element={<DoctorDashboardRoute />} />
-
-      {/* OPD Routes */}
-      <Route path='/opd/*' element={<OPDSystemRoute />} />
     </Routes>
   );
 };
