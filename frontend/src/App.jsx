@@ -3,9 +3,10 @@ import IndexRoutes from "./routes/IndexRoutes";
 import { BrowserRouter as Router } from "react-router-dom";
 function App() {
   return (
-    <Router>
-<IndexRoutes/>
-</Router>);
+    
+      <IndexRoutes />
+
+  );
 }
 export default App;
 

@@ -5,7 +5,7 @@ import MainDashboard from "../pages/DoctorsDashboard/Mainpanel";
 import DoctorAppointments from "../pages/DoctorsDashboard/DoctorAppointments";
 import AuthCheck from "../components/AuthCheck";
 
-const DoctorDashboardRoutes = () => (
+const DoctorDashboardRoute = () => (
   <Routes>
     <Route
       path="/"
