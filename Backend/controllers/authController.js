@@ -4,8 +4,6 @@ const jwt = require("jsonwebtoken");
 const { ObjectId } = require("mongodb");
 require("dotenv").config();
 
-
-
 const db = () => getDB().collection("register");
 
 //patient
@@ -77,56 +75,89 @@ const registerUser = async (req, res) => {
 const loginUser = async (req, res) => {
   // const db = getDB();
 
-  const { name, mobile_no, password } = req.body;
+  // const { name, mobile_no, password } = req.body;
 
-  const user = await db().findOne({ name, mobile_no });
-  if (user.role === "patient") {
+  // const user = await db().findOne({ name, mobile_no });
+  // if (!user) {
+  //   return res.status(404).json({ message: "User Not Found" });
+  // } else if (user.role === "patient") {
+  //   const isMatch = await bcrypt.compare(password, user.password);
+  //   if (!isMatch) {
+  //     return res.status(401).json({ message: "Invalid Credentials" });
+  //   }
+
+  //   const option = {
+  //     expiresIn: "1d",
+  //   };
+  //   const token = jwt.sign(user, process.env.JWT_SECRET, option);
+
+  //   return res.send({
+  //     status: 200,
+  //     message: "Login Successfully",
+  //     user,
+  //     token: token,
+  //   });
+  // } else if (user.role === "doctor") {
+  //   if (!user) {
+  //     return res.status(404).json({ message: "User Not Found" });
+  //   } else {
+  //     const isMatch = await bcrypt.compare(password, user.password);
+  //     if (!isMatch) {
+  //       return res.status(401).json({
+  //         message: "Invalid Credentials",
+  //       });
+  //     }
+
+  //     const option = {
+  //       expiresIn: "1d",
+  //     };
+  //     const token = jwt.sign(user, process.env.JWT_SECRET, option);
+
+  //     return res.send({
+  //       status: 200,
+  //       message: "Doctor Login Successfully",
+  //       token: token,
+  //       user,
+  //     });
+  //   }
+  // } else {
+  //   return res.status(401).json({ message: "Access Denied , Invalid Role" });
+  // }
+
+  const {name, mobile_no, password } = req.body;
+
+  try {
+    const user = await db().findOne({ name, mobile_no });
+
     if (!user) {
-      return res.status(404).json({ message: "User Not Found" });
-    } else {
-      const isMatch = await bcrypt.compare(password, user.password);
-      if (!isMatch) {
-        return res.status(401).json({ message: "Invalid Credentials" });
-      }
-
-      const option = {
-        expiresIn: "1d",
-      };
-      const token = jwt.sign(user, process.env.JWT_SECRET, option);
-
-      return res.send({
-        status: 200,
-        message: "Login Successfully",
-        user,
-        token: token,
-      });
+      return res.status(404).json({message: "User Not Found" });
     }
-  } else if (user.role === "doctor") {
-    if (!user) {
-      return res.status(404).json({ message: "User Not Found" });
-    } else {
-      const isMatch = await bcrypt.compare(password, user.password);
-      if (!isMatch) {
-        return res.status(401).json({
-          message: "Invalid Credentials",
-        });
-      }
 
-      const option = {
-        expiresIn: "1d",
-      };
-      const token = jwt.sign(user, process.env.JWT_SECRET, option);
-
-      return res.send({
-        status: 200,
-        message: "Doctor Login Successfully",
-        token: token,
-        user
-      });
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) {
+      return res.status(401).json({ message : "Invalid Credentials"});
     }
-  }
-  else {
-    return res.status(401).json({ message: "Access Denied , Invalid Role" });
+
+    if (user.role !==  "patient" && user.role !== 'doctor') {
+      return res.status(401).json({ message: "Access Denied, Invalid Role" });
+    }
+
+    const option = {
+      expiresIn: '1d',
+    }
+
+    const token = jwt.sign(user, process.env.JWT_SECRET, option);
+
+    const message = user.role === 'doctor' ? 'Doctor Login Successfully' : 'Login Successfully'
+
+     return res.status(200).json({
+      message,
+      token,
+      user,
+     })
+  } catch (error) {
+    console.error("Login error:", error);
+    return res.status(500).json({ message: "Internal Server Error" });
   }
 };
 
@@ -176,11 +207,10 @@ const loginManagement = async (req, res) => {
         token: token,
       });
     }
-  }
-  else {
+  } else {
     return res.status(401).json({ message: "Access Denied , Invalid Role" });
   }
-}
+};
 
 //doctor
 const doctorRegistration = async (req, res) => {
@@ -241,33 +271,6 @@ const doctorRegistration = async (req, res) => {
   }
 };
 
-// const doctorLogin = async (req, res) => {
-//   const { name, mobile_no, password } = req.body;
-
-//   const doctor = await db().find({ name, mobile_no });
-//   if (!doctor) {
-//     return res.status(404).json({ message: "User Not Found" });
-//   } else {
-//     const isMatch = await bcrypt.compare(password, doctor.password);
-//     if (!isMatch) {
-//       return res.status(401).json({
-//         message: "Invalid Credentials",
-//       });
-//     }
-
-//     const option = {
-//       expiresIn: "1d",
-//     };
-//     const token = jwt.sign(doctor, process.env.JWT_SECRET, option);
-
-//     return res.send({
-//       status: 200,
-//       message: "Login Successfully",
-//       token: token,
-//     });
-//   }
-// };
-
 //check jwt work properly
 const checkJWT = async (req, res) => {
   res.json({ message: "Your profile", user: req.user, status: 200 });
@@ -294,7 +297,6 @@ const roleOPD = async (req, res) => {
 const updatePatientProfile = async (req, res) => {
   const db = getDB();
   const userId = req.params.id;
-
   try {
     console.log("✅ Received ID:", userId);
     const id = new ObjectId(userId);
@@ -333,47 +335,56 @@ const updatePatientProfile = async (req, res) => {
   }
 };
 
+// logout
+const logout = (req, res) => {
+  // nothing to be do because we use jwt not session
+  res.status(200).json({ message: "Logged Out Successfully" });
+};
+
+// for book Appointment
 const bookAppointment = async (req, res) => {
   try {
-    const { name, doctor, date, purpose } = req.body
+    const { name, doctor, date, purpose } = req.body;
     if (!name || !doctor || !date) {
       return res.status(400).send({
         status: 400,
-        message: "Please provide all information to proceed "
-      })
+        message: "Please provide all information to proceed ",
+      });
     }
     let db = await getDB();
-    let collection = db.collection('appointments')
-    let result =await collection.insertOne({
+    let collection = db.collection("appointments");
+    let result = await collection.insertOne({
       name,
       doctor,
       date,
       purpose,
-       createdAt: new Date()
-    })
-if(!result.acknowledged){
-  console.log("problem while booking appointment in db")
-  return res.status(500).send({
-    status:500,
-    message:"appointement data not stored due to internal server error",
-    insertId:result.insertedId,
-  })
-}
-return res.status(200).send({
-  status:200,
-  message:"appointment booked Successfully",
-  appointmentId:result.insertedId,
-})
-
+      createdAt: new Date(),
+    });
+    if (!result.acknowledged) {
+      console.log("problem while booking appointment in db");
+      return res.status(500).send({
+        status: 500,
+        message: "appointement data not stored due to internal server error",
+        insertId: result.insertedId,
+      });
+    }
+    return res.status(200).send({
+      status: 200,
+      message: "appointment booked Successfully",
+      appointmentId: result.insertedId,
+    });
   } catch (error) {
-    console.log("error catched while booking appointment to db in authController.js line 325")
+    console.log(
+      "error catched while booking appointment to db in authController.js line 325"
+    );
     return res.status(500).send({
       status: 500,
       message: "Internal server error while booking appointment",
-      error: error.message
+      error: error.message,
     });
   }
-}
+};
+
 module.exports = {
   registerUser,
   loginUser,
@@ -383,5 +394,7 @@ module.exports = {
   roleAdmin,
   roleOPD,
   updatePatientProfile,
-  bookAppointment
+  bookAppointment,
+  logout,
+  bookAppointment,
 };

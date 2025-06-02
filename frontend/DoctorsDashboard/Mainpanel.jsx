@@ -1,8 +1,8 @@
-import React,{useState} from 'react'
+import React, { useState } from 'react';
 import Sidebar from './Sidebar';
-import Navbar from './Navbar.jsx';
-import { Outlet } from 'react-router-dom';
-export default function MainDashboard(props)  {
+import Navbar from './Navbar';
+
+const MainDashboard = () => {
   const [isSidebarOpen, setSidebarOpen] = useState(false);
 
   const toggleSidebar = () => setSidebarOpen(!isSidebarOpen);
@@ -24,6 +24,7 @@ export default function MainDashboard(props)  {
           </button>
         </div>
 
+        {/* Navbar */}
         <Navbar />
 
         {/* Dashboard Content */}
@@ -46,9 +47,10 @@ export default function MainDashboard(props)  {
               <p className="text-gray-600 mt-2">2 unread messages from patients.</p>
             </div>
           </section>
-          <Outlet/>
         </main>
       </div>
     </div>
   );
 };
+
+export default MainDashboard;

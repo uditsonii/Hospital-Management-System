@@ -6,7 +6,6 @@ import FormInput from "../components/FormInput";
 import { FaSignInAlt } from "react-icons/fa";
 import Footer from "../components/Footer";
 import IndexNavbar from "../components/IndexNavbar";
-
 const Login = () => {
   const [formData, setFormData] = useState({
     name: "",
@@ -15,20 +14,19 @@ const Login = () => {
   });
   const [error, setError] = useState("");
   const navigate = useNavigate();
-
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
     setError("");
   };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     if (!formData.name || !formData.mobile_no || !formData.password) {
       setError("Mobile number and password are required.");
       return;
-    }
-    // Basic mobile number validation (10 digits)
+    } 
+
+   // Basic mobile number validation (10 digits)
+   
     if (!/^\d{10}$/.test(formData.mobile_no)) {
       setError("Please enter a valid 10-digit mobile number.");
       return;
@@ -37,7 +35,6 @@ const Login = () => {
     // Add actual login logic here (e.g., API call)
     // alert("Login functionality placeholder. Check console for data.");
     // On successful login, redirect or update auth state
-
     // login check
     try {
       const option = {
@@ -48,18 +45,19 @@ const Login = () => {
         body: JSON.stringify(formData),
       };
       const res = await fetch("http://localhost:8000/login", option);
-
       const data = await res.json();
+      // const data = await res.text();
+      console.log('response: ', data)
       console.log("token: ", data.token);
       if (res.ok) {
-        console.log('daata ', data);
+        console.log("daata ", data);
         localStorage.setItem("token", data.token);
         localStorage.setItem("user", JSON.stringify(data.user));
-        console.log(data.user)
+        console.log(data.user);
         alert("Login Successfully");
         navigate("/dashboard");
       } else {
-        alert("Login Failed: ", data.message);
+        alert("Invalid Credentials: ", data.message);
       }
     } catch (error) {
       console.error("Error:", error);
@@ -88,13 +86,11 @@ const Login = () => {
                 </Link>
               </p>
             </div>
-
-            {error && (
+             {error& (
               <div className="mb-4 p-3 rounded-md bg-red-100 text-red-700 border border-red-300 text-sm">
                 {error}
               </div>
             )}
-
             <form onSubmit={handleSubmit} className="space-y-6">
               <FormInput
                 id="name"
@@ -147,5 +143,4 @@ const Login = () => {
     </div>
   );
 };
-
 export default Login;

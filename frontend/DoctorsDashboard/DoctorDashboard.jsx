@@ -2,8 +2,8 @@ import React from "react";
 import { Routes, Route } from "react-router-dom";
 import AuthCheck from "../components/AuthCheck";
 
-import MainDashboard from "../pages/DoctorDashboard/MainDashboard";
-import DoctorAppointments from "../pages/DoctorDashboard/DoctorAppointments";
+import MainDashboard from "../pages/DoctorsDashboard/Mainpanel";
+import DoctorAppointments from "../pages/DoctorsDashboard/DoctorAppointments";
 
 const DoctorDashboardRoutes = () => {
   return (
