@@ -1,11 +1,11 @@
 // src/pages/Login.jsx
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import PageContainer from "../components/PageContainer";
-import FormInput from "../components/FormInput";
+import PageContainer from "../src/components/PageContainer";
+import FormInput from "../src/components/FormInput";
 import { FaSignInAlt } from "react-icons/fa";
-import Footer from "../components/Footer";
-import IndexNavbar from "../components/IndexNavbar";
+import Footer from "../src/components/Footer";
+import IndexNavbar from "../src/components/IndexNavbar";
 
 const Login2 = () => {
   const [formData, setFormData] = useState({

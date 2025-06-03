@@ -1,8 +1,14 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, Navigate, useNavigate } from 'react-router-dom';
 import { BiLogOutCircle } from "react-icons/bi";
+import Logout from '../../components/Logout';
 
 const Sidebar = ({ isOpen, toggleSidebar }) => {
+  const navigate = useNavigate();
+  const handleLogout = () => {
+    console.log("hello");
+    <Logout />
+  }
   return (
     <>
       {isOpen && (
@@ -26,7 +32,9 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
             <SidebarLink icon="🧪" label="Lab Reports" to="/patient-dashboard/lab-reports" />
             <SidebarLink icon="🧾" label="Medical History" to="/patient-dashboard/medical-history" />
            <SidebarLink icon="📅" label="Book Appointment" to="/patient-dashboard/book-appointment" />
-           <SidebarLink icon={ <BiLogOutCircle />} label="Log Out" to="/" />
+           <SidebarLink icon={ <BiLogOutCircle />} label="Log Out" to="/"/>
+           {/* <button onClick={handleLogout} >Logout</button> */}
+           <Logout />
           </nav>
         </div>
       </aside>

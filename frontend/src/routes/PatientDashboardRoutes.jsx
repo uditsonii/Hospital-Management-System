@@ -12,51 +12,14 @@ import ProfilePage from "../pages/PatientDashboard/ProfilePage";
 const PatientDashboardRoutes = () => {
   return (
     <Routes>
-      <Route
-        path="/"
-        element={
-          <AuthCheck>
-            <MainDashboard />
-          </AuthCheck>
-        }
-      />
-      <Route
-        path="/lab-reports"
-        element={
-          <AuthCheck>
-            <LabReports />
-          </AuthCheck>
-        }
-      />
-      <Route
-        path="/medical-history"
-        element={
-          <AuthCheck>
-            <MedicalHistory />
-          </AuthCheck>
-        }
-      />
-      <Route
-        path="/appointments"
-        element={
-          <AuthCheck>
-            <Appointments />
-          </AuthCheck>
-        }
-      />
-      <Route
-        path="/book-appointment"
-        element={
-          <AuthCheck>
-            <BookAppointment />
-          </AuthCheck>
-        }
-      />
-      <Route path="/profile/:id" element={<AuthCheck><PatientProfile/></AuthCheck>} />
-      
-          <Route path="/profile" element={<AuthCheck><ProfilePage/></AuthCheck>}></Route>
-      
-      
+      <Route path="/" element={<MainDashboard />} />
+      <Route path="/lab-reports" element={<LabReports />} />
+      <Route path="/medical-history" element={<MedicalHistory />} />
+      <Route path="/appointments" element={<Appointments />} />
+      <Route path="/book-appointment" element={<BookAppointment />} />
+      <Route path="/profile/:id" element={<PatientProfile />} />
+
+      <Route path="/profile" element={<ProfilePage />}></Route>
     </Routes>
   );
 };

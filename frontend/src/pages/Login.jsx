@@ -21,15 +21,19 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!formData.name || !formData.mobile_no || !formData.password) {
+    if (!formData.name || !formData.password) {
       setError("Mobile number and password are required.");
       return;
     }
+    // if (!formData.name || !formData.mobile_no || !formData.password) {
+    //   setError("Mobile number and password are required.");
+    //   return;
+    // }
     // Basic mobile number validation (10 digits)
-    if (!/^\d{10}$/.test(formData.mobile_no)) {
-      setError("Please enter a valid 10-digit mobile number.");
-      return;
-    }
+    // if (!/^\d{10}$/.test(formData.mobile_no)) {
+    //   setError("Please enter a valid 10-digit mobile number.");
+    //   return;
+    // }
     console.log("Login Data:", formData);
     // Add actual login logic here (e.g., API call)
     // alert("Login functionality placeholder. Check console for data.");
@@ -85,7 +89,7 @@ const Login = () => {
                 </Link>
               </p>
             </div>
-             {error& (
+             {error&& (
               <div className="mb-4 p-3 rounded-md bg-red-100 text-red-700 border border-red-300 text-sm">
                 {error}
               </div>
