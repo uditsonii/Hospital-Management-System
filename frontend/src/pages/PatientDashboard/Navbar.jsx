@@ -47,7 +47,7 @@ const Navbar = ({ toggleSidebar }) => {
                 Profile
               </Link>
              
-                Logout
+                <Logout />
            
             </div>
           )}

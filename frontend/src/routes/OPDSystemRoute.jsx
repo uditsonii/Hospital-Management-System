@@ -6,21 +6,10 @@ import AuthCheck from "../components/AuthCheck";
 const OPDSystemRoute = () => {
   return (
     <Routes>
-      <Route
-        path="/fill-slip"
-        element={
-          <AuthCheck>
-            <OPDFillSlip />
-          </AuthCheck>
-        }
-      />
+      <Route path="/fill-slip" element={<OPDFillSlip />} />
       <Route
         path="/register-new-patient"
-        element={
-          <AuthCheck>
-            <NewPatientRegistration />
-          </AuthCheck>
-        }
+        element={<NewPatientRegistration />}
       />
     </Routes>
   );

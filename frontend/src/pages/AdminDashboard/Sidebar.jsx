@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { BiLogOutCircle } from "react-icons/bi";
 import { FaChevronDown, FaChevronUp } from "react-icons/fa";
+import { LogOut } from 'lucide-react';
+import Logout from '../../components/Logout';
 
 const Sidebar = ({ isOpen, toggleSidebar }) => {
   const [doctorMenuOpen, setDoctorMenuOpen] = useState(false);
@@ -24,7 +26,7 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
       >
         <div>
           <div className="text-xl font-bold p-4 text-center text-blue-500 border-b">
-            Admin Panel
+            <Link to={"/"}>Admin Panel</Link>
           </div>
           <nav className="flex flex-col p-4 space-y-2">
             <SidebarLink icon="🏠" label="Dashboard" to="/admin-dashboard" />
@@ -36,8 +38,8 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
               isOpen={departmentMenuOpen}
               toggleOpen={() => setDepartmentMenuOpen(!departmentMenuOpen)}
               links={[
-                { icon: "➕", label: "Add New Department", to: "/adddepartment" },
-                { icon: "📋", label: "View Departments", to: "/departments" },
+                { icon: "➕", label: "Add New Department", to: "/admin/adddepartment" },
+                { icon: "📋", label: "View Departments", to: "/admin/departments" },
               ]}
             />
             
@@ -47,8 +49,8 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
               isOpen={doctorMenuOpen}
               toggleOpen={() => setDoctorMenuOpen(!doctorMenuOpen)}
               links={[
-                { icon: "➕", label: "Add Doctor", to: "/adddoctor" },
-                { icon: "📋", label: "View Doctors", to: "/viewdoctor" },
+                { icon: "➕", label: "Add Doctor", to: "/admin/adddoctor" },
+                { icon: "📋", label: "View Doctors", to: "/admin/viewdoctor" },
                 { icon: "📅", label: "Doctor Schedule", to: "/doctordetails" },
               ]}
             />
@@ -60,12 +62,12 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
               toggleOpen={() => setAppointmentMenuOpen(!appointmentMenuOpen)}
               links={[
                 { icon: "📖", label: "All Appointments", to: "/admin/appointments" },
-                { icon: "⏳", label: "Upcoming Appointments", to: "/upcoming" },
+                { icon: "⏳", label: "Upcoming Appointments", to: "/admin/upcoming" },
               ]}
             />
 
-            <SidebarLink icon="🛏️" label="OPD" to="/opd" />
-            <SidebarLink icon="🧪" label="Lab Reports" to="/labreport" />
+            <SidebarLink icon="🛏️" label="OPD" to="/admin/opd" />
+            <SidebarLink icon="🧪" label="Lab Reports" to="/admin/labreport" />
 
             <CollapsibleMenu
               label="Reports & Analytics"
@@ -73,11 +75,12 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
               isOpen={reportMenuOpen}
               toggleOpen={() => setReportMenuOpen(!reportMenuOpen)}
               links={[
-                { icon: "📊", label: "Doctor-Earning", to: "/doctor-earning" },
+                { icon: "📊", label: "Doctor-Earning", to: "/admin/doctor-earning" },
               ]}
             />
 
-            <SidebarLink icon={<BiLogOutCircle />} label="Log Out" to="/" />
+            {/* <SidebarLink icon={<BiLogOutCircle />} label="Log Out" to="/" /> */}
+            <Logout />
           </nav>
         </div>
       </aside>
