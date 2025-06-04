@@ -6,6 +6,7 @@ const routes = require("./routes/checkJWT.js");
 const authRoute = require("./routes/authRoute.js");
 const opdRoutes = require("./routes/opdRoute.js");
 const doctorRoutes = require("./routes/doctorRoutes.js");
+const router = require("./routes/departments.js");
 
 const http = require("http");
 const {Server}=require("socket.io")
@@ -35,6 +36,7 @@ app.use("/", authRoute);
 // app.use("/", verifyToken, routes);
 app.use("/", routes);
 app.use("/api/doctor", doctorRoutes); // doctor panel API
+app.use("/api/departments", router); // department management API
 app.get("/test", (req, res) => res.send("Hospital Management"));
 
 initSocket(io)

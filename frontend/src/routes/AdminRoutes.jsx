@@ -26,8 +26,11 @@ const AdminRoutes = () => {
       <Route path="/upcoming" element={<UpcomingAppointments />} />
       <Route path="/adddepartment" element={<AddDepartment />} />
       <Route path="/opd" element={<Opd />} />
-      <Route path="labreport" element={<LabReports />} />
+      <Route path="/labreport" element={<LabReports />} />
       <Route path="/doctor-earning" element={<DoctorEarning />} />
+
+      {/* Optional fallback route */}
+      <Route path="*" element={<MainDashboard />} />
     </Routes>
   );
 };
