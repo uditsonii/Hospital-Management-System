@@ -21,22 +21,37 @@ const AddDepartment = () => {
     }));
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    // Replace this with actual backend call
-    console.log("New Department Data:", formData);
-    setMessage("Department added successfully!");
+  const handleSubmit = async (e) => {
+  e.preventDefault();
+
+  try {
+    const response = await fetch("http://localhost:8000/api/departments", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(formData),
+    });
+
+    if (!response.ok) {
+      // Extract error message from response
+      const errorData = await response.json();
+      throw new Error(errorData.error || "Failed to add department");
+    }
+
+    setMessage("✅ Department added successfully!");
     setFormData({ name: "", head: "", description: "" });
-  };
+  } catch (error) {
+    console.error(error);
+    setMessage(`❌ Failed to add department: ${error.message}`);
+  }
+};
 
   return (
     <div className="min-h-screen flex bg-blue-50">
-      {/* Sidebar */}
       <Sidebar isOpen={isSidebarOpen} toggleSidebar={toggleSidebar} />
 
-      {/* Main content */}
       <div className="flex-1 md:ml-64 flex flex-col min-h-screen">
-        {/* Navbar */}
         <Navbar toggleSidebar={toggleSidebar} />
 
         <main className="flex-grow bg-gradient-to-br from-blue-100 to-white p-8">
@@ -53,10 +68,7 @@ const AddDepartment = () => {
 
             <form onSubmit={handleSubmit} className="space-y-7">
               <div>
-                <label
-                  htmlFor="name"
-                  className="block text-blue-900 font-semibold mb-2"
-                >
+                <label htmlFor="name" className="block text-blue-900 font-semibold mb-2">
                   Department Name
                 </label>
                 <input
@@ -72,10 +84,7 @@ const AddDepartment = () => {
               </div>
 
               <div>
-                <label
-                  htmlFor="head"
-                  className="block text-blue-900 font-semibold mb-2"
-                >
+                <label htmlFor="head" className="block text-blue-900 font-semibold mb-2">
                   Head Doctor
                 </label>
                 <input
@@ -91,10 +100,7 @@ const AddDepartment = () => {
               </div>
 
               <div>
-                <label
-                  htmlFor="description"
-                  className="block text-blue-900 font-semibold mb-2"
-                >
+                <label htmlFor="description" className="block text-blue-900 font-semibold mb-2">
                   Department Description
                 </label>
                 <textarea

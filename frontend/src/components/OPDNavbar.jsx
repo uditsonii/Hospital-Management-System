@@ -8,9 +8,6 @@ const OPDNavbar = ({ toggleSidebar }) => {
   const userId = user._id || '';
   const userName = user.name || 'OPD User';
   const userEmail = user.email || 'user@opdclinic.com';
-
- 
-
   return (
     <header className="bg-gradient-to-r from-blue-50 via-blue-100 to-blue-50 shadow-md sticky top-0 z-50 border-b border-blue-200">
       <div className="max-w-screen-xl mx-auto px-6 py-3 flex items-center justify-between">
@@ -69,7 +66,6 @@ const OPDNavbar = ({ toggleSidebar }) => {
                 className="px-4 py-3 text-sm text-red-600 hover:bg-red-50 cursor-pointer flex items-center gap-2 transition rounded-b-lg"
                 onClick={() => {
                   setDropdownOpen(false);
-                  // Add logout logic if needed
                 }}
               >
                 🔓 <Logout />
