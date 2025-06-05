@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import Sidebar from './Sidebar';
 import { Menu } from 'lucide-react';
-
+import Navbar from './Navbar';
 const labReports = [
   {
     reportName: 'Complete Blood Count (CBC)',
