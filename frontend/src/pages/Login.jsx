@@ -6,6 +6,8 @@ import FormInput from "../components/FormInput";
 import { FaSignInAlt } from "react-icons/fa";
 import Footer from "../components/Footer";
 import IndexNavbar from "../components/IndexNavbar";
+import Swal from "sweetalert2"; // 
+
 const Login = () => {
   const [formData, setFormData] = useState({
     name: "",
@@ -14,10 +16,12 @@ const Login = () => {
   });
   const [error, setError] = useState("");
   const navigate = useNavigate();
+
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
     setError("");
   };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -25,20 +29,7 @@ const Login = () => {
       setError("Mobile number and password are required.");
       return;
     }
-    // if (!formData.name || !formData.mobile_no || !formData.password) {
-    //   setError("Mobile number and password are required.");
-    //   return;
-    // }
-    // Basic mobile number validation (10 digits)
-    // if (!/^\d{10}$/.test(formData.mobile_no)) {
-    //   setError("Please enter a valid 10-digit mobile number.");
-    //   return;
-    // }
-    console.log("Login Data:", formData);
-    // Add actual login logic here (e.g., API call)
-    // alert("Login functionality placeholder. Check console for data.");
-    // On successful login, redirect or update auth state
-    // login check
+
     try {
       const option = {
         method: "POST",
@@ -47,24 +38,42 @@ const Login = () => {
         },
         body: JSON.stringify(formData),
       };
+
       const res = await fetch("http://localhost:8000/login", option);
       const data = await res.json();
-      // const data = await res.text();
-      console.log('response: ', data)
-      console.log("token: ", data.token);
+
       if (res.ok) {
-        console.log("daata ", data);
         localStorage.setItem("token", data.token);
         localStorage.setItem("user", JSON.stringify(data.user));
-        console.log(data.user);
-        alert("Login Successfully");
-        navigate("/dashboard");
+
+        // ✅ Success modal with progress bar
+        Swal.fire({
+          title: "Login Successful!",
+          icon: "success",
+          timer: 1000,
+          showConfirmButton: false,
+          timerProgressBar: true,
+          willClose: () => {
+            navigate("/dashboard");
+          },
+        });
       } else {
-        alert("Invalid Credentials: ", data.message);
+        // ❌ Error modal
+        Swal.fire({
+          title: "Invalid Credentials",
+          text: data.message || "Please try again.",
+          icon: "error",
+          confirmButtonText: "Retry",
+        });
       }
     } catch (error) {
       console.error("Error:", error);
-      alert("Something went wrong.");
+      Swal.fire({
+        title: "Oops!",
+        text: "Something went wrong. Please try again later.",
+        icon: "error",
+        confirmButtonText: "OK",
+      });
     }
   };
 
@@ -89,11 +98,13 @@ const Login = () => {
                 </Link>
               </p>
             </div>
-             {error&& (
+
+            {error && (
               <div className="mb-4 p-3 rounded-md bg-red-100 text-red-700 border border-red-300 text-sm">
                 {error}
               </div>
             )}
+
             <form onSubmit={handleSubmit} className="space-y-6">
               <FormInput
                 id="name"
@@ -121,6 +132,7 @@ const Login = () => {
                 placeholder="Your Password"
                 required
               />
+
               <div>
                 <button
                   type="submit"
@@ -129,6 +141,7 @@ const Login = () => {
                   Sign In
                 </button>
               </div>
+
               <div className="text-right">
                 <Link
                   to="/forgot-password"
@@ -145,4 +158,5 @@ const Login = () => {
     </div>
   );
 };
+
 export default Login;

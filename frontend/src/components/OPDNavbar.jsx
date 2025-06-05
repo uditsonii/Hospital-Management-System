@@ -1,195 +1,89 @@
-import React, { useState } from "react";
-import Logout from "./Logout";
+import React, { useState } from 'react';
+import Logout from './Logout';
+import { Link } from 'react-router-dom';
 
-const OPDNavbar = () => {
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [profileMenuOpen, setProfileMenuOpen] = useState(false);
-
+const OPDNavbar = ({ toggleSidebar }) => {
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+  const user = JSON.parse(localStorage.getItem('user')) || {};
+  const userId = user._id || '';
+  const userName = user.name || 'OPD User';
+  const userEmail = user.email || 'user@opdclinic.com';
   return (
-    <>
-      {/* <nav className="bg-teal-800 text-white">
-      <div className="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
-        <div className="relative flex h-16 items-center justify-between">
-          {/* Mobile menu button 
-          <div className="absolute inset-y-0 left-0 flex items-center sm:hidden">
-            <button
-              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="inline-flex items-center justify-center rounded-md p-2 text-gray-400 hover:bg-gray-700 hover:text-white focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white"
-              aria-expanded={mobileMenuOpen}
+    <header className="bg-gradient-to-r from-blue-50 via-blue-100 to-blue-50 shadow-md sticky top-0 z-50 border-b border-blue-200">
+      <div className="max-w-screen-xl mx-auto px-6 py-3 flex items-center justify-between">
+        
+        {/* Left Section: OPD Branding + Sidebar Toggle */}
+        <div className="flex items-center gap-4">
+          <button
+            onClick={toggleSidebar}
+            className="md:hidden bg-blue-200 hover:bg-blue-300 text-blue-700 px-3 py-2 rounded-full shadow-sm transition focus:outline-none focus:ring-2 focus:ring-blue-400"
+            aria-label="Toggle Sidebar"
+          >
+            ☰
+          </button>
+          <h1 className="text-2xl font-extrabold text-blue-700 tracking-wide select-none">
+            OPD System
+          </h1>
+        </div>
+
+        {/* Center Section: Search bar (only on md+) */}
+        <div className="flex-1 mx-6 hidden md:block">
+          <input
+            type="text"
+            placeholder="Search patients, doctors..."
+            className="w-full px-5 py-2 text-gray-700 text-sm bg-white border border-blue-200 rounded-full shadow-sm placeholder-blue-400 focus:outline-none focus:ring-2 focus:ring-blue-300 focus:border-blue-300 transition"
+          />
+        </div>
+
+        {/* Right Section: Profile Dropdown */}
+        <div className="relative">
+          <img
+            src="https://tse2.mm.bing.net/th?id=OIP.30Yq02E10j8tn6kKBO1qdQHaHa&pid=Api&P=0&h=180"
+            alt="Profile"
+            className="w-10 h-10 rounded-full border-2 border-white cursor-pointer shadow-md hover:ring-4 hover:ring-blue-300 transition"
+            onClick={() => setDropdownOpen(!dropdownOpen)}
+          />
+
+          {dropdownOpen && (
+            <div
+              className="absolute right-0 mt-2 w-56 bg-white rounded-lg shadow-lg border border-blue-200 z-50"
+              onMouseLeave={() => setDropdownOpen(false)}
             >
-              <span className="sr-only">Open main menu</span>
-              {mobileMenuOpen ? (
-                <svg className="block h-6 w-6" viewBox="0 0 24 24" stroke="currentColor" fill="none">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M6 18L18 6M6 6l12 12" />
-                </svg>
-              ) : (
-                <svg className="block h-6 w-6" viewBox="0 0 24 24" stroke="currentColor" fill="none">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M4 6h16M4 12h16M4 18h16" />
-                </svg>
-              )}
-            </button>
-          </div>
-
-          {/* Logo and nav 
-          <div className="flex flex-1 items-center justify-center sm:justify-start">
-            <div className="flex shrink-0 items-center">
-              <img
-                className="h-8 w-auto"
-                src="https://tailwindcss.com/_next/static/media/mark.1b3e5841.svg"
-                alt="Logo"
-              />
-            </div>
-            <div className="hidden sm:ml-6 sm:flex sm:space-x-4">
-              <a href="#" className="bg-gray-900 text-white px-3 py-2 rounded-md text-sm font-medium">Dashboard</a>
-            </div>
-          </div>
-
-          {/* Profile section 
-          <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:pr-0">
-            {/* Profile dropdown 
-            <div className="relative ml-3">
-              <div>
-                <button
-                  onClick={() => setProfileMenuOpen(!profileMenuOpen)}
-                  className="flex rounded-full bg-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-white"
-                >
-                  <img
-                    className="h-8 w-8 rounded-full"
-                    src="https://i.pravatar.cc/300"
-                    alt="User"
-                  />
-                </button>
+              <div className="px-4 py-3 border-b border-blue-100 bg-blue-50 rounded-t-lg">
+                <p className="text-sm font-semibold text-blue-800 truncate">{userName}</p>
+                <p className="text-xs text-blue-500 truncate">{userEmail}</p>
               </div>
 
-              {/* Dropdown menu 
-              {profileMenuOpen && (
-                <div className="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white text-gray-800 shadow-lg ring-1 ring-black ring-opacity-5">
-                  <a href="#" className="block px-4 py-2 text-sm hover:bg-gray-100">Your Profile</a>
-                  <a href="#" className="block px-4 py-2 text-sm hover:bg-gray-100">Settings</a>
-                  <a href="#" className="block px-4 py-2 text-sm hover:bg-gray-100">Sign out</a>
-                </div>
-              )}
+              <Link
+                to={`/profile/${userId}`}
+                className="block px-4 py-3 text-sm text-blue-700 hover:bg-blue-100 transition"
+                onClick={() => setDropdownOpen(false)}
+              >
+                👤 Profile
+              </Link>
+
+              <div
+                className="px-4 py-3 text-sm text-red-600 hover:bg-red-50 cursor-pointer flex items-center gap-2 transition rounded-b-lg"
+                onClick={() => {
+                  setDropdownOpen(false);
+                }}
+              >
+                🔓 <Logout />
+              </div>
             </div>
-          </div>
+          )}
         </div>
       </div>
 
-      {/* Mobile Menu 
-      {mobileMenuOpen && (
-        <div className="sm:hidden" id="mobile-menu">
-          <div className="space-y-1 px-2 pb-3 pt-2">
-            <a href="#" className="block bg-gray-900 text-white px-3 py-2 rounded-md text-base font-medium">Dashboard</a>
-          </div>
-        </div>
-      )}
-    </nav>
- */}
-
-      <nav className="bg-white border-b border-gray-200 dark:bg-gray-900 dark:border-gray-700">
-        <div className="max-w-screen-xl mx-auto px-4 py-3 flex items-center justify-between">
-          {/* <!-- Logo --> */}
-          <a href="#" className="flex items-center space-x-2 rtl:space-x-reverse">
-            <span className="text-2xl font-semibold whitespace-nowrap dark:text-white">
-              Logo
-            </span>
-          </a>
-
-          {/* <!-- Search Bar (visible on md and up) --> */}
-          <div className="hidden md:flex flex-1 justify-center px-4">
-            <input
-              type="text"
-              placeholder="Search..."
-              className="w-full max-w-md px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring focus:ring-blue-500 dark:bg-gray-800 dark:border-gray-600 dark:text-white"
-            />
-          </div>
-
-          {/* <!-- Right Side (search icon on small + profile dropdown) --> */}
-          <div className="flex items-center space-x-4">
-            {/* <!-- Search Icon (small screens only) --> */}
-            <div className="md:hidden">
-              <button className="p-2 rounded-full text-gray-500 hover:bg-transparent dark:text-gray-400 dark:hover:bg-transparent">
-                <svg
-                  className="w-5 h-5"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="2"
-                  viewBox="0 0 24 24"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    d="M21 21l-4.35-4.35m0 0A7.5 7.5 0 1110.5 3a7.5 7.5 0 016.15 13.65z"
-                  ></path>
-                </svg>
-              </button>
-            </div>
-
-            {/* <!-- Profile with dropdown on hover --> */}
-            <div className="relative group">
-              <button
-                type="button"
-                className="flex text-sm bg-gray-800 rounded-full focus:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600"
-              >
-                <span className="sr-only">Open user menu</span>
-                <img
-                  className="w-8 h-8 rounded-full"
-                  src="/docs/images/people/profile-picture-3.jpg"
-                  alt="User photo"
-                />
-              </button>
-
-              {/* <!-- Dropdown menu (shown on hover) --> */}
-              <div className="absolute right-0 z-50 hidden group-hover:block mt-2 w-44 text-base list-none bg-white divide-y divide-gray-100 rounded-lg shadow-sm dark:bg-gray-700 dark:divide-gray-600">
-                <div className="px-4 py-3">
-                  <span className="block text-sm text-gray-900 dark:text-white">
-                    Bonnie Green
-                  </span>
-                  <span className="block text-sm text-gray-500 truncate dark:text-gray-400">
-                    name@flowbite.com
-                  </span>
-                </div>
-                <ul className="py-2">
-                  <li>
-                    <a
-                      href="#"
-                      className="block px-4 py-2 text-sm dark:text-gray-200"
-                    >
-                      Dashboard
-                    </a>
-                  </li>
-                  <li>
-                    <a
-                      href="#"
-                      className="block px-4 py-2 text-sm dark:text-gray-200"
-                    >
-                      Settings
-                    </a>
-                  </li>
-                  <li>
-                    <a
-                      href="#"
-                      className="block px-4 py-2 text-sm dark:text-gray-200"
-                    >
-                      Earnings
-                    </a>
-                  </li>
-                  <li>
-                    {/* <a
-                      href="#"
-                      className="block px-4 py-2 text-sm dark:text-gray-200"
-                    >
-                      Sign out
-                    </a> */}
-                    <Logout />
-                  </li>
-                </ul>
-              </div>
-            </div>
-          </div>
-        </div>
-      </nav>
-    </>
+      {/* Mobile Search Bar */}
+      <div className="md:hidden px-6 pb-4 bg-blue-50">
+        <input
+          type="text"
+          placeholder="Search..."
+          className="w-full px-4 py-2 text-gray-700 text-sm bg-white rounded-full placeholder-blue-400 focus:outline-none focus:ring-2 focus:ring-blue-300 shadow-sm"
+        />
+      </div>
+    </header>
   );
 };
 
