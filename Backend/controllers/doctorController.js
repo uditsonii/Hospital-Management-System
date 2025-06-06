@@ -45,7 +45,7 @@ const getMyPatients = async (req, res) => {
     const visits = await db.collection("visits").find({ doctor: doctorName }).toArray();
     const patientNames = [...new Set(visits.map(v => v.name))];
 
-    const patients = await db.collection("register").find({
+    const patients = await db.collection("patient-registration").find({
       name: { $in: patientNames },
       role: "patient"
     }).toArray();
@@ -80,7 +80,7 @@ const addDiagnosis = async (req, res) => {
 const getDoctorProfile = async (req, res) => {
   try {
     const db = getDB();
-    const doctor = await db.collection("register").findOne({ _id: new ObjectId(req.user._id) });
+    const doctor = await db.collection("management-registration").findOne({ _id: new ObjectId(req.user._id) });
 
     if (!doctor || doctor.role !== "doctor") {
       return res.status(404).json({ message: "Doctor not found" });

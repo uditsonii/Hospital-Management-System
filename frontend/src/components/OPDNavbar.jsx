@@ -1,17 +1,16 @@
-import React, { useState } from 'react';
-import Logout from './Logout';
-import { Link } from 'react-router-dom';
+import React, { useState } from "react";
+import Logout from "./Logout";
+import { Link } from "react-router-dom";
 
 const OPDNavbar = ({ toggleSidebar }) => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
-  const user = JSON.parse(localStorage.getItem('user')) || {};
-  const userId = user._id || '';
-  const userName = user.name || 'OPD User';
-  const userEmail = user.email || 'user@opdclinic.com';
+  const user = JSON.parse(localStorage.getItem("user")) || {};
+  const userId = user._id || "";
+  const userName = user.name || "OPD User";
+  const userEmail = user.email || "user@opdclinic.com";
   return (
     <header className="bg-gradient-to-r from-blue-50 via-blue-100 to-blue-50 shadow-md sticky top-0 z-50 border-b border-blue-200">
       <div className="max-w-screen-xl mx-auto px-6 py-3 flex items-center justify-between">
-        
         {/* Left Section: OPD Branding + Sidebar Toggle */}
         <div className="flex items-center gap-4">
           <button
@@ -50,7 +49,9 @@ const OPDNavbar = ({ toggleSidebar }) => {
               onMouseLeave={() => setDropdownOpen(false)}
             >
               <div className="px-4 py-3 border-b border-blue-100 bg-blue-50 rounded-t-lg">
-                <p className="text-sm font-semibold text-blue-800 truncate">{userName}</p>
+                <p className="text-sm font-semibold text-blue-800 truncate">
+                  {userName}
+                </p>
                 <p className="text-xs text-blue-500 truncate">{userEmail}</p>
               </div>
 
@@ -62,12 +63,10 @@ const OPDNavbar = ({ toggleSidebar }) => {
                 👤 Profile
               </Link>
 
-              <div
-                className="px-4 py-3 text-sm text-red-600 hover:bg-red-50 cursor-pointer flex items-center gap-2 transition rounded-b-lg"
-                onClick={() => {
+              <div className="px-4 py-3 text-sm text-red-600 hover:bg-red-50 cursor-pointer flex items-center gap-2 transition rounded-b-lg">
+                {/* onClick={() => {
                   setDropdownOpen(false);
-                }}
-              >
+                }} */}
                 🔓 <Logout />
               </div>
             </div>

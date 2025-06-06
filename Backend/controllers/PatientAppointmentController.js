@@ -1,6 +1,6 @@
 const { getDB } = require("../models/db");
 const bcrypt = require("bcrypt");
-const {emitNewAppointment}=require("../socket/index.js");
+const { emitNewAppointment } = require("../socket/index.js");
 const { ObjectId } = require("mongodb");
 const db = () => getDB();
 
@@ -30,7 +30,7 @@ const NewPatient = async (req, res) => {
   }
   try {
     // Check for Existing Patient
-    const existingPatient = await db().collection("register").findOne({
+    const existingPatient = await db().collection("patient-registration").findOne({
       name: pData.name,
       mobile_no: pData.mobile_no,
       gender: pData.gender,
@@ -72,7 +72,7 @@ const NewPatient = async (req, res) => {
 
       // if (pData.bloodGroup) patient.bloodGroup = pData.bloodGroup;
 
-      const result = await db().collection("register").insertOne(patient);
+      const result = await db().collection("patient-registration").insertOne(patient);
 
       return res.status(200).json({
         success: true,
@@ -96,7 +96,7 @@ const SendDetailThroughPID = async (req, res) => {
   //  console.log("PID : ",pid);
 
   try {
-    const patient = await db().collection("register").findOne({ pid });
+    const patient = await db().collection("patient-registration").findOne({ pid });
     if (!patient) {
       return res.status(404).json({ message: "Patient not found" });
     }
@@ -121,7 +121,7 @@ const OPDRegister = async (req, res) => {
 
   try {
     // find patient by pid
-    const patient = await db().collection("register").findOne({ pid });
+    const patient = await db().collection("patient-registration").findOne({ pid });
     if (!patient) {
       return res.status(404).json({ message: "Patient not found with pid" });
     }
@@ -156,8 +156,8 @@ const OPDRegister = async (req, res) => {
 
 const bookAppointmentFromUser = async (req, res) => {
   try {
-    const { name,pid, doctor, date, purpose,time } = req.body;
-    if (!name ||!pid || !doctor || !date || !purpose ||!time) {
+    const { name, pid, doctor, date, purpose, time } = req.body;
+    if (!name || !pid || !doctor || !date || !purpose || !time) {
       return res.status(400).send({
         status: 400,
         message: "Please provide all information to proceed ",
@@ -165,33 +165,39 @@ const bookAppointmentFromUser = async (req, res) => {
     }
     let db = await getDB();
     let collection = db.collection("appointments");
-let result = await collection.insertOne({
-  name,
-  pid,
-  doctor,
-  date,
-  time,
-  purpose,
-  status: "pending",
-  createdAt: new Date(),
-});
+    let result = await collection.insertOne({
+      name,
+      pid,
+      doctor,
+      date,
+      time,
+      purpose,
+      status: "pending",
+      createdAt: new Date(),
+    });
 
-if (!result.acknowledged) {
-  return res.status(500).send({status:500,message:"problem while booking appointement from user"});
-}
+    if (!result.acknowledged) {
+      return res
+        .status(500)
+        .send({
+          status: 500,
+          message: "problem while booking appointement from user",
+        });
+    }
 
-// Fetch the actual saved appointment
-const savedAppointment = await collection.findOne({ _id: result.insertedId });
+    // Fetch the actual saved appointment
+    const savedAppointment = await collection.findOne({
+      _id: result.insertedId,
+    });
 
-// Emit the real saved DB document
-emitNewAppointment(savedAppointment);
+    // Emit the real saved DB document
+    emitNewAppointment(savedAppointment);
 
-return res.status(200).send({
-  status: 200,
-  message: "appointment booked successfully",
-  appointmentId: result.insertedId,
-});
-
+    return res.status(200).send({
+      status: 200,
+      message: "appointment booked successfully",
+      appointmentId: result.insertedId,
+    });
   } catch (error) {
     console.log(
       "error catched while booking appointment to db in PatientAppointmentController.js"
@@ -208,13 +214,34 @@ const getPendingRequests = async (req, res) => {
     let db = await getDB();
     let collection = db.collection("appointments");
     const result = await collection.find({ status: "pending" }).toArray();
-    if (!result) res.status(401).json({ status: 401, message: "problem while fetching pending requests" })
+    if (!result)
+      res
+        .status(401)
+        .json({
+          status: 401,
+          message: "problem while fetching pending requests",
+        });
 
-    res.status(200).json({ status: 200, message: "successfully fetched pending requests", data: result })
-
+    res
+      .status(200)
+      .json({
+        status: 200,
+        message: "successfully fetched pending requests",
+        data: result,
+      });
   } catch (error) {
-    res.status(500).json({ status: 500, message: "Internal server error while fetching pending requests" })
+    res
+      .status(500)
+      .json({
+        status: 500,
+        message: "Internal server error while fetching pending requests",
+      });
   }
-
-}
-module.exports = { NewPatient, OPDRegister, SendDetailThroughPID, bookAppointmentFromUser, getPendingRequests };
+};
+module.exports = {
+  NewPatient,
+  OPDRegister,
+  SendDetailThroughPID,
+  bookAppointmentFromUser,
+  getPendingRequests,
+};
