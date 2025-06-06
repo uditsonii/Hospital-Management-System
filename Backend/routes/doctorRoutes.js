@@ -2,17 +2,17 @@ const express = require("express");
 const doctorRoutes = express.Router();
 const doctorController = require("../controllers/doctorController");
 const { createDoctor, getAllDoctor, getDoctorById, updateDoctor, deleteDoctor } = require("../controllers/admincontroller/DoctorController");
-// const authMiddleware = require("../middlewares/auth"); // Your JWT middleware
+const authMiddleware = require("../middleware/authMiddleware"); // Your JWT middleware
 
-// Protect all doctor routes
-doctorRoutes.use(verifyToken);
+// Protected Doctor Routes
+doctorRoutes.use(authMiddleware); // Ensure all are JWT-protected
 
 doctorRoutes.get("/appointments", doctorController.getDoctorAppointments);
 doctorRoutes.patch("/appointments/:id/status", doctorController.updateAppointmentStatus);
 doctorRoutes.get("/patients", doctorController.getMyPatients);
 doctorRoutes.post("/diagnosis", doctorController.addDiagnosis);
 doctorRoutes.get("/profile", doctorController.getDoctorProfile);
-
+doctorRoutes.put("/profile", doctorController.updateDoctorProfile);
 // crud
 doctorRoutes.post("/", createDoctor)  //create
 doctorRoutes.get("/", getAllDoctor)  //create

@@ -32,7 +32,7 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
             <SidebarLink icon="📝" label="Prescriptions" to="/prescriptions" />
             <SidebarLink icon="🧪" label="Lab Reports" to="/lab-reports" />
             <SidebarLink icon="📊" label="Analytics" to="/analytics" />
-            <SidebarLink icon="👤" label="Profile" to="/profile" />
+            <SidebarLink icon="👤" label="Profile" to="/doctor-dashboard/profile" />
              <hr className="my-2 border-t border-gray-300" />
 
             {/* ✅ Styled logout like sidebar link with hover */}
