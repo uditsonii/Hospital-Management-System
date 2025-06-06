@@ -1,10 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { Swiper, SwiperSlide } from "swiper/react";
-import { Navigation, Pagination, Autoplay } from "swiper/modules";
-import "swiper/css";
-import "swiper/css/navigation";
-import "swiper/css/pagination";
+import { motion } from "framer-motion";
 import {
   FaAmbulance,
   FaUserMd,
@@ -57,6 +53,29 @@ const services = [
   },
 ];
 
+// Animation Variants
+const containerVariants = {
+  hidden: { opacity: 0, y: 30 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: {
+      staggerChildren: 0.15,
+      duration: 0.5,
+      ease: "easeOut",
+    },
+  },
+};
+
+const cardVariants = {
+  hidden: { opacity: 0, y: 30 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.5, ease: "easeOut" },
+  },
+};
+
 const Home = () => {
   const [showEmergency, setShowEmergency] = useState(false);
 
@@ -80,10 +99,9 @@ const Home = () => {
           style={{
             backgroundImage:
               "url('https://www.zmartbuild.com/wp-content/uploads/2021/10/38054.jpg')",
-          }} // Replace with your preferred image
+          }}
         >
           <div className="absolute inset-0 bg-black bg-opacity-60 z-0"></div>{" "}
-          {/* Dark overlay for contrast */}
           <div className="relative z-10 max-w-6xl mx-auto px-4">
             <h1 className="text-5xl sm:text-6xl font-extrabold mb-4">
               Welcome to{" "}
@@ -162,13 +180,27 @@ const Home = () => {
             </div>
           </div>
         )}
-        <section className="py-10 bg-gray-100 animate-fadeIn">
+
+        <motion.section
+          className="py-10 bg-gray-100"
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.8 }}
+        >
           <h2 className="text-5xl font-extrabold text-center mb-16 text-transparent bg-clip-text bg-gradient-to-r from-sky-600 to-blue-400 drop-shadow-xl">
             Our Specialists
           </h2>
           <Doctors />
-        </section>
-        <section className="py-20 bg-gray-100 animate-slideRight">
+        </motion.section>
+
+        <motion.section
+          className="py-20 bg-gray-100"
+          initial={{ opacity: 0, x: 100 }}
+          whileInView={{ opacity: 1, x: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.8, ease: "easeOut" }}
+        >
           <div className="max-w-7xl mx-auto px-4">
             <h2 className="text-5xl  font-extrabold text-center mb-16 text-transparent bg-clip-text bg-gradient-to-r from-sky-600 to-blue-400 drop-shadow-xl">
               Our Facilities
@@ -234,44 +266,49 @@ const Home = () => {
                       <h3 className="text-xl font-semibold text-blue-700 mb-2">
                         {facility.backTitle}
                       </h3>
-                      <p className="text-gray-600 text-sm">
-                        {facility.backText}
-                      </p>
+                      <p className="text-gray-600 text-sm">{facility.backText}</p>
                     </div>
                   </div>
                 </div>
               ))}
             </div>
           </div>
-        </section>
+        </motion.section>
 
-        <section className="py-20 bg-white animate-slideUp">
+        <motion.section
+          className="py-20 bg-white"
+          variants={containerVariants}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.3 }}
+        >
           <div className="max-w-7xl mx-auto px-4">
             <h2 className="text-5xl font-extrabold text-center mb-16 text-transparent bg-clip-text bg-gradient-to-r from-sky-600 to-blue-400 drop-shadow-xl">
               Our Services
             </h2>
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-10">
+            <motion.div className="grid md:grid-cols-2 lg:grid-cols-3 gap-10">
               {services.map((service, idx) => (
-                <div
+                <motion.div
                   key={idx}
-                  className={`p-8 rounded-2xl bg-gradient-to-br from-sky-400 to-sky-600 text-white shadow-xl hover:scale-105 transform transition duration-300 animate-zoomIn delay-[${
-                    idx * 100
-                  }ms]`}
+                  className="p-8 rounded-2xl bg-gradient-to-br from-sky-400 to-sky-600 text-white shadow-xl hover:scale-105 transform transition duration-300 cursor-pointer"
+                  variants={cardVariants}
                 >
                   <div className="mb-5">{service.icon}</div>
-                  <h3 className="text-2xl font-semibold mb-3">
-                    {service.title}
-                  </h3>
-                  <p className="text-base leading-relaxed">
-                    {service.description}
-                  </p>
-                </div>
+                  <h3 className="text-2xl font-semibold mb-3">{service.title}</h3>
+                  <p className="text-base leading-relaxed">{service.description}</p>
+                </motion.div>
               ))}
-            </div>
+            </motion.div>
           </div>
-        </section>
+        </motion.section>
 
-        <section className="py-20 bg-gray-50 animate-fadeIn">
+        <motion.section
+          className="py-20 bg-gray-50"
+          initial={{ opacity: 0, y: 50 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.3 }}
+          transition={{ duration: 0.8 }}
+        >
           <div className="max-w-7xl mx-auto px-6 grid lg:grid-cols-2 gap-12 items-center">
             <div className="flex flex-col items-center">
               <img
@@ -285,9 +322,7 @@ const Home = () => {
               <p className="text-gray-600 text-sm">Director</p>
             </div>
             <div>
-              <h2 className="text-4xl font-bold text-blue-600 mb-8">
-                We Value the Life
-              </h2>
+              <h2 className="text-4xl font-bold text-blue-600 mb-8">We Value the Life</h2>
               <div className="space-y-6">
                 <div className="flex items-start gap-4">
                   <div className="bg-blue-500 text-white p-3 rounded-full text-xl">
@@ -308,8 +343,7 @@ const Home = () => {
                   <div>
                     <h4 className="font-bold text-lg">Quality & Affordable</h4>
                     <p className="text-gray-700 text-sm">
-                      Quality care is the key component of the right to
-                      health...
+                      Quality care is the key component of the right to health...
                     </p>
                   </div>
                 </div>
@@ -318,31 +352,41 @@ const Home = () => {
                     <FaHospitalAlt />
                   </div>
                   <div>
-                    <h4 className="font-bold text-lg">
-                      All Services under One Roof
-                    </h4>
+                    <h4 className="font-bold text-lg">All Services under One Roof</h4>
                     <p className="text-gray-700 text-sm">
-                      We bring unparalleled medical services and diagnostic
-                      facilities...
+                      We bring unparalleled medical services and diagnostic facilities...
                     </p>
                   </div>
                 </div>
               </div>
             </div>
           </div>
-        </section>
-        <section className="py-20 bg-white animate-slideUp">
+        </motion.section>
+
+        <motion.section
+          className="py-20 bg-white"
+          initial={{ opacity: 0, y: 40 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.7 }}
+        >
           <div className="max-w-7xl mx-auto px-4">
             <h2 className="text-5xl font-extrabold text-center mb-16 text-transparent bg-clip-text bg-gradient-to-r from-sky-600 to-blue-400 drop-shadow-xl">
               Our Media
             </h2>
             <HorizontalVideoScroll />
           </div>
-        </section>
+        </motion.section>
 
-        <div className="animate-fadeIn">
+        <motion.div
+          className="animate-fadeIn"
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.8 }}
+        >
           <TPAPartners />
-        </div>
+        </motion.div>
       </main>
       <Footer />
     </div>

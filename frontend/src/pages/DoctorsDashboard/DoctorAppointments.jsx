@@ -6,25 +6,35 @@ const DoctorAppointments = () => {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    const fetchAppointments = async () => {
-      try {
-        setLoading(true);
+  const fetchAppointments = async () => {
+    try {
+      setLoading(true);
+      const token = localStorage.getItem("token");
 
-        const res = await fetch("http://localhost:8000/appointments");
-        const data = await res.json();
+      const res = await fetch("http://localhost:8000/api/doctor/appointments", {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
 
-        setAppointments(data.appointments || []);
-        setError(null);
-      } catch (err) {
-        console.error(err);
-        setError("Failed to load appointments");
-      } finally {
-        setLoading(false);
+      if (!res.ok) {
+        throw new Error(`HTTP error! status: ${res.status}`);
       }
-    };
 
-    fetchAppointments();
-  }, []);
+      const data = await res.json();
+      setAppointments(data.appointments || []);
+      setError(null);
+    } catch (err) {
+      console.error(err);
+      setError("Failed to load appointments");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  fetchAppointments();
+}, []);
 
   if (loading)
     return (

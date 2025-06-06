@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from "react";
 import Sidebar from "./Sidebar";
 import Navbar from "./Navbar";
-import { FaStethoscope, FaUserMd } from "react-icons/fa";
+import { FaStethoscope, FaUserMd, FaEdit, FaTrash } from "react-icons/fa";
+import Swal from "sweetalert2";
+import { motion } from "framer-motion";
 
 const ViewDepartment = () => {
   const [isSidebarOpen, setSidebarOpen] = useState(false);
@@ -16,10 +18,6 @@ const ViewDepartment = () => {
   const [updateLoading, setUpdateLoading] = useState(false);
   const [updateError, setUpdateError] = useState(null);
 
-  const [isDeleteModalOpen, setDeleteModalOpen] = useState(false);
-  const [deptToDelete, setDeptToDelete] = useState(null);
-
-  // Fetch departments
   useEffect(() => {
     const fetchDepartments = async () => {
       try {
@@ -69,22 +67,18 @@ const ViewDepartment = () => {
         }),
       });
 
-      let data = null;
-      if (response.status !== 204) {
-        data = await response.json();
-      }
+      const data = response.status !== 204 ? await response.json() : {};
 
       if (!response.ok) {
-        const errorMsg = data?.message || data?.error || "Failed to update department";
-        throw new Error(errorMsg);
+        throw new Error(data?.message || "Failed to update department");
       }
 
-      const updatedDept = data?.department || data || currentDept;
-
+      const updatedDept = data?.department || currentDept;
       setDepartments((prev) =>
         prev.map((dept) => (dept._id === currentDept._id ? updatedDept : dept))
       );
 
+      Swal.fire("Success", "Department updated successfully", "success");
       setUpdateOpen(false);
     } catch (err) {
       setUpdateError(err.message);
@@ -93,24 +87,30 @@ const ViewDepartment = () => {
     }
   };
 
-  const confirmDelete = (_id) => {
-    setDeptToDelete(_id);
-    setDeleteModalOpen(true);
-  };
+  const handleDelete = async (_id) => {
+    const confirm = await Swal.fire({
+      title: "Are you sure?",
+      text: "You won’t be able to revert this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#d33",
+      cancelButtonColor: "#3085d6",
+      confirmButtonText: "Yes, delete it!",
+    });
 
-  const handleDeleteConfirmed = async () => {
-    try {
-      const res = await fetch(`http://localhost:8000/api/departments/${deptToDelete}`, {
-        method: "DELETE",
-      });
+    if (confirm.isConfirmed) {
+      try {
+        const res = await fetch(`http://localhost:8000/api/departments/${_id}`, {
+          method: "DELETE",
+        });
 
-      if (!res.ok) throw new Error("Failed to delete department");
+        if (!res.ok) throw new Error("Failed to delete department");
 
-      setDepartments((prev) => prev.filter((dept) => dept._id !== deptToDelete));
-      setDeleteModalOpen(false);
-      setDeptToDelete(null);
-    } catch (err) {
-      alert(err.message);
+        setDepartments((prev) => prev.filter((dept) => dept._id !== _id));
+        Swal.fire("Deleted!", "The department has been deleted.", "success");
+      } catch (err) {
+        Swal.fire("Error", err.message, "error");
+      }
     }
   };
 
@@ -128,65 +128,65 @@ const ViewDepartment = () => {
             {error && <p className="text-red-600 font-semibold">Error: {error}</p>}
 
             {!loading && !error && (
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-                {departments.map((dept) => (
-                  <div
-                    key={dept._id}
-                    className="bg-white p-6 rounded-3xl shadow-xl border border-blue-100 hover:shadow-2xl transition"
-                  >
-                    <div className="flex items-center gap-3 mb-4">
-                      <div className="bg-blue-100 p-3 rounded-full text-blue-700">
-                        <FaStethoscope className="text-xl" />
-                      </div>
-                      <h2 className="text-xl font-bold text-blue-800">{dept.name}</h2>
-                    </div>
-
-                    <p className="text-gray-700 mb-2">
-                      <span className="font-semibold text-blue-700">Head:</span> {dept.head}
-                    </p>
-                    <p className="text-gray-600 text-sm italic mb-4">{dept.description}</p>
-
-                    <div className="mt-4">
-                      <h3 className="text-sm font-semibold text-blue-600 mb-2 flex items-center gap-1">
-                        <FaUserMd className="text-blue-500" /> Associated Doctors
-                      </h3>
-                      <ul className="list-disc list-inside text-sm text-gray-700 pl-2">
-                        <li className="italic text-gray-500">
-                          Dynamic doctor data integration pending
-                        </li>
-                      </ul>
-                    </div>
-
-                    <div className="mt-6 flex gap-4">
-                      <button
-                        onClick={() => handleUpdate(dept)}
-                        className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg transition"
-                      >
-                        Update
-                      </button>
-                      <button
-                        onClick={() => confirmDelete(dept._id)}
-                        className="bg-red-600 hover:bg-red-700 text-white font-semibold py-2 px-4 rounded-lg transition"
-                      >
-                        Delete
-                      </button>
-                    </div>
-                  </div>
-                ))}
+              <div className="overflow-x-auto bg-white rounded-xl shadow-xl border border-blue-100">
+                <table className="min-w-full table-auto">
+                  <thead className="bg-blue-200 text-blue-900">
+                    <tr>
+                      <th className="px-6 py-3 text-left">Name</th>
+                      <th className="px-6 py-3 text-left">Head</th>
+                      <th className="px-6 py-3 text-left">Description</th>
+                      <th className="px-6 py-3 text-left flex items-center gap-1">
+                        <FaUserMd /> Associated Doctors
+                      </th>
+                      <th className="px-6 py-3 text-center">Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {departments.map((dept) => (
+                      <tr key={dept._id} className="border-t border-blue-100 hover:bg-blue-50 transition">
+                        <td className="px-6 py-4 font-semibold text-blue-800 flex items-center gap-2">
+                          <FaStethoscope className="text-blue-600" /> {dept.name}
+                        </td>
+                        <td className="px-6 py-4">{dept.head}</td>
+                        <td className="px-6 py-4 italic text-gray-600">{dept.description}</td>
+                        <td className="px-6 py-4 italic text-gray-500">Coming Soon</td>
+                        <td className="px-6 py-4">
+                          <div className="flex justify-center items-center gap-4">
+                            <button
+                              onClick={() => handleUpdate(dept)}
+                              className="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold py-1.5 px-4 rounded-full shadow-md transition transform hover:scale-105"
+                            >
+                              <FaEdit />
+                              Update
+                            </button>
+                            <button
+                              onClick={() => handleDelete(dept._id)}
+                              className="inline-flex items-center gap-2 bg-red-600 hover:bg-red-700 text-white font-semibold py-1.5 px-4 rounded-full shadow-md transition transform hover:scale-105"
+                            >
+                              <FaTrash />
+                              Delete
+                            </button>
+                          </div>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
               </div>
             )}
 
-            {/* Update Department Modal */}
             {isUpdateOpen && currentDept && (
               <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
-                <div className="bg-white rounded-xl shadow-lg w-full max-w-md p-6 relative">
+                <motion.div
+                  initial={{ opacity: 0, scale: 0.8 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ duration: 0.3 }}
+                  className="bg-white rounded-xl shadow-lg w-full max-w-md p-6 relative"
+                >
                   <h2 className="text-2xl font-bold mb-4 text-blue-800">Update Department</h2>
-
                   <form onSubmit={handleUpdateSubmit} className="space-y-4">
                     <div>
-                      <label htmlFor="name" className="block font-semibold text-gray-700 mb-1">
-                        Name
-                      </label>
+                      <label htmlFor="name" className="block font-semibold text-gray-700 mb-1">Name</label>
                       <input
                         id="name"
                         name="name"
@@ -197,11 +197,8 @@ const ViewDepartment = () => {
                         required
                       />
                     </div>
-
                     <div>
-                      <label htmlFor="head" className="block font-semibold text-gray-700 mb-1">
-                        Head
-                      </label>
+                      <label htmlFor="head" className="block font-semibold text-gray-700 mb-1">Head</label>
                       <input
                         id="head"
                         name="head"
@@ -212,14 +209,8 @@ const ViewDepartment = () => {
                         required
                       />
                     </div>
-
                     <div>
-                      <label
-                        htmlFor="description"
-                        className="block font-semibold text-gray-700 mb-1"
-                      >
-                        Description
-                      </label>
+                      <label htmlFor="description" className="block font-semibold text-gray-700 mb-1">Description</label>
                       <textarea
                         id="description"
                         name="description"
@@ -230,11 +221,7 @@ const ViewDepartment = () => {
                         required
                       />
                     </div>
-
-                    {updateError && (
-                      <p className="text-red-600 font-semibold">{updateError}</p>
-                    )}
-
+                    {updateError && <p className="text-red-600 font-semibold">{updateError}</p>}
                     <div className="flex justify-end gap-4 mt-6">
                       <button
                         type="button"
@@ -253,31 +240,7 @@ const ViewDepartment = () => {
                       </button>
                     </div>
                   </form>
-                </div>
-              </div>
-            )}
-
-            {/* Delete Confirmation Modal */}
-            {isDeleteModalOpen && (
-              <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
-                <div className="bg-white rounded-xl shadow-lg w-full max-w-sm p-6">
-                  <h2 className="text-xl font-bold text-red-600 mb-4">Delete Department</h2>
-                  <p className="text-gray-700 mb-6">Are you sure you want to delete this department?</p>
-                  <div className="flex justify-end gap-4">
-                    <button
-                      onClick={() => setDeleteModalOpen(false)}
-                      className="px-4 py-2 rounded-lg border border-gray-300 hover:bg-gray-100 transition"
-                    >
-                      Cancel
-                    </button>
-                    <button
-                      onClick={handleDeleteConfirmed}
-                      className="bg-red-600 hover:bg-red-700 text-white font-semibold px-4 py-2 rounded-lg transition"
-                    >
-                      Delete
-                    </button>
-                  </div>
-                </div>
+                </motion.div>
               </div>
             )}
           </div>
