@@ -1,10 +1,10 @@
 const express = require("express");
 const doctorRoutes = express.Router();
 const doctorController = require("../controllers/doctorController");
-// const authMiddleware = require("../middlewares/auth"); // Your JWT middleware
+const verifyToken = require("../middleware/authMiddleware"); // Your JWT middleware
 
-// Protected Doctor Routes
-// doctorRoutes.use(authMiddleware); // Ensure all are JWT-protected
+// Protect all doctor routes
+doctorRoutes.use(verifyToken);
 
 doctorRoutes.get("/appointments", doctorController.getDoctorAppointments);
 doctorRoutes.patch("/appointments/:id/status", doctorController.updateAppointmentStatus);
