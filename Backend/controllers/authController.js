@@ -4,7 +4,7 @@ const jwt = require("jsonwebtoken");
 const { ObjectId } = require("mongodb");
 require("dotenv").config();
 
-const db = () => getDB().collection("register");
+const db = () => getDB();
 
 // //patient
 // const registerUser = async (req, res) => {
@@ -74,56 +74,135 @@ const db = () => getDB().collection("register");
 
 // Login for all Roles(patient, doctor, admin, opd)
 const login = async (req, res) => {
-  const {name, mobile_no, password} = req.body;
+  const { name, mobile_no, password } = req.body;
 
   try {
-    const query = mobile_no ? {name, mobile_no} : {name};
-    const user = await db().findOne(query);
+    const roleWithMobile = ["patient", "doctor"];
+    const roleWithoutMobile = ["admin", "opd"];
+    const allRoles = [...roleWithMobile, ...roleWithoutMobile];
 
-    if (!user) {
-      return res.status(404).json({message: "User Not Found"});
+    let user;
+    // check patient from patient-registration
+    // if (name, mobile_no) {
+    //   user = await db()
+    //     .collection("patient-registration")
+    //     .findOne({ name, mobile_no });
+    // }
+    //  (!user) {
+    //   const query = mobile_no ? { name, mobile_no } : { name };
+    //   user = await db().collection("management-registration").findOne(query);
+    //   // console.log("inside admin", user );
+    // }
+    // if (!user) {
+    //   return res.status(404).json({ message: "User Not Found" });
+    // }
+
+    if (name) {
+      user = await db().collection("management-registration").findOne({ name });
+      console.log("user value :", user);
+      if (user) {
+        if (user.role === "doctor") {
+          if (roleWithMobile.includes(user.role) && !mobile_no) {
+            return res
+              .status(400)
+              .json({ message: "Mobile number is required" });
+          }
+        } else {
+          if (roleWithoutMobile.includes(user.role) && mobile_no) {
+            return res
+              .status(400)
+              .json({ message: "Mobile number is not required" });
+          }
+        }
+      } else {
+        user = await db().collection("patient-registration").findOne({ name });
+        if (user) {
+          console.log(user.role);
+          if (roleWithMobile.includes(user.role) && !mobile_no) {
+            return res
+              .status(400)
+              .json({ message: "Mobile number is required" });
+          }
+        }
+      }
+    } else {
+      return res.status(404).json({ message: "User Not Found" });
     }
+    // const { role } = user;
+
+    // if (!allRoles.includes(user.role)) {
+    //   return res.status(403).json({ message: "Invalid Role" });
+    // }
+
+    // if (mobile_no) {
+    //   user = await db()
+    //     .collection("patient-registration")
+    //     .findOne({ name, mobile_no });
+    //   if (!user) {
+    //     user = await db()
+    //       .collection("management-registration")
+    //       .findOne({ name, mobile_no });
+    //   }
+    // } else {
+    //   user = await db().collection("management-registration").findOne({ name });
+    //   // console.log("inside admin", user );
+    // }
+
+    // if (!user) {
+    //   return res.status(404).json({ message: "User Not Found" });
+    // }
+
+    //  if (!user.role === 'admin' || !user.role === 'opd') {
+    //   return res.status(404).json({message: "Mobile Number is Required"});
+    //  }
 
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
-      return res.status(401).json({message: "Invalid Credentials"});
+      return res.status(401).json({ message: "Invalid Credentials" });
     }
 
-    const Roles = ["patient", "doctor", "admin", "opd"];
-    if (!Roles.includes(user.role)) {
-      return res.status(401).json({ message : "Access Denied, Invalid Role" });
-    }
+    // const Roles = ["patient", "doctor", "admin", "opd"];
+    // if (!allRoles.includes(user.role)) {
+    //   return res.status(401).json({ message: "Access Denied, Invalid Role" });
+    // }
 
-    const option = {
-      expiresIn: "1d"
-    }
-    const token = jwt.sign(user, process.env.JWT_SECRET,  option);
+    // const payload = {
+    //   id: user._id,
+    //   name:
+    // };
+    const token = jwt.sign(user, process.env.JWT_SECRET, { expiresIn: "1d" });
 
-    let message;
-    switch (user.role) {
-      case "admin":
-        message = "Admin Login Successfully";
-        break;
-      case "opd":
-        message = "OPD Management Login Successfully";
-        break;
-      case "doctor":
-        message = "Doctor Login Successfully";
-        break;
-      case "patient":
-        message = "Login Successfully";
-        break;
-    }
+    // let message;
+    // switch (user.role) {
+    //   case "admin":
+    //     message = "Admin Login Successfully";
+    //     break;
+    //   case "opd":
+    //     message = "OPD Management Login Successfully";
+    //     break;
+    //   case "doctor":
+    //     message = "Doctor Login Successfully";
+    //     break;
+    //   case "patient":
+    //     message = "Login Successfully";
+    //     break;
+    // }
+    const roleMessages = {
+      admin: "Admin Login Successfully",
+      opd: "OPD Management Login Successfully",
+      doctor: "Doctor Login Successfully",
+      patient: "Login Successfully",
+    };
     return res.status(200).json({
-      message, 
-      token, 
-      user
-    })
+      message: roleMessages[user.role],
+      token,
+      user,
+    });
   } catch (error) {
     console.error("Login error: ", error);
-    return res.status(500).json({message: "Internal Server Error"});
+    return res.status(500).json({ message: "Internal Server Error" });
   }
-}
+};
 
 // // doctor + user or patient
 // const loginUser = async (req, res) => {
@@ -372,21 +451,23 @@ const updatePatientProfile = async (req, res) => {
 
     console.log("🛠️ Fields to Update:", updateFields);
 
-    const result = await db.collection("register").updateOne(
-      { _id: id },
-      { $set: updateFields }
-    );
+    const result = await db
+      .collection("patient-registration")
+      .updateOne({ _id: id }, { $set: updateFields });
 
     console.log("🧾 MongoDB Result:", result);
 
     if (result.modifiedCount === 0) {
-      return res.status(404).json({ message: "User not found or data unchanged" });
+      return res
+        .status(404)
+        .json({ message: "User not found or data unchanged" });
     }
 
     res.status(200).json({ message: "Profile updated successfully" });
-
   } catch (error) {
-    res.status(500).json({ message: "Internal server error", error: error.message });
+    res
+      .status(500)
+      .json({ message: "Internal server error", error: error.message });
   }
 };
 
