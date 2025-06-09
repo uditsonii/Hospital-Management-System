@@ -2,19 +2,22 @@ import React, { useState, useEffect, useContext } from "react";
 import Logout from "./Logout";
 import { Link } from "react-router-dom";
 import { OpdNotificationContext } from "../Context/OpdNotifications.context";
+
 const OPDNavbar = ({ toggleSidebar }) => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
-  const [notificationCount, setNotificationCount] = useState(3); // Replace with dynamic count from API
+  const [notificationCount, setNotificationCount] = useState(3); // default
+
   const user = JSON.parse(localStorage.getItem("user")) || {};
   const userId = user._id || "";
   const userName = user.name || "OPD User";
   const userEmail = user.email || "user@opdclinic.com";
 
-  // Example useEffect to fetch notifications in real use
-const {notificationCountContext}=useContext(OpdNotificationContext)
+  const { notificationCountContext } = useContext(OpdNotificationContext);
+
   useEffect(() => {
-setNotificationCount(notificationCountContext)
+    setNotificationCount(notificationCountContext);
   }, [notificationCountContext]);
+
   return (
     <header className="bg-gradient-to-r from-blue-50 via-blue-100 to-blue-50 shadow-md sticky top-0 z-50 border-b border-blue-200">
       <div className="max-w-screen-xl mx-auto px-6 py-3 flex items-center justify-between">
@@ -44,7 +47,6 @@ setNotificationCount(notificationCountContext)
         {/* Right Section: Notifications + Profile */}
         <div className="flex items-center gap-4 relative">
           {/* Notification Icon */}
-          {/* Appointment Requests Icon */}
           <Link
             to="/opd/opd-requests"
             className="relative text-blue-700 hover:text-blue-900 transition"
@@ -70,12 +72,6 @@ setNotificationCount(notificationCountContext)
               </span>
             )}
           </Link>
-              <div className="px-4 py-3 border-b border-blue-100 bg-blue-50 rounded-t-lg">
-                <p className="text-sm font-semibold text-blue-800 truncate">
-                  {userName}
-                </p>
-                <p className="text-xs text-blue-500 truncate">{userEmail}</p>
-              </div>
 
           {/* Profile Dropdown */}
           <div className="relative">
@@ -105,12 +101,10 @@ setNotificationCount(notificationCountContext)
                 >
                   👤 Profile
                 </Link>
-              <div className="px-4 py-3 text-sm text-red-600 hover:bg-red-50 cursor-pointer flex items-center gap-2 transition rounded-b-lg">
-                {/* onClick={() => {
-                  setDropdownOpen(false);
-                }} */}
-                🔓 <Logout />
 
+                <div className="px-4 py-3 text-sm text-red-600 hover:bg-red-50 cursor-pointer flex items-center gap-2 transition rounded-b-lg">
+                  🔓 <Logout />
+                </div>
               </div>
             )}
           </div>
