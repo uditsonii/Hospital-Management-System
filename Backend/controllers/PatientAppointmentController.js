@@ -156,41 +156,41 @@ const OPDRegister = async (req, res) => {
 
 const bookAppointmentFromUser = async (req, res) => {
   try {
-    const { name,pid, doctor, date, purpose,time } = req.body;
-    if (!name ||!pid || !doctor || !date || !purpose ||!time) {
+    const { name, pid, doctor, date, purpose, time } = req.body;
+    if (!name || !pid || !doctor || !date || !purpose || !time) {
       return res.status(400).send({
         status: 400,
-        message: "Please provide all information to proceed ",
+        message: "Please provide all information to proceed",
       });
     }
     let db = await getDB();
     let collection = db.collection("appointments");
-let result = await collection.insertOne({
-  name,
-  pid,
-  doctor,
-  date,
-  time,
-  purpose,
-  status: "pending",
-  createdAt: new Date(),
-});
+    let result = await collection.insertOne({
+      name,
+      pid,
+      doctor,
+      date,
+      time,
+      purpose,
+      status: "pending",
+      createdAt: new Date(),
+    });
 
-if (!result.acknowledged) {
-  return res.status(500).send({status:500,message:"problem while booking appointement from user"});
-}
+    if (!result.acknowledged) {
+      return res.status(500).send({ status: 500, message: "problem while booking appointement from user" });
+    }
 
-// Fetch the actual saved appointment
-const savedAppointment = await collection.findOne({ _id: result.insertedId });
+    // Fetch the actual saved appointment
+    const savedAppointment = await collection.findOne({ _id: result.insertedId });
 
-// Emit the real saved DB document
-emitNewAppointment(savedAppointment);
+    // Emit the real saved DB document
+    emitNewAppointment(savedAppointment);
 
-return res.status(200).send({
-  status: 200,
-  message: "appointment booked successfully",
-  appointmentId: result.insertedId,
-});
+    return res.status(200).send({
+      status: 200,
+      message: "appointment booked successfully",
+      appointmentId: result.insertedId,
+    });
 
   } catch (error) {
     console.log(
