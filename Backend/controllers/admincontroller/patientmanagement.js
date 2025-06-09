@@ -1,7 +1,7 @@
 const { ObjectId } = require("mongodb");
 const { getDB } = require("../../models/db");
 
-const patientCollection = () => getDB().collection("patients");
+const patientCollection = () => getDB().collection("patient-registration");
 
 const addPatient = async (req, res) => {
   const { name, age, gender, contact, address } = req.body;

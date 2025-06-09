@@ -18,7 +18,7 @@ setNotificationCount(notificationCountContext)
   return (
     <header className="bg-gradient-to-r from-blue-50 via-blue-100 to-blue-50 shadow-md sticky top-0 z-50 border-b border-blue-200">
       <div className="max-w-screen-xl mx-auto px-6 py-3 flex items-center justify-between">
-        {/* Left Section: Branding + Sidebar Toggle */}
+        {/* Left Section: OPD Branding + Sidebar Toggle */}
         <div className="flex items-center gap-4">
           <button
             onClick={toggleSidebar}
@@ -70,6 +70,12 @@ setNotificationCount(notificationCountContext)
               </span>
             )}
           </Link>
+              <div className="px-4 py-3 border-b border-blue-100 bg-blue-50 rounded-t-lg">
+                <p className="text-sm font-semibold text-blue-800 truncate">
+                  {userName}
+                </p>
+                <p className="text-xs text-blue-500 truncate">{userEmail}</p>
+              </div>
 
           {/* Profile Dropdown */}
           <div className="relative">
@@ -99,15 +105,12 @@ setNotificationCount(notificationCountContext)
                 >
                   👤 Profile
                 </Link>
+              <div className="px-4 py-3 text-sm text-red-600 hover:bg-red-50 cursor-pointer flex items-center gap-2 transition rounded-b-lg">
+                {/* onClick={() => {
+                  setDropdownOpen(false);
+                }} */}
+                🔓 <Logout />
 
-                <div
-                  className="px-4 py-3 text-sm text-red-600 hover:bg-red-50 cursor-pointer flex items-center gap-2 transition rounded-b-lg"
-                  onClick={() => {
-                    setDropdownOpen(false);
-                  }}
-                >
-                  🔓 <Logout />
-                </div>
               </div>
             )}
           </div>

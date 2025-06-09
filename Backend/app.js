@@ -30,14 +30,14 @@ const server=http.createServer(app)
   });
 
 //routes
-app.use("/opd", opdRoutes) // opd panel routes
 
 app.use("/", authRoute);
 // app.use("/", verifyToken, routes);
 app.use("/", routes);
-app.use("/api/doctor", doctorRoutes); // doctor panel API
 app.use("/api/departments", router); // department management API
+app.use("/api/doctor", doctorRoutes); // doctor panel API
 app.use("/api/patients", patientRoutes);// patient management API
+app.use("/opd", opdRoutes) // opd panel routes
 app.get("/test", (req, res) => res.send("Hospital Management"));
 
 initSocket(io)

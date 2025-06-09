@@ -1,6 +1,6 @@
 const { getDB } = require("../models/db");
 const bcrypt = require("bcrypt");
-const {emitNewAppointment}=require("../socket/index.js");
+const { emitNewAppointment } = require("../socket/index.js");
 const { ObjectId } = require("mongodb");
 const db = () => getDB();
 
@@ -30,7 +30,7 @@ const NewPatient = async (req, res) => {
   }
   try {
     // Check for Existing Patient
-    const existingPatient = await db().collection("register").findOne({
+    const existingPatient = await db().collection("patient-registration").findOne({
       name: pData.name,
       mobile_no: pData.mobile_no,
       gender: pData.gender,
@@ -72,7 +72,7 @@ const NewPatient = async (req, res) => {
 
       // if (pData.bloodGroup) patient.bloodGroup = pData.bloodGroup;
 
-      const result = await db().collection("register").insertOne(patient);
+      const result = await db().collection("patient-registration").insertOne(patient);
 
       return res.status(200).json({
         success: true,
@@ -96,7 +96,7 @@ const SendDetailThroughPID = async (req, res) => {
   //  console.log("PID : ",pid);
 
   try {
-    const patient = await db().collection("register").findOne({ pid });
+    const patient = await db().collection("patient-registration").findOne({ pid });
     if (!patient) {
       return res.status(404).json({ message: "Patient not found" });
     }
@@ -121,7 +121,7 @@ const OPDRegister = async (req, res) => {
 
   try {
     // find patient by pid
-    const patient = await db().collection("register").findOne({ pid });
+    const patient = await db().collection("patient-registration").findOne({ pid });
     if (!patient) {
       return res.status(404).json({ message: "Patient not found with pid" });
     }
@@ -191,7 +191,6 @@ const bookAppointmentFromUser = async (req, res) => {
       message: "appointment booked successfully",
       appointmentId: result.insertedId,
     });
-
   } catch (error) {
     console.log(
       "error catched while booking appointment to db in PatientAppointmentController.js"
@@ -208,13 +207,34 @@ const getPendingRequests = async (req, res) => {
     let db = await getDB();
     let collection = db.collection("appointments");
     const result = await collection.find({ status: "pending" }).toArray();
-    if (!result) res.status(401).json({ status: 401, message: "problem while fetching pending requests" })
+    if (!result)
+      res
+        .status(401)
+        .json({
+          status: 401,
+          message: "problem while fetching pending requests",
+        });
 
-    res.status(200).json({ status: 200, message: "successfully fetched pending requests", data: result })
-
+    res
+      .status(200)
+      .json({
+        status: 200,
+        message: "successfully fetched pending requests",
+        data: result,
+      });
   } catch (error) {
-    res.status(500).json({ status: 500, message: "Internal server error while fetching pending requests" })
+    res
+      .status(500)
+      .json({
+        status: 500,
+        message: "Internal server error while fetching pending requests",
+      });
   }
-
-}
-module.exports = { NewPatient, OPDRegister, SendDetailThroughPID, bookAppointmentFromUser, getPendingRequests };
+};
+module.exports = {
+  NewPatient,
+  OPDRegister,
+  SendDetailThroughPID,
+  bookAppointmentFromUser,
+  getPendingRequests,
+};
