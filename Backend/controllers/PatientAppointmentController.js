@@ -160,7 +160,7 @@ const bookAppointmentFromUser = async (req, res) => {
     if (!name || !pid || !doctor || !date || !purpose || !time) {
       return res.status(400).send({
         status: 400,
-        message: "Please provide all information to proceed ",
+        message: "Please provide all information to proceed",
       });
     }
     let db = await getDB();
@@ -177,18 +177,11 @@ const bookAppointmentFromUser = async (req, res) => {
     });
 
     if (!result.acknowledged) {
-      return res
-        .status(500)
-        .send({
-          status: 500,
-          message: "problem while booking appointement from user",
-        });
+      return res.status(500).send({ status: 500, message: "problem while booking appointement from user" });
     }
 
     // Fetch the actual saved appointment
-    const savedAppointment = await collection.findOne({
-      _id: result.insertedId,
-    });
+    const savedAppointment = await collection.findOne({ _id: result.insertedId });
 
     // Emit the real saved DB document
     emitNewAppointment(savedAppointment);
