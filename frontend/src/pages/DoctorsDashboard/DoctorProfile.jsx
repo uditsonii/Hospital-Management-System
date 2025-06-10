@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
+import Sidebar from "./Sidebar";
+import Navbar from "./Navbar";
 import {
   FaVenusMars,
   FaBirthdayCake,
@@ -25,7 +27,10 @@ export default function DoctorProfile() {
   const [loading, setLoading] = useState(true);
   const [editMode, setEditMode] = useState(false);
   const [formData, setFormData] = useState({});
-
+  
+  const [error, setError] = useState(null);
+ const [isSidebarOpen, setSidebarOpen] = useState(false);
+   const toggleSidebar = () => setSidebarOpen(!isSidebarOpen);
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (!token) {
@@ -110,7 +115,17 @@ export default function DoctorProfile() {
   if (!doctor) return <div className="loader">Doctor profile not found</div>;
 
   return (
+    <div className="min-h-screen flex bg-gray-50">
+      {/* Sidebar */}
+      <Sidebar isOpen={isSidebarOpen} toggleSidebar={toggleSidebar} />
+
+      {/* Main Content */}
+      <div className="flex-1 md:ml-64">
+        {/* Navbar */}
+        <Navbar toggleSidebar={toggleSidebar} />
+
     <>
+    
       <style
         dangerouslySetInnerHTML={{
           __html: `
@@ -286,5 +301,7 @@ export default function DoctorProfile() {
         </button>
       </motion.div>
     </>
+    </div>
+      </div>
   );
 }

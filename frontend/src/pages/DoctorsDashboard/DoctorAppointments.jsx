@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from "react";
-
+import Sidebar from "./Sidebar";
+import Navbar from "./Navbar";
 const DoctorAppointments = () => {
   const [appointments, setAppointments] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-
+ const [isSidebarOpen, setSidebarOpen] = useState(false);
+  const toggleSidebar = () => setSidebarOpen(!isSidebarOpen);
   useEffect(() => {
   const fetchAppointments = async () => {
     try {
@@ -49,6 +51,15 @@ const DoctorAppointments = () => {
     );
 
   return (
+    <div className="min-h-screen flex bg-gray-50">
+      {/* Sidebar */}
+      <Sidebar isOpen={isSidebarOpen} toggleSidebar={toggleSidebar} />
+
+      {/* Main Content */}
+      <div className="flex-1 md:ml-64">
+        {/* Navbar */}
+        <Navbar toggleSidebar={toggleSidebar} />
+ 
     <div className="max-w-5xl mx-auto p-6">
       <h2 className="text-4xl font-extrabold mb-8 text-center text-blue-700 tracking-wide">
         🩺 My Appointments
@@ -116,6 +127,8 @@ const DoctorAppointments = () => {
         </div>
       )}
     </div>
+    </div>
+      </div>
   );
 };
 

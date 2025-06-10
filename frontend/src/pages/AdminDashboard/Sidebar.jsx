@@ -10,7 +10,7 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
   const [appointmentMenuOpen, setAppointmentMenuOpen] = useState(false);
   const [reportMenuOpen, setReportMenuOpen] = useState(false);
     const [departmentMenuOpen, setDepartmentMenuOpen] = useState(false);
-
+    const [patientMenuOpen, setPatientMenuOpen] = useState(false);
   return (
     <>
       {isOpen && (
@@ -30,8 +30,7 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
           </div>
           <nav className="flex flex-col p-4 space-y-2">
             <SidebarLink icon="🏠" label="Dashboard" to="/admin-dashboard" />
-            <SidebarLink icon="👥" label="Manage Patients" to="/managepatients" />
-
+            <SidebarLink icon="👥" label="Manage Patients" to="/admin/managepatients" />
  <CollapsibleMenu
               label="Departments"
               icon="🏥"
