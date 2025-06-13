@@ -4,8 +4,6 @@ const doctorController = require("../controllers/doctorController");
 const { createDoctor, getAllDoctor, getDoctorById, updateDoctor, deleteDoctor } = require("../controllers/admincontroller/DoctorController");
 const authMiddleware = require("../middleware/authMiddleware"); // Your JWT middleware
 
-
-
 doctorRoutes.get("/appointments", doctorController.getDoctorAppointments);
 doctorRoutes.patch("/appointments/:id/status", doctorController.updateAppointmentStatus);
 doctorRoutes.get("/patients", doctorController.getMyPatients);

@@ -26,11 +26,16 @@ const result=await axios.put("http://localhost:8000/api/doctor/updatedoctor")
     }
   };
 
-  const handleDelete = (id) => {
-    const confirmed = window.confirm("Are you sure you want to delete this doctor?");
-    if (confirmed) {
-      alert(`Doctor with ID ${id} deleted.`);
-    }
+  const handleDelete = async (id) => {
+   try
+   {
+const result= await axios
+   }
+   catch(err)
+   {
+    console.log(err);
+    setError("Failed to Delete Doctor")
+   }
   };
 
  useEffect(() => {
