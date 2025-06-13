@@ -1,7 +1,7 @@
 const express = require("express");
 const doctorRoutes = express.Router();
 const doctorController = require("../controllers/doctorController");
-const DoctorController=require(".././controllers/admincontroller/DoctorController")
+const {createDoctor, getAllDoctor, getDoctorById, updateDoctor, deleteDoctor} =require(".././controllers/admincontroller/DoctorController")
 const authMiddleware = require("../middleware/authMiddleware"); // Your JWT middleware
 
 // Protected Doctor Routes
