@@ -45,7 +45,7 @@ const createDoctor = async (req, res) => {
       dob: dob || "",
       speciality,
       email: email || "",
-      experience: experience || "",
+      role: "doctor"
     });
 
     return res.status(200).json({

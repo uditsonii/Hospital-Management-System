@@ -6,37 +6,52 @@ const AddDoctor = () => {
   const [doctor, setDoctor] = useState({
     name: "",
     email: "",
-    phone: "",
-    specialization: "",
-    department: "",
+    mobile_no: "",
+    speciality: "",
+    departmentId: "",
     password: "",
     confirmPassword: "",
     gender: "",
-    age: "",
   });
+
+  const [isSidebarOpen, setSidebarOpen] = useState(false);
+  const toggleSidebar = () => setSidebarOpen(!isSidebarOpen);
 
   const handleChange = (e) => {
     setDoctor({ ...doctor, [e.target.name]: e.target.value });
   };
 
-  const [isSidebarOpen, setSidebarOpen] = useState(false);
-  const toggleSidebar = () => setSidebarOpen(!isSidebarOpen);
+  const token = localStorage.getItem("token");
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (doctor.password !== doctor.confirmPassword) {
-      alert("Passwords do not match!");
-      return;
+
+    try {
+      const response = await fetch("http://localhost:8000/api/doctor/adddoctor", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(doctor),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        console.error("Error adding doctor:", data.message);
+        return;
+      }
+
+      console.log("Doctor added successfully:", data);
+    } catch (error) {
+      console.error("Network error:", error.message);
     }
-    console.log("Doctor data:", doctor);
   };
 
   return (
     <div className="min-h-screen flex bg-gradient-to-br from-blue-50 to-blue-100">
-      {/* Sidebar */}
       <Sidebar isOpen={isSidebarOpen} toggleSidebar={toggleSidebar} />
-
-      {/* Main Content */}
       <div className="flex-1 md:ml-64">
         <Navbar toggleSidebar={toggleSidebar} />
         <main className="flex-grow overflow-auto flex justify-center items-start p-6">
@@ -46,13 +61,11 @@ const AddDoctor = () => {
             </h2>
 
             <form onSubmit={handleSubmit} className="space-y-5 text-gray-800 text-[15px] font-medium">
-              {/* Input Group */}
               {[
                 { label: "👨‍⚕️ Full Name", name: "name", type: "text", placeholder: "Dr. John Doe" },
                 { label: "📧 Email", name: "email", type: "email", placeholder: "doctor@example.com" },
-                { label: "📞 Phone Number", name: "phone", type: "tel", placeholder: "+91-9876543210" },
-                { label: "🎂 Age", name: "age", type: "number", placeholder: "e.g. 35" },
-                { label: "🩻 Specialization", name: "specialization", type: "text", placeholder: "Cardiologist, Surgeon..." },
+                { label: "📞 Mobile Number", name: "mobile_no", type: "tel", placeholder: "+91-9876543210" },
+                { label: "🩻 Speciality", name: "speciality", type: "text", placeholder: "Cardiologist, Surgeon..." },
                 { label: "🔐 Password", name: "password", type: "password", placeholder: "Enter password" },
                 { label: "🔒 Confirm Password", name: "confirmPassword", type: "password", placeholder: "Confirm password" },
               ].map(({ label, name, type, placeholder }) => (
@@ -91,8 +104,8 @@ const AddDoctor = () => {
               <div>
                 <label className="block mb-1 font-semibold">🏥 Department</label>
                 <select
-                  name="department"
-                  value={doctor.department}
+                  name="departmentId"
+                  value={doctor.departmentId}
                   onChange={handleChange}
                   className="w-full border border-blue-300 rounded-xl px-4 py-2 bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
                   required
@@ -106,7 +119,7 @@ const AddDoctor = () => {
                 </select>
               </div>
 
-              {/* Submit Button */}
+              {/* Submit */}
               <button
                 type="submit"
                 className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 rounded-xl shadow-md transition duration-300 hover:shadow-lg"
