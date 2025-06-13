@@ -1,13 +1,23 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import Logout from "./Logout";
 import { Link } from "react-router-dom";
+import { OpdNotificationContext } from "../Context/OpdNotifications.context";
 
 const OPDNavbar = ({ toggleSidebar }) => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [notificationCount, setNotificationCount] = useState(3); // default
+
   const user = JSON.parse(localStorage.getItem("user")) || {};
   const userId = user._id || "";
   const userName = user.name || "OPD User";
   const userEmail = user.email || "user@opdclinic.com";
+
+  const { notificationCountContext } = useContext(OpdNotificationContext);
+
+  useEffect(() => {
+    setNotificationCount(notificationCountContext);
+  }, [notificationCountContext]);
+
   return (
     <header className="bg-gradient-to-r from-blue-50 via-blue-100 to-blue-50 shadow-md sticky top-0 z-50 border-b border-blue-200">
       <div className="max-w-screen-xl mx-auto px-6 py-3 flex items-center justify-between">
@@ -25,7 +35,7 @@ const OPDNavbar = ({ toggleSidebar }) => {
           </h1>
         </div>
 
-        {/* Center Section: Search bar (only on md+) */}
+        {/* Center Section: Search */}
         <div className="flex-1 mx-6 hidden md:block">
           <input
             type="text"
@@ -34,43 +44,70 @@ const OPDNavbar = ({ toggleSidebar }) => {
           />
         </div>
 
-        {/* Right Section: Profile Dropdown */}
-        <div className="relative">
-          <img
-            src="https://tse2.mm.bing.net/th?id=OIP.30Yq02E10j8tn6kKBO1qdQHaHa&pid=Api&P=0&h=180"
-            alt="Profile"
-            className="w-10 h-10 rounded-full border-2 border-white cursor-pointer shadow-md hover:ring-4 hover:ring-blue-300 transition"
-            onClick={() => setDropdownOpen(!dropdownOpen)}
-          />
-
-          {dropdownOpen && (
-            <div
-              className="absolute right-0 mt-2 w-56 bg-white rounded-lg shadow-lg border border-blue-200 z-50"
-              onMouseLeave={() => setDropdownOpen(false)}
+        {/* Right Section: Notifications + Profile */}
+        <div className="flex items-center gap-4 relative">
+          {/* Notification Icon */}
+          <Link
+            to="/opd/opd-requests"
+            className="relative text-blue-700 hover:text-blue-900 transition"
+            title="Appointment Requests"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="h-7 w-7"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
             >
-              <div className="px-4 py-3 border-b border-blue-100 bg-blue-50 rounded-t-lg">
-                <p className="text-sm font-semibold text-blue-800 truncate">
-                  {userName}
-                </p>
-                <p className="text-xs text-blue-500 truncate">{userEmail}</p>
-              </div>
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+              />
+            </svg>
+            {notificationCount > 0 && (
+              <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full px-1.5 py-0.5">
+                {notificationCount}
+              </span>
+            )}
+          </Link>
 
-              <Link
-                to={`/profile/${userId}`}
-                className="block px-4 py-3 text-sm text-blue-700 hover:bg-blue-100 transition"
-                onClick={() => setDropdownOpen(false)}
+          {/* Profile Dropdown */}
+          <div className="relative">
+            <img
+              src="https://tse2.mm.bing.net/th?id=OIP.30Yq02E10j8tn6kKBO1qdQHaHa&pid=Api&P=0&h=180"
+              alt="Profile"
+              className="w-10 h-10 rounded-full border-2 border-white cursor-pointer shadow-md hover:ring-4 hover:ring-blue-300 transition"
+              onClick={() => setDropdownOpen(!dropdownOpen)}
+            />
+
+            {dropdownOpen && (
+              <div
+                className="absolute right-0 mt-2 w-56 bg-white rounded-lg shadow-lg border border-blue-200 z-50"
+                onMouseLeave={() => setDropdownOpen(false)}
               >
-                👤 Profile
-              </Link>
+                <div className="px-4 py-3 border-b border-blue-100 bg-blue-50 rounded-t-lg">
+                  <p className="text-sm font-semibold text-blue-800 truncate">
+                    {userName}
+                  </p>
+                  <p className="text-xs text-blue-500 truncate">{userEmail}</p>
+                </div>
 
-              <div className="px-4 py-3 text-sm text-red-600 hover:bg-red-50 cursor-pointer flex items-center gap-2 transition rounded-b-lg">
-                {/* onClick={() => {
-                  setDropdownOpen(false);
-                }} */}
-                🔓 <Logout />
+                <Link
+                  to={`/profile/${userId}`}
+                  className="block px-4 py-3 text-sm text-blue-700 hover:bg-blue-100 transition"
+                  onClick={() => setDropdownOpen(false)}
+                >
+                  👤 Profile
+                </Link>
+
+                <div className="px-4 py-3 text-sm text-red-600 hover:bg-red-50 cursor-pointer flex items-center gap-2 transition rounded-b-lg">
+                  🔓 <Logout />
+                </div>
               </div>
-            </div>
-          )}
+            )}
+          </div>
         </div>
       </div>
 

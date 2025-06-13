@@ -1,4 +1,4 @@
-const { getDB } = require("../models/db");
+const { getDB, connectDB } = require("../models/db");
 const bcrypt = require("bcrypt");
 const { emitNewAppointment } = require("../socket/index.js");
 const { ObjectId } = require("mongodb");
@@ -113,7 +113,7 @@ const OPDRegister = async (req, res) => {
   const { pid, department, doctor, diagnosis, fee, referredBy, visitType } =
     req.body;
 
-  if (!pid || !department || !doctor || !fee) {
+  if (!pid || !department || !doctor ) {
     return res
       .status(400)
       .json({ message: "All required fields must be provided." });
@@ -133,7 +133,7 @@ const OPDRegister = async (req, res) => {
       doctor,
       diagnosis: diagnosis || null,
       visitDate: new Date(),
-      fee,
+      fee: fee||null,
       visitType: visitType || null,
       referredBy: referredBy || null,
     };
@@ -156,11 +156,11 @@ const OPDRegister = async (req, res) => {
 
 const bookAppointmentFromUser = async (req, res) => {
   try {
-    const { name, pid, doctor, date, purpose, time } = req.body;
-    if (!name || !pid || !doctor || !date || !purpose || !time) {
+    const { name, pid, doctor, date, diagnosis, department } = req.body;
+    if (!name || !pid || !doctor || !date || !department) {
       return res.status(400).send({
         status: 400,
-        message: "Please provide all information to proceed ",
+        message: "Please provide all information to proceed",
       });
     }
     let db = await getDB();
@@ -170,25 +170,18 @@ const bookAppointmentFromUser = async (req, res) => {
       pid,
       doctor,
       date,
-      time,
-      purpose,
+      diagnosis:diagnosis||null,
+      department,
       status: "pending",
       createdAt: new Date(),
     });
 
     if (!result.acknowledged) {
-      return res
-        .status(500)
-        .send({
-          status: 500,
-          message: "problem while booking appointement from user",
-        });
+      return res.status(500).send({ status: 500, message: "problem while booking appointement from user" });
     }
 
     // Fetch the actual saved appointment
-    const savedAppointment = await collection.findOne({
-      _id: result.insertedId,
-    });
+    const savedAppointment = await collection.findOne({ _id: result.insertedId });
 
     // Emit the real saved DB document
     emitNewAppointment(savedAppointment);
@@ -238,10 +231,52 @@ const getPendingRequests = async (req, res) => {
       });
   }
 };
+
+const updateAppointmentStatus = async (req, res) => {
+  try {
+    const { id, status } = req.body;
+
+    if (!id || !status) {
+      return res.status(401).json({
+        status: 401,
+        message: "Provide appropriate ID and status to update the record"
+      });
+    }
+    let db = await getDB();
+    let collection = db.collection("appointments");
+    const idToFind = new ObjectId(id);
+    console.log("Converted ID:", idToFind);
+
+    const result = await collection.updateOne(
+      { _id: idToFind },
+      { $set: { status: status } }
+    );
+
+    if (result.matchedCount === 0) {
+      return res.status(404).json({
+        status: 404,
+        message: "Appointment not found"
+      });
+    }
+
+    res.status(200).json({
+      status: 200,
+      message: "Appointment status updated successfully"
+    });
+
+  } catch (error) {
+    res.status(500).json({
+      status: 500,
+      message: "Internal server error while updating appointment status",
+      error: error.message || error
+    });
+  }
+};
 module.exports = {
   NewPatient,
   OPDRegister,
   SendDetailThroughPID,
   bookAppointmentFromUser,
   getPendingRequests,
+  updateAppointmentStatus
 };
