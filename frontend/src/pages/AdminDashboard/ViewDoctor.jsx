@@ -1,49 +1,37 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Navbar from "./Navbar";
 import Sidebar from "./Sidebar";
 import { FaTrash, FaEdit } from "react-icons/fa";
-
-const dummyDoctors = [
-  {
-    id: 1,
-    name: "Dr. John Doe",
-    email: "john.doe@example.com",
-    phone: "+91-9876543210",
-    specialization: "Cardiologist",
-    department: "Cardiology",
-    gender: "Male",
-    age: 45,
-  },
-  {
-    id: 2,
-    name: "Dr. Jane Smith",
-    email: "jane.smith@example.com",
-    phone: "+91-9123456789",
-    specialization: "Neurologist",
-    department: "Neurology",
-    gender: "Female",
-    age: 38,
-  },
-  {
-    id: 3,
-    name: "Dr. Alex Johnson",
-    email: "alex.johnson@example.com",
-    phone: "+91-9988776655",
-    specialization: "Orthopedic Surgeon",
-    department: "Orthopedics",
-    gender: "Other",
-    age: 40,
-  },
-];
 
 const ViewDoctors = () => {
   const [isSidebarOpen, setSidebarOpen] = useState(false);
   const toggleSidebar = () => setSidebarOpen(!isSidebarOpen);
   const [selectedRow, setSelectedRow] = useState(null);
 
+  const [doctors, setDoctors] = useState([]);
+
   const handleRowClick = (id) => {
     setSelectedRow(id === selectedRow ? null : id);
   };
+
+  useEffect(() => {
+    fetchAllDoctor();
+  }, []);
+
+   const fetchAllDoctor = async () => {
+      try {
+        const res = await fetch("http://localhost:8000/api/doctor");
+        if(!res.ok) throw new Error("Failed to fetch departments");
+        
+        const data = await res.json();
+        console.log(data)
+        // if (!(data[0].role === 'admin') || !(data[1].role === 'opd')) {
+        //   setDoctors(data);        
+        // }
+      } catch (error) {
+        console.error("Failed to fetch doctors:", error);
+      }
+    }
 
   const handleEdit = (id) => {
     alert(`Edit doctor with ID: ${id}`);
@@ -83,7 +71,7 @@ const ViewDoctors = () => {
                   </tr>
                 </thead>
                 <tbody className="text-gray-700 text-xs">
-  {dummyDoctors.map((doctor, idx) => (
+  {doctors.map((doctor, idx) => (
     <tr
       key={doctor.id}
       onClick={() => handleRowClick(doctor.id)}

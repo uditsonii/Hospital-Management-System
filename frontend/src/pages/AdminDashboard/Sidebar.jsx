@@ -48,8 +48,8 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
               isOpen={doctorMenuOpen}
               toggleOpen={() => setDoctorMenuOpen(!doctorMenuOpen)}
               links={[
-                { icon: "➕", label: "Add Doctor", to: "/admin/adddoctor" },
-                { icon: "📋", label: "View Doctors", to: "/admin/viewdoctor" },
+                { icon: "➕", label: "Add Doctor", to: "/admin/add-doctor" },
+                { icon: "📋", label: "View Doctors", to: "/admin/view-doctor" },
                 { icon: "📅", label: "Doctor Schedule", to: "/doctordetails" },
               ]}
             />
