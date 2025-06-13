@@ -13,11 +13,12 @@ doctorRoutes.get("/patients", doctorController.getMyPatients);
 doctorRoutes.post("/diagnosis", doctorController.addDiagnosis);
 doctorRoutes.get("/profile", doctorController.getDoctorProfile);
 doctorRoutes.put("/profile", doctorController.updateDoctorProfile);
+
 // crud
-doctorRoutes.post("/adddoctor", DoctorController.createDoctor)  //create
-doctorRoutes.get("/", DoctorController.getAllDoctor)  //get all doctor
-doctorRoutes.get("/:id",DoctorController. getDoctorById)  //get by ID for search
-doctorRoutes.put("/:id",DoctorController. updateDoctor)  //update doctor
-doctorRoutes.delete("/:id", DoctorController.deleteDoctor)  //delete doctor
+doctorRoutes.post("/", createDoctor)  //create
+doctorRoutes.get("/fetchdoctor", getAllDoctor)  //create
+doctorRoutes.get("/:id", getDoctorById)  //create
+doctorRoutes.put("/:id", updateDoctor)  //create
+doctorRoutes.delete("/:id", deleteDoctor)  //create
 
 module.exports = doctorRoutes;
