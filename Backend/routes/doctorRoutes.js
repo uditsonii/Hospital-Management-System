@@ -16,9 +16,9 @@ doctorRoutes.put("/profile", doctorController.updateDoctorProfile);
 
 // crud
 doctorRoutes.post("/", createDoctor)  //create
-doctorRoutes.get("/fetchdoctor", getAllDoctor)  //create
-doctorRoutes.get("/:id", getDoctorById)  //create
-doctorRoutes.put("/:id", updateDoctor)  //create
-doctorRoutes.delete("/:id", deleteDoctor)  //create
+doctorRoutes.get("/fetchdoctor", getAllDoctor)  //read all
+doctorRoutes.get("/:id", getDoctorById)  //read one
+doctorRoutes.put("/:id", updateDoctor)  //update
+doctorRoutes.delete("/:id", deleteDoctor)  //delete
 
 module.exports = doctorRoutes;

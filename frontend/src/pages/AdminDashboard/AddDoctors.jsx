@@ -249,5 +249,5 @@ const AddDoctor = () => {
     </div>
   );
 };
-
+}
 export default AddDoctor;
