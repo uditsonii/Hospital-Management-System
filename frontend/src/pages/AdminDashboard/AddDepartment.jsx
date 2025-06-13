@@ -40,9 +40,10 @@ const AddDepartment = () => {
       }
 
       // SweetAlert2 Success
-      await Swal.fire({
-        title: "Department Added 🎉",
-        html: `<div class="flex flex-col items-center">
+await Swal.fire({
+  title: "Department Added ✅",
+  html: `
+    <div class="flex flex-col items-center">
       <img src="https://media.tenor.com/OYJL9tWUZ0cAAAAi/checkmark.gif" alt="Success" style="width:100px; margin-bottom: 10px;" />
       <p class="text-lg text-gray-800">The department has been added successfully.</p>
        </div>`,
@@ -52,7 +53,7 @@ const AddDepartment = () => {
         background: "#f0f9ff",
       });
 
-      navigate("/departments");
+navigate("/admin/departments");
 
       setFormData({ name: "", head: "", description: "" });
     } catch (error) {

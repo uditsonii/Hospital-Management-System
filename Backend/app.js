@@ -11,6 +11,7 @@ const patientRoutes = require("./routes/patientRoutes.js");
 const http = require("http");
 const {Server}=require("socket.io")
 const {initSocket}=require("./socket/index.js")
+const aiRoutes = require("./routes/aiRoutes.js");
 
 
 require("dotenv").config();
@@ -38,6 +39,7 @@ app.use("/", routes);
 app.use("/api/departments", departmentRoutes); // department management API
 app.use("/api/patients", patientRoutes);// patient management API
 app.use("/opd", opdRoutes) // opd panel routes
+app.use("/api/medical-chat",aiRoutes);//aichatbox
 app.get("/test", (req, res) => res.send("Hospital Management"));
 
 initSocket(io)

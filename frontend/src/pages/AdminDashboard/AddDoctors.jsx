@@ -46,9 +46,9 @@ const AddDoctor = () => {
     setDoctor({ ...doctor, [e.target.name]: e.target.value });
   };
 
-  const [isSidebarOpen, setSidebarOpen] = useState(false);
-  const toggleSidebar = () => setSidebarOpen(!isSidebarOpen);
+  const token = localStorage.getItem("token");
 
+  const handleSubmit = async (e) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     console.log(doctor);
@@ -114,10 +114,7 @@ const AddDoctor = () => {
 
   return (
     <div className="min-h-screen flex bg-gradient-to-br from-blue-50 to-blue-100">
-      {/* Sidebar */}
       <Sidebar isOpen={isSidebarOpen} toggleSidebar={toggleSidebar} />
-
-      {/* Main Content */}
       <div className="flex-1 md:ml-64">
         <Navbar toggleSidebar={toggleSidebar} />
         <main className="flex-grow overflow-auto flex justify-center items-start p-6">
@@ -238,7 +235,7 @@ const AddDoctor = () => {
                 </select>
               </div>
 
-              {/* Submit Button */}
+              {/* Submit */}
               <button
                 type="submit"
                 className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 rounded-xl shadow-md transition duration-300 hover:shadow-lg"

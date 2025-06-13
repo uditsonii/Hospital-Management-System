@@ -72,8 +72,9 @@ const createDoctor = async (req, res) => {
 const getAllDoctor = async (req, res) => {
   try {
     const doctors = await db()
+    const doctors = await db()
       .collection("management-registration")
-      .find()
+      .find({role:"doctor"})
       .toArray();
     return res.status(200).json(doctors);
   } catch (error) {
