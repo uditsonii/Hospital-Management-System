@@ -1,16 +1,17 @@
 const express = require("express");
 const cors = require("cors");
 const { connectDB } = require("./models/db.js");
-const verifyToken = require("./middleware/authMiddleware.js");
+// const verifyToken = require("./middleware/authMiddleware.js");
 const routes = require("./routes/checkJWT.js");
 const authRoute = require("./routes/authRoute.js");
 const opdRoutes = require("./routes/opdRoute.js");
+const departmentRoutes = require("./routes/departmentsRoutes.js")
 const doctorRoutes = require("./routes/doctorRoutes.js");
-const router = require("./routes/departments.js");
 const patientRoutes = require("./routes/patientRoutes.js");
 const http = require("http");
 const {Server}=require("socket.io")
 const {initSocket}=require("./socket/index.js")
+const aiRoutes = require("./routes/aiRoutes.js");
 
 
 require("dotenv").config();
@@ -31,13 +32,14 @@ const server=http.createServer(app)
 
 //routes
 
+app.use("/api/doctor", doctorRoutes); // doctor panel API
 app.use("/", authRoute);
 // app.use("/", verifyToken, routes);
 app.use("/", routes);
-app.use("/api/departments", router); // department management API
-app.use("/api/doctor", doctorRoutes); // doctor panel API
+app.use("/api/departments", departmentRoutes); // department management API
 app.use("/api/patients", patientRoutes);// patient management API
 app.use("/opd", opdRoutes) // opd panel routes
+app.use("/api/medical-chat",aiRoutes);//aichatbox
 app.get("/test", (req, res) => res.send("Hospital Management"));
 
 initSocket(io)

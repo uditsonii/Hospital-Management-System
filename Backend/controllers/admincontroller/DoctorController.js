@@ -1,4 +1,5 @@
 const { ObjectId, ReturnDocument } = require("mongodb");
+const bcrypt = require("bcrypt");
 const { getDB } = require("../../models/db");
 
 const db = () => getDB();
@@ -6,52 +7,60 @@ const db = () => getDB();
 // Create Doctor
 const createDoctor = async (req, res) => {
   const {
+    deptid,
     name,
     mobile_no,
     dob,
     gender,
     email,
-    speciality,
+    specialization,
+    degree,
     experience,
-    departmentId,
   } = req.body;
 
-  if (!name || !mobile_no || !gender || !speciality || !departmentId) {
+  if (!name || !mobile_no || !gender || !specialization ||!degree || !deptid) {
     return res.status(400).json({ message: "All Fields are Required " });
   }
 
   try {
     // Validate Department Exists
-    const departmentExists = await db
+    const departmentExists = await db()
       .collection("departments")
-      .findOne({ _id: new ObjectId(departmentId) });
+      .findOne({ deptid });
     if (!departmentExists) {
       return res.status(400).json({ message: "Department Not Found" });
     }
 
     // Check doctor exists
-    const doctorExists = await db
+    const doctorExists = await db()
       .collection("management-registration")
       .findOne({ name, mobile_no });
     if (doctorExists) {
       return res.status(409).json({ message: "Doctor Already Exists" });
     }
 
-    const result = await db.collection("management-registration").insertOne({
-      departmentId: new ObjectId(departmentId),
-      name,
-      mobile_no,
-      gender,
-      dob: dob || "",
-      speciality,
-      email: email || "",
-      experience: experience || "",
-    });
+    const hashPassword = await bcrypt.hash(`JH@${name}`, 10);
 
-    return res.status(200).json({
-      id: result.insertedId,
-      result,
-    });
+    const result = await db()
+      .collection("management-registration")
+      .insertOne({
+        deptid,
+        name,
+        mobile_no,
+        gender,
+        role: "doctor",
+        password: hashPassword,
+        specialization,
+        degree,
+        dob: dob || "",
+        email: email || "",
+        experience: experience || "",
+        createdAt: new Date(),
+      });
+    const createdDoctor = await db()
+      .collection("management-registration")
+      .findOne({ _id: result.insertedId });
+    return res.status(201).json(createdDoctor);
   } catch (error) {
     return res
       .status(500)
@@ -75,12 +84,12 @@ const getAllDoctor = async (req, res) => {
 // Read One
 const getDoctorById = async (req, res) => {
   try {
-    const id = req.params.id;
+    const { id } = req.params;
     if (!ObjectId.isValid(id)) {
       return res.status(400).json({ message: "Invalid Doctor id" });
     }
 
-    const doctor = await db
+    const doctor = await db()
       .collection("management-registration")
       .findOne({ _id: new ObjectId(id) });
     if (!doctor) {
@@ -95,32 +104,51 @@ const getDoctorById = async (req, res) => {
 
 // Update
 const updateDoctor = async (req, res) => {
+  const { id } = req.params;
+  const fields = req.body;
+  if (
+    !fields.name ||
+    !fields.mobile_no ||
+    !fields.gender ||
+    !fields.specialization ||
+    !fields.degree ||
+    !fields.deptid
+  ) {
+    return res.status(400).json({ message: "All Fields are Required" });
+  }
+  if (!ObjectId.isValid(id)) {
+    return res.status(400).json({ message: "Invalid Doctor ID" });
+  }
   try {
-    const id = req.params.id;
-    const { departmentId, ...fields } = req.body;
-    const updateData = { ...fields };
 
-    if (departmentId) {
-      const dept = await db
-        .collection("departments")
-        .findOne({ _id: new ObjectId(departmentId) });
-      if (!dept) {
-        return res.status(404).json({ message: "Department Not Found" });
-      }
-      updateData.departmentId = new ObjectId(departmentId);
+    //validate Department
+    const departmentExists = await db()
+      .collection("departments")
+      .findOne({ deptid: fields.deptid });
+    if (!departmentExists) {
+      return res.status(404).json({ message: "Department Not Found" });
     }
+    // console.log(id);
 
-    const result = await db
+    const result = await db()
       .collection("management-registration")
       .findOneAndUpdate(
-        { _id: new ObjectId(id) },
-        { $set: updateData },
-        { ReturnDocument: "after" }
+         { _id: new ObjectId(id) },
+        {
+          $set: {
+            ...fields,
+            updatedAt: new Date(),
+          },
+        },
+        { returnDocument: "after" }
       );
-    if (!result.value) {
+      // console.log("result", result)
+    if (!result) {
       return res.status(404).json({ message: "Doctor not Found" });
     }
-    return res.status(200).json(result.value);
+    return res
+      .status(200)
+      .json({ message: "Doctor Updated Successfully", doctor: result });
   } catch (err) {
     res.status(400).json({ error: "Invalid data" });
   }
@@ -128,13 +156,13 @@ const updateDoctor = async (req, res) => {
 
 //  Delete
 const deleteDoctor = async (req, res) => {
-  try {
-    const id = req.params.id;
+  const { id } = req.params;
 
+  try {
     if (!ObjectId.isValid(id)) {
       return res.status(400).json({ message: "Invalid Doctor id" });
     }
-    const result = await db
+    const result = await db()
       .collection("management-registration")
       .deleteOne({ _id: new ObjectId(id) });
 

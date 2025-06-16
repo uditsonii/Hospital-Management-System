@@ -12,12 +12,15 @@ import {
   FaUserAlt,
   FaClinicMedical,
   FaHeartbeat,
+  FaComments,
 } from "react-icons/fa";
+
 import TPAPartners from "../components/TPAPartners";
 import Doctors from "../components/Doctors";
 import HorizontalVideoScroll from "../components/HorizontalVideoScroll";
 import Footer from "../components/Footer";
 import IndexNavbar from "../components/IndexNavbar";
+import MedicalChatbot from "../components/chatboxai";
 
 const services = [
   {
@@ -28,8 +31,7 @@ const services = [
   {
     icon: <FaProcedures className="text-white text-4xl" />,
     title: "Advanced Procedures",
-    description:
-      "Utilizing cutting-edge technologies for effective treatments.",
+    description: "Utilizing cutting-edge technologies for effective treatments.",
   },
   {
     icon: <FaFlask className="text-white text-4xl" />,
@@ -78,6 +80,7 @@ const cardVariants = {
 
 const Home = () => {
   const [showEmergency, setShowEmergency] = useState(false);
+  const [isChatOpen, setIsChatOpen] = useState(false);
 
   useEffect(() => {
     function handleScroll() {
@@ -94,6 +97,7 @@ const Home = () => {
     <div className="flex flex-col min-h-screen">
       <IndexNavbar />
       <main>
+        {/* Hero Section */}
         <section
           className="relative bg-cover bg-center bg-no-repeat text-[var(--text-light)] py-32 text-center animate-fadeIn h-[600px]"
           style={{
@@ -101,7 +105,7 @@ const Home = () => {
               "url('https://www.zmartbuild.com/wp-content/uploads/2021/10/38054.jpg')",
           }}
         >
-          <div className="absolute inset-0 bg-black bg-opacity-60 z-0"></div>{" "}
+          <div className="absolute inset-0 bg-black bg-opacity-60 z-0"></div>
           <div className="relative z-10 max-w-6xl mx-auto px-4">
             <h1 className="text-5xl sm:text-6xl font-extrabold mb-4">
               Welcome to{" "}
@@ -130,6 +134,7 @@ const Home = () => {
           </div>
         </section>
 
+        {/* Emergency Popup */}
         {showEmergency && (
           <div
             className="fixed inset-0 bg-black bg-opacity-80 flex justify-center items-center z-50 p-4"
@@ -181,6 +186,7 @@ const Home = () => {
           </div>
         )}
 
+        {/* Our Specialists Section */}
         <motion.section
           className="py-10 bg-gray-100"
           initial={{ opacity: 0 }}
@@ -194,6 +200,7 @@ const Home = () => {
           <Doctors />
         </motion.section>
 
+        {/* Our Facilities Section */}
         <motion.section
           className="py-20 bg-gray-100"
           initial={{ opacity: 0, x: 100 }}
@@ -202,7 +209,7 @@ const Home = () => {
           transition={{ duration: 0.8, ease: "easeOut" }}
         >
           <div className="max-w-7xl mx-auto px-4">
-            <h2 className="text-5xl  font-extrabold text-center mb-16 text-transparent bg-clip-text bg-gradient-to-r from-sky-600 to-blue-400 drop-shadow-xl">
+            <h2 className="text-5xl font-extrabold text-center mb-16 text-transparent bg-clip-text bg-gradient-to-r from-sky-600 to-blue-400 drop-shadow-xl">
               Our Facilities
             </h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-12">
@@ -275,6 +282,7 @@ const Home = () => {
           </div>
         </motion.section>
 
+        {/* Our Services Section */}
         <motion.section
           className="py-20 bg-white"
           variants={containerVariants}
@@ -302,6 +310,7 @@ const Home = () => {
           </div>
         </motion.section>
 
+        {/* We Value The Life Section */}
         <motion.section
           className="py-20 bg-gray-50"
           initial={{ opacity: 0, y: 50 }}
@@ -331,8 +340,7 @@ const Home = () => {
                   <div>
                     <h4 className="font-bold text-lg">Patient First</h4>
                     <p className="text-gray-700 text-sm">
-                      For us, patient care comes first & we put patient's needs
-                      above all...
+                      For us, patient care comes first & we put patient's needs above all...
                     </p>
                   </div>
                 </div>
@@ -363,6 +371,7 @@ const Home = () => {
           </div>
         </motion.section>
 
+        {/* Our Media Section */}
         <motion.section
           className="py-20 bg-white"
           initial={{ opacity: 0, y: 40 }}
@@ -378,6 +387,7 @@ const Home = () => {
           </div>
         </motion.section>
 
+        {/* TPA Partners */}
         <motion.div
           className="animate-fadeIn"
           initial={{ opacity: 0 }}
@@ -387,6 +397,12 @@ const Home = () => {
         >
           <TPAPartners />
         </motion.div>
+
+        {/* Floating Chatbot Component */}
+<div className="fixed bottom-6 right-6 z-50 w-[370px]">
+  <MedicalChatbot />
+</div>
+
       </main>
       <Footer />
     </div>

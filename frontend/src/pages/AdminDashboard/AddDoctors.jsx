@@ -1,42 +1,120 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Navbar from "./Navbar";
 import Sidebar from "./Sidebar";
+import Swal from "sweetalert2";
+import { useNavigate } from "react-router-dom";
 
 const AddDoctor = () => {
   const [doctor, setDoctor] = useState({
+    deptid: "",
     name: "",
     email: "",
-    phone: "",
+    mobile_no: "",
     specialization: "",
-    department: "",
-    password: "",
-    confirmPassword: "",
+    // password: "",
+    // confirmPassword: "",
     gender: "",
-    age: "",
+    dob: "",
+    degree: "",
+    experience: "",
   });
+
+  const [departments, setDepartments] = useState([]);
+  useEffect(() => {
+    const fetchDepartments = async () => {
+      try {
+        const res = await fetch("http://localhost:8000/api/departments")
+        const data = await res.json();
+        setDepartments(data)
+      } catch (error) {
+        console.error("Failed to fetch departments", err);
+        Swal.fire({
+          title: 'Error',
+          text: 'Failed to load departments',
+          icon: 'error'
+        });
+      }
+    }
+  
+    fetchDepartments();
+  }, [])
+  
+
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
     setDoctor({ ...doctor, [e.target.name]: e.target.value });
   };
 
-  const [isSidebarOpen, setSidebarOpen] = useState(false);
-  const toggleSidebar = () => setSidebarOpen(!isSidebarOpen);
+  const token = localStorage.getItem("token");
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (doctor.password !== doctor.confirmPassword) {
-      alert("Passwords do not match!");
-      return;
+    console.log(doctor);
+    try {
+      const res = await fetch("http://localhost:8000/api/doctor", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(doctor),
+      });
+      
+      const data = await res.json();
+      if (!res.ok) {
+        const errorData = await res.json();
+        throw new Error(errorData.error || "Failed to add Doctor");
+      }
+
+
+      // SweetAlert2 Success
+      await Swal.fire({
+        title: "Department Added 🎉",
+        html: `<div class="flex flex-col items-center">
+            <img src="https://media.tenor.com/OYJL9tWUZ0cAAAAi/checkmark.gif" alt="Success" style="width:100px; margin-bottom: 10px;" />
+            <p class="text-lg text-gray-800">The Doctor has been added successfully.</p>
+             </div>`,
+        showConfirmButton: true,
+        confirmButtonText: "Go to Doctors",
+        confirmButtonColor: "#2563EB",
+        background: "#f0f9ff",
+      });
+
+      navigate("/view-doctor");
+
+      setDoctor({
+        deptid: "",
+        name: "",
+        email: "",
+        mobile_no: "",
+        specialization: "",
+        // password: "",
+        // confirmPassword: "",
+        gender: "",
+        dob: "",
+        degree: "",
+        experience: "",
+      });
+    } catch (error) {
+      console.error(error);
+      Swal.fire({
+        title: "Oops 😓",
+        html: `
+        <div class="flex flex-col items-center">
+          <img src="https://media.tenor.com/8zUVTt0RWxkAAAAi/sad-tears.gif" alt="Error" style="width:80px; margin-bottom: 10px;" />
+          <p class="text-lg text-gray-700">${
+            error.message || "Something went wrong"
+          }</p>
+        </div>
+      `,
+        icon: "error",
+        confirmButtonText: "Try Again",
+      });
     }
-    console.log("Doctor data:", doctor);
   };
 
   return (
     <div className="min-h-screen flex bg-gradient-to-br from-blue-50 to-blue-100">
-      {/* Sidebar */}
       <Sidebar isOpen={isSidebarOpen} toggleSidebar={toggleSidebar} />
-
-      {/* Main Content */}
       <div className="flex-1 md:ml-64">
         <Navbar toggleSidebar={toggleSidebar} />
         <main className="flex-grow overflow-auto flex justify-center items-start p-6">
@@ -45,16 +123,86 @@ const AddDoctor = () => {
               🩺 Add New Doctor
             </h2>
 
-            <form onSubmit={handleSubmit} className="space-y-5 text-gray-800 text-[15px] font-medium">
+            <form
+              onSubmit={handleSubmit}
+              className="space-y-5 text-gray-800 text-[15px] font-medium"
+            >
+
+              {/* Department */}
+              <div>
+                <label className="block mb-1 font-semibold">
+                  🏥 Department
+                </label>
+                <select
+                  name="deptid"
+                  value={doctor.deptid}
+                  onChange={handleChange}
+                  className="w-full border border-blue-300 rounded-xl px-4 py-2 bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  required
+                >
+                  <option value="">Select Department</option>
+                  {departments.map((dept) => (
+                    // console.log(<option value={dept._id} key={dept._id}>{dept.name}</option>)
+                    <option value={dept.deptid} key={dept.deptid}>{dept.name}</option>
+                  ))}
+                </select>
+              </div>
+
               {/* Input Group */}
               {[
-                { label: "👨‍⚕️ Full Name", name: "name", type: "text", placeholder: "Dr. John Doe" },
-                { label: "📧 Email", name: "email", type: "email", placeholder: "doctor@example.com" },
-                { label: "📞 Phone Number", name: "phone", type: "tel", placeholder: "+91-9876543210" },
-                { label: "🎂 Age", name: "age", type: "number", placeholder: "e.g. 35" },
-                { label: "🩻 Specialization", name: "specialization", type: "text", placeholder: "Cardiologist, Surgeon..." },
-                { label: "🔐 Password", name: "password", type: "password", placeholder: "Enter password" },
-                { label: "🔒 Confirm Password", name: "confirmPassword", type: "password", placeholder: "Confirm password" },
+                {
+                  label: "👨‍⚕️ Full Name",
+                  name: "name",
+                  type: "text",
+                  placeholder: "Dr. John Doe",
+                },
+                {
+                  label: "📞 Phone Number",
+                  name: "mobile_no",
+                  type: "tel",
+                  placeholder: "+91-9876543210",
+                },
+                {
+                  label: "🎂 dob",
+                  name: "dob",
+                  type: "date",
+                },
+                {
+                  label: "🩻 Specialization",
+                  name: "specialization",
+                  type: "text",
+                  placeholder: "Cardiologist, Surgeon...",
+                },
+                {
+                  label: "🎓 Degree",
+                  name: "degree",
+                  type: "text",
+                  placeholder: "MBBS, MD...",
+                },
+                {
+                  label: "⏳ Experience",
+                  name: "experience",
+                  type: "text",
+                  placeholder: "MBBS, MD...",
+                },
+                // {
+                //   label: "🔐 Password",
+                //   name: "password",
+                //   type: "password",
+                //   placeholder: "Enter password",
+                // },
+                // {
+                //   label: "🔒 Confirm Password",
+                //   name: "confirmPassword",
+                //   type: "password",
+                //   placeholder: "Confirm password",
+                // },
+                {
+                  label: "📧 Email",
+                  name: "email",
+                  type: "email",
+                  placeholder: "doctor@example.com",
+                },
               ].map(({ label, name, type, placeholder }) => (
                 <div key={name}>
                   <label className="block mb-1 font-semibold">{label}</label>
@@ -65,7 +213,7 @@ const AddDoctor = () => {
                     onChange={handleChange}
                     placeholder={placeholder}
                     className="w-full border border-blue-300 rounded-xl px-4 py-2 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    required
+                    required={!(name === "experience" || name === "email" || name === "dob")}
                   />
                 </div>
               ))}
@@ -87,26 +235,7 @@ const AddDoctor = () => {
                 </select>
               </div>
 
-              {/* Department */}
-              <div>
-                <label className="block mb-1 font-semibold">🏥 Department</label>
-                <select
-                  name="department"
-                  value={doctor.department}
-                  onChange={handleChange}
-                  className="w-full border border-blue-300 rounded-xl px-4 py-2 bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  required
-                >
-                  <option value="">Select Department</option>
-                  <option value="Cardiology">Cardiology</option>
-                  <option value="Neurology">Neurology</option>
-                  <option value="Orthopedics">Orthopedics</option>
-                  <option value="Pediatrics">Pediatrics</option>
-                  <option value="General Medicine">General Medicine</option>
-                </select>
-              </div>
-
-              {/* Submit Button */}
+              {/* Submit */}
               <button
                 type="submit"
                 className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 rounded-xl shadow-md transition duration-300 hover:shadow-lg"
@@ -120,5 +249,5 @@ const AddDoctor = () => {
     </div>
   );
 };
-
+}
 export default AddDoctor;

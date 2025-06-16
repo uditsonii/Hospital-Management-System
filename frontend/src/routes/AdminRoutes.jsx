@@ -17,10 +17,13 @@ const AdminRoutes = () => {
   return (
     <Routes>
       <Route path="/" element={<MainDashboard />} />
-      <Route path="/adddoctor" element={<AddDoctor />} />
+
+      <Route path="/add-doctor" element={<AddDoctor />} />
       <Route path="/doctordetails" element={<DoctorDetails />} />
-      <Route path="/viewdoctor" element={<ViewDoctor />} />
+      <Route path="/view-doctor" element={<ViewDoctor />} />
+
       <Route path="/profile" element={<Profile />} />
+      
       <Route path="/departments" element={<ViewDepartment />} />
       <Route path="/managepatients" element={<ManagePatients />} />
       <Route path="/upcoming" element={<UpcomingAppointments />} />
