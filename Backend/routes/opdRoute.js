@@ -1,5 +1,5 @@
 const express = require("express");
-const { NewPatient, OPDRegister, SendDetailThroughPID, getPendingRequests, bookAppointmentFromUser, updateAppointmentStatus } = require("../controllers/PatientAppointmentController");
+const { NewPatient, OPDRegister, SendDetailThroughPID, getPendingRequests, bookAppointmentFromUser, updateAppointmentStatus, searchPatientForOpd } = require("../controllers/PatientAppointmentController");
 
 const opdRoutes = express.Router();
 
@@ -13,6 +13,9 @@ opdRoutes.get("/patient-pid/:pid", SendDetailThroughPID);
 opdRoutes.post('/book-appointments',bookAppointmentFromUser)
 opdRoutes.post('/get-pending-requests',getPendingRequests)
 opdRoutes.patch('/update-appointment-status',updateAppointmentStatus)
+
+// patient search by opd manager
+opdRoutes.get('/search', searchPatientForOpd);
 
 
 module.exports = opdRoutes;

@@ -46,30 +46,31 @@ await Swal.fire({
     <div class="flex flex-col items-center">
       <img src="https://media.tenor.com/OYJL9tWUZ0cAAAAi/checkmark.gif" alt="Success" style="width:100px; margin-bottom: 10px;" />
       <p class="text-lg text-gray-800">The department has been added successfully.</p>
-    </div>
-  `,
-  showConfirmButton: true,
-  confirmButtonText: "Go to Departments",
-  confirmButtonColor: "#2563EB",
-  background: "#f0f9ff",
-});
+       </div>`,
+        showConfirmButton: true,
+        confirmButtonText: "Go to Departments",
+        confirmButtonColor: "#2563EB",
+        background: "#f0f9ff",
+      });
 
 navigate("/admin/departments");
 
-setFormData({ name: "", head: "", description: "" });
+      setFormData({ name: "", head: "", description: "" });
     } catch (error) {
       console.error(error);
       Swal.fire({
-  title: "Oops 😓",
-  html: `
+        title: "Oops 😓",
+        html: `
     <div class="flex flex-col items-center">
       <img src="https://media.tenor.com/8zUVTt0RWxkAAAAi/sad-tears.gif" alt="Error" style="width:80px; margin-bottom: 10px;" />
-      <p class="text-lg text-gray-700">${error.message || "Something went wrong"}</p>
+      <p class="text-lg text-gray-700">${
+        error.message || "Something went wrong"
+      }</p>
     </div>
   `,
-  icon: "error",
-  confirmButtonText: "Try Again",
-});
+        icon: "error",
+        confirmButtonText: "Try Again",
+      });
     }
   };
 
@@ -88,7 +89,10 @@ setFormData({ name: "", head: "", description: "" });
 
             <form onSubmit={handleSubmit} className="space-y-7">
               <div>
-                <label htmlFor="name" className="block text-blue-900 font-semibold mb-2">
+                <label
+                  htmlFor="name"
+                  className="block text-blue-900 font-semibold mb-2"
+                >
                   Department Name
                 </label>
                 <input
@@ -104,7 +108,10 @@ setFormData({ name: "", head: "", description: "" });
               </div>
 
               <div>
-                <label htmlFor="head" className="block text-blue-900 font-semibold mb-2">
+                <label
+                  htmlFor="head"
+                  className="block text-blue-900 font-semibold mb-2"
+                >
                   Head Doctor
                 </label>
                 <input
@@ -120,7 +127,10 @@ setFormData({ name: "", head: "", description: "" });
               </div>
 
               <div>
-                <label htmlFor="description" className="block text-blue-900 font-semibold mb-2">
+                <label
+                  htmlFor="description"
+                  className="block text-blue-900 font-semibold mb-2"
+                >
                   Department Description
                 </label>
                 <textarea

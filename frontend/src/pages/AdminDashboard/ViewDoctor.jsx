@@ -1,52 +1,29 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Navbar from "./Navbar";
 import Sidebar from "./Sidebar";
 import { FaTrash, FaEdit } from "react-icons/fa";
-
-const dummyDoctors = [
-  {
-    id: 1,
-    name: "Dr. John Doe",
-    email: "john.doe@example.com",
-    phone: "+91-9876543210",
-    specialization: "Cardiologist",
-    department: "Cardiology",
-    gender: "Male",
-    age: 45,
-  },
-  {
-    id: 2,
-    name: "Dr. Jane Smith",
-    email: "jane.smith@example.com",
-    phone: "+91-9123456789",
-    specialization: "Neurologist",
-    department: "Neurology",
-    gender: "Female",
-    age: 38,
-  },
-  {
-    id: 3,
-    name: "Dr. Alex Johnson",
-    email: "alex.johnson@example.com",
-    phone: "+91-9988776655",
-    specialization: "Orthopedic Surgeon",
-    department: "Orthopedics",
-    gender: "Other",
-    age: 40,
-  },
-];
+import axios from "axios";
 
 const ViewDoctors = () => {
   const [isSidebarOpen, setSidebarOpen] = useState(false);
   const toggleSidebar = () => setSidebarOpen(!isSidebarOpen);
   const [selectedRow, setSelectedRow] = useState(null);
+  const [doctors, setDoctors] = useState([]);
+  const [error, setError] = useState(null);
 
   const handleRowClick = (id) => {
     setSelectedRow(id === selectedRow ? null : id);
   };
 
-  const handleEdit = (id) => {
-    alert(`Edit doctor with ID: ${id}`);
+  const handleEdit = async (id) => {
+    try{
+const result=await axios.put("http://localhost:8000/api/doctor/updatedoctor")
+    }
+    catch(err)
+    {
+      console.log(err);
+      setError("Failed to Update Doctor");
+    }
   };
 
   const handleDelete = (id) => {
@@ -55,6 +32,40 @@ const ViewDoctors = () => {
       alert(`Doctor with ID ${id} deleted.`);
     }
   };
+
+ useEffect(() => {
+  const getData = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        setError("User not authenticated");
+        return;
+      }
+
+      const response = await fetch("http://localhost:8000/api/doctor/fetchdoctor", {
+        method: "GET",
+        headers: {
+          "Authorization": `Bearer ${token}`,
+          "Content-Type": "application/json"
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error(`Error: ${response.status} ${response.statusText}`);
+      }
+
+      const data = await response.json();
+      setDoctors(data);
+      setError(null);
+    } catch (err) {
+      console.error(err);
+      setError("Failed to fetch doctors data.");
+    }
+  };
+
+  getData();
+}, []);
+
 
   return (
     <div className="min-h-screen flex bg-gray-50">
@@ -68,11 +79,17 @@ const ViewDoctors = () => {
                 👨‍⚕️ Doctors List
               </h1>
             </div>
+
+            {error && (
+              <p className="text-red-600 p-4">{error}</p>
+            )}
+
             <div className="overflow-x-auto">
               <table className="min-w-full bg-white">
                 <thead>
                   <tr className="bg-blue-100 text-blue-800 uppercase text-xs leading-normal">
                     <th className="py-3 px-6 text-left">Name</th>
+                    <th className="py-3 px-6 text-left">Id</th>
                     <th className="py-3 px-6 text-left">Email</th>
                     <th className="py-3 px-6 text-left">Phone</th>
                     <th className="py-3 px-6 text-left">Specialization</th>
@@ -83,47 +100,53 @@ const ViewDoctors = () => {
                   </tr>
                 </thead>
                 <tbody className="text-gray-700 text-xs">
-  {dummyDoctors.map((doctor, idx) => (
-    <tr
-      key={doctor.id}
-      onClick={() => handleRowClick(doctor.id)}
-      className={`group border-b border-gray-200 cursor-pointer
-        ${selectedRow === doctor.id ? "bg-blue-100" : idx % 2 === 0 ? "bg-white" : "bg-blue-50"}
-        hover:bg-blue-200 hover:shadow-md transition duration-200 ease-in-out`}
-    >
-      <td className="py-3 px-6 text-left font-medium text-blue-800">{doctor.name}</td>
-      <td className="py-3 px-6 text-left">{doctor.email}</td>
-      <td className="py-3 px-6 text-left">{doctor.phone}</td>
-      <td className="py-3 px-6 text-left">{doctor.specialization}</td>
-      <td className="py-3 px-6 text-left">{doctor.department}</td>
-      <td className="py-3 px-6 text-left">{doctor.gender}</td>
-      <td className="py-3 px-6 text-center">{doctor.age}</td>
-      <td className="py-3 px-6 text-center flex gap-3 justify-center">
-        <button
-          onClick={(e) => {
-            e.stopPropagation();
-            handleEdit(doctor.id);
-          }}
-          className="text-blue-600 hover:text-blue-800"
-          aria-label={`Edit ${doctor.name}`}
-        >
-          <FaEdit />
-        </button>
-        <button
-          onClick={(e) => {
-            e.stopPropagation();
-            handleDelete(doctor.id);
-          }}
-          className="text-red-600 hover:text-red-800"
-          aria-label={`Delete ${doctor.name}`}
-        >
-          <FaTrash />
-        </button>
-      </td>
-    </tr>
-  ))}
-</tbody>
-
+                  {doctors.length === 0 ? (
+                    <tr>
+                      <td colSpan="8" className="text-center py-4">No Data Found</td>
+                    </tr>
+                  ) : (
+                    doctors.map((doctor, idx) => (
+                      <tr
+                        key={doctor.id || doctor._id} // support MongoDB _id or id
+                        onClick={() => handleRowClick(doctor.id || doctor._id)}
+                        className={`group border-b border-gray-200 cursor-pointer
+                          ${selectedRow === (doctor.id || doctor._id) ? "bg-blue-100" : idx % 2 === 0 ? "bg-white" : "bg-blue-50"}
+                          hover:bg-blue-200 hover:shadow-md transition duration-200 ease-in-out`}
+                      >
+                        <td className="py-3 px-6 text-left font-medium text-blue-800">{doctor.name}</td>
+                        <td className="py-3 px-6 text-left">{doctor.deptid}</td>
+                        <td className="py-3 px-6 text-left">{doctor.email}</td>
+                        <td className="py-3 px-6 text-left">{doctor.mobile_no}</td>
+                        <td className="py-3 px-6 text-left">{doctor.specialization}</td>
+                        <td className="py-3 px-6 text-left">{doctor.deptid}</td>
+                        <td className="py-3 px-6 text-left">{doctor.gender}</td>
+                        <td className="py-3 px-6 text-center">{doctor.age}</td>
+                        <td className="py-3 px-6 text-center flex gap-3 justify-center">
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleEdit(doctor.id || doctor._id);
+                            }}
+                            className="text-blue-600 hover:text-blue-800"
+                            aria-label={`Edit ${doctor.name}`}
+                          >
+                            <FaEdit />
+                          </button>
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleDelete(doctor.id || doctor._id);
+                            }}
+                            className="text-red-600 hover:text-red-800"
+                            aria-label={`Delete ${doctor.name}`}
+                          >
+                            <FaTrash />
+                          </button>
+                        </td>
+                      </tr>
+                    ))
+                  )}
+                </tbody>
               </table>
             </div>
           </div>

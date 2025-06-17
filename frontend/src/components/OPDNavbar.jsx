@@ -12,6 +12,39 @@ const OPDNavbar = ({ toggleSidebar }) => {
   const userName = user.name || "OPD User";
   const userEmail = user.email || "user@opdclinic.com";
 
+  //search patient for pid by name, mobile_noh
+  const [query, setQuery] = useState("");
+  const [results, setResults] = useState([]);
+  const [isOpen, setIsOpen] = useState(false);
+
+  useEffect(() => {
+    const handleCloseDropdown = (e) => {
+      const dropdown = document.getElementById('search-dropdown-container');
+      if(dropdown && !dropdown.contains(e.target)){
+        setIsOpen(false);
+      }
+    }
+
+    document.addEventListener('mousedown', handleCloseDropdown);
+    return () => document.removeEventListener('mousedown', handleCloseDropdown);
+   }, [])
+
+  const handleSearch = async (e) => {
+    setIsOpen(true);
+    try {
+      // console.log(query);
+      const res = await fetch(
+        `http://localhost:8000/opd/search?query=${query}`
+      );
+      const data = await res.json();
+      // console.log(data);
+      setResults(data.data);
+      console.log(results);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   const { notificationCountContext } = useContext(OpdNotificationContext);
 
   useEffect(() => {
@@ -39,10 +72,52 @@ const OPDNavbar = ({ toggleSidebar }) => {
         <div className="flex-1 mx-6 hidden md:block">
           <input
             type="text"
+            value={query}
+            onChange={(e) => {
+              setQuery(e.target.value);
+              // setIsOpen(true);
+            }}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                handleSearch();
+              }
+            }}
             placeholder="Search patients, doctors..."
             className="w-full px-5 py-2 text-gray-700 text-sm bg-white border border-blue-200 rounded-full shadow-sm placeholder-blue-400 focus:outline-none focus:ring-2 focus:ring-blue-300 focus:border-blue-300 transition"
           />
         </div>
+        <button onClick={handleSearch}>Search</button>
+        {/* dropdown */}
+        {isOpen && (
+          <div id="search-dropdown-container" className="absolute top-full mt-2 w-full bg-white rounded-lg shadow-xl border border-gray-100 z-50 max-h-96 overflow-y-auto">
+          {/* Trending Searches */}
+          <div className="p-4">
+            <h3 className="text-lg font-semibold text-gray-800 mb-3">SEARCH PATIENTS</h3>
+            <div className="mt-4">
+              {results.length > 0
+                ? results.map((patient, index) => (
+                    <div
+                      key={index}
+                      className="p-4 mb-2 bg-gray-100 rounded shadow-sm"
+                    >
+                      <p>
+                        <strong>Name:</strong> {patient.name}
+                      </p>
+                      <p>
+                        <strong>Mobile:</strong> {patient.mobile_no}
+                      </p>
+                      <p>
+                        <strong>PID:</strong> {patient.pid}
+                      </p>
+                    </div>
+                  ))
+                : query && (
+                    <p className="text-gray-500 mt-2">No patients found.</p>
+                  )}
+            </div>
+          </div>
+          </div>
+        )}
 
         {/* Right Section: Notifications + Profile */}
         <div className="flex items-center gap-4 relative">
@@ -115,8 +190,10 @@ const OPDNavbar = ({ toggleSidebar }) => {
       <div className="md:hidden px-6 pb-4 bg-blue-50">
         <input
           type="text"
+          value={query}
           placeholder="Search..."
           className="w-full px-4 py-2 text-gray-700 text-sm bg-white rounded-full placeholder-blue-400 focus:outline-none focus:ring-2 focus:ring-blue-300 shadow-sm"
+          onChange={(e) => console.log(e.target.value)}
         />
       </div>
     </header>

@@ -85,7 +85,7 @@ const login = async (req, res) => {
 
     if (name) {
       user = await db().collection("management-registration").findOne({ name });
-      console.log("user value :", user);
+      // console.log("user value :", user);
       if (user) {
         if (user.role === "doctor") {
           if (roleWithMobile.includes(user.role) && !mobile_no) {
