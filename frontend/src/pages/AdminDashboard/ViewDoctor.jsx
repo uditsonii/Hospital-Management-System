@@ -87,7 +87,7 @@ const handleEdit = async (id) => {
     `,
     focusConfirm: false,
     showCancelButton: true,
-    confirmButtonText: 'Save',
+    confirmButtonText: 'Save',//
     preConfirm: () => {
       return {
         name: document.getElementById('name').value.trim(),
