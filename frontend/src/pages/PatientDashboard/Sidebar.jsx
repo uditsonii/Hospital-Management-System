@@ -32,9 +32,15 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
             <SidebarLink icon="🧪" label="Lab Reports" to="/patient-dashboard/lab-reports" />
             <SidebarLink icon="🧾" label="Medical History" to="/patient-dashboard/medical-history" />
            <SidebarLink icon="📅" label="Book Appointment" to="/patient-dashboard/book-appointment" />
-           <SidebarLink icon={ <BiLogOutCircle />} label="Log Out" to="/"/>
-           {/* <button onClick={handleLogout} >Logout</button> */}
-           <Logout />
+                 <hr className="my-2 border-t border-gray-300" />
+
+            {/* ✅ Styled logout like sidebar link with hover */}
+            <div className="ml-2">
+              <div className="flex items-center gap-3 px-3 py-2 text-red-600 hover:bg-blue-100 rounded cursor-pointer transition">
+                <span className="text-lg">🔓</span>
+                <Logout />
+              </div>
+              </div>
           </nav>
         </div>
       </aside>

@@ -43,11 +43,8 @@ const NewPatientRegistration = () => {
         );
       }
 
-      // Show pid number
-      console.log(`${data.patient.name} PID is : ${data.patient.pid}`);
-
-      alert(`Patient registered successfully & PID: ${data.patient.pid}`);
-      resetForm(); //clear the form
+      alert(`Patient registered successfully! PID: ${data.patient.pid}`);
+      resetForm();
     } catch (error) {
       alert("Registration failed. Please try again.");
     } finally {
@@ -69,212 +66,200 @@ const NewPatientRegistration = () => {
   };
 
   return (
-    // <div className="bg-gray-700 min-h-screen text-white">
-    <div>
-      <OPDNavbar />
-      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 p-4">
-        <div className="max-w-4xl mx-auto">
-          <div className="max-w-4xl rounded-xl shadow-lg overflow-hidden">
-            {/* OPD Header */}
-            <div className="bg-gradient-to-r from-blue-600 to-indigo-600 px-6 py-8 text-white">
-              <div className="flex items-center justify-around">
-                <div className="flex items-center space-x-3">
-                  <FileText className="h-8 w-8 text-white" />
-                  <div>
-                    <h1 className="text-3xl font-bold text-white">
-                      OPD Registration
-                    </h1>
-                    <p className="text-blue-100 mt-1">
-                      OutPatient Department - Patient Registration Form
-                    </p>
-                  </div>
+   <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-100 to-white">
+  <OPDNavbar />
+
+  <div className="max-w-3xl mx-auto p-4 md:p-6">
+    <div className="bg-white rounded-2xl shadow-md border border-blue-100 overflow-hidden">
+
+      {/* Header */}
+      <div className="bg-gradient-to-r from-indigo-600 to-blue-500 p-5 md:p-6">
+        <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-3">
+          <div className="flex items-center gap-3 text-white">
+            <FileText className="h-6 w-6" />
+            <div>
+              <h1 className="text-xl md:text-2xl font-bold">OPD Registration</h1>
+              <p className="text-sm text-blue-200">
+                OutPatient Department - Patient Registration
+              </p>
+            </div>
+          </div>
+
+          <Link
+            to="/opd/fill-slip"
+            className="px-4 py-2 text-sm bg-sky-500 hover:bg-sky-600 text-white rounded-lg transition shadow-md"
+          >
+            &larr; Back
+          </Link>
+        </div>
+      </div>
+     
+
+          {/* Form */}
+          <form onSubmit={handleSubmit} className="p-8">
+            {/* Section Header */}
+            <div className="mb-8 flex items-center space-x-3">
+              <User className="h-6 w-6 text-indigo-600" />
+              <h2 className="text-2xl font-semibold text-gray-800 border-b-2 border-indigo-500 pb-1">
+                Patient Information
+              </h2>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {[
+                {
+                  label: "Name *",
+                  name: "name",
+                  type: "text",
+                  placeholder: "Enter Patient Name",
+                  required: true,
+                },
+                {
+                  label: "Age *",
+                  name: "age",
+                  type: "number",
+                  placeholder: "Enter Age",
+                  required: true,
+                },
+                {
+                  label: "Gender *",
+                  name: "gender",
+                  type: "select",
+                  options: [
+                    { value: "", label: "Select Gender" },
+                    { value: "male", label: "Male" },
+                    { value: "female", label: "Female" },
+                    { value: "other", label: "Other" },
+                  ],
+                  required: true,
+                },
+                {
+                  label: "Mobile Number *",
+                  name: "mobile_no",
+                  type: "tel",
+                  placeholder: "Enter Mobile Number",
+                  required: true,
+                },
+                {
+                  label: "Guardian Name",
+                  name: "gname",
+                  type: "text",
+                  placeholder: "Enter Guardian Name",
+                  required: false,
+                },
+                {
+                  label: "Email",
+                  name: "email",
+                  type: "email",
+                  placeholder: "Enter Email",
+                  required: false,
+                },
+                {
+                  label: "Blood Group",
+                  name: "bloodGroup",
+                  type: "select",
+                  options: [
+                    { value: "", label: "Select Blood Group" },
+                    { value: "A+", label: "A+" },
+                    { value: "A-", label: "A-" },
+                    { value: "B+", label: "B+" },
+                    { value: "B-", label: "B-" },
+                    { value: "AB+", label: "AB+" },
+                    { value: "AB-", label: "AB-" },
+                    { value: "O+", label: "O+" },
+                    { value: "O-", label: "O-" },
+                  ],
+                  required: false,
+                },
+              ].map(({ label, name, type, placeholder, required, options }) => (
+                <div key={name} className="flex flex-col">
+                  <label
+                    htmlFor={name}
+                    className="mb-2 text-gray-700 font-medium"
+                  >
+                    {label}
+                  </label>
+                  {type === "select" ? (
+                    <select
+                      id={name}
+                      name={name}
+                      value={formData[name]}
+                      onChange={handleInputChange}
+                      required={required}
+                      className="rounded-md border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition"
+                    >
+                      {options.map(({ value, label }) => (
+                        <option key={value} value={value}>
+                          {label}
+                        </option>
+                      ))}
+                    </select>
+                  ) : (
+                    <input
+                      id={name}
+                      name={name}
+                      type={type}
+                      placeholder={placeholder}
+                      value={formData[name]}
+                      onChange={handleInputChange}
+                      required={required}
+                      className="rounded-md border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition"
+                    />
+                  )}
                 </div>
-                <Link to="/opd/fill-slip">
-                  <div className="text-white font-medium border-solid border-2 bg-sky-500 hover:bg-sky-600 rounded-lg p-3">
-                    Back
-                  </div>
-                  {/* <button className="text-white font-medium border-solid border-2 bg-sky-500 hover:bg-sky-600 rounded-lg p-3">Add New Patient</button> */}
-                </Link>
+              ))}
+
+              {/* Address textarea */}
+              <div className="md:col-span-2 lg:col-span-3 flex flex-col">
+                <label
+                  htmlFor="address"
+                  className="mb-2 text-gray-700 font-medium"
+                >
+                  Address
+                </label>
+                <textarea
+                  id="address"
+                  name="address"
+                  rows={3}
+                  placeholder="Enter Address"
+                  value={formData.address}
+                  onChange={handleInputChange}
+                  className="rounded-md border border-gray-300 px-3 py-2 resize-none focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition"
+                />
               </div>
             </div>
-            <form
-              onSubmit={handleSubmit}
-              className="p-6 bg-white rounded-lg shadow"
-            >
-              <div className="p-6 space-y-8">
-                {/* Patient Information */}
-                <div className="bg-gray-50 rounded-lg p-6">
-                  <div className="flex items-center space-x-2 mb-4">
-                    <User className="h-5 w-5 text-blue-600" />
-                    <h2 className="text-xl font-semibold text-gray-800">
-                      Patient Information
-                    </h2>
-                  </div>
 
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">
-                        Name *
-                      </label>
-                      <input
-                        type="text"
-                        name="name"
-                        value={formData.name}
-                        onChange={handleInputChange}
-                        required
-                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                        placeholder="Enter Your First Name"
-                      />
-                    </div>
+            {/* Action Buttons */}
+            <div className="mt-10 flex flex-col sm:flex-row gap-4 justify-between">
+              <button
+                type="submit"
+                disabled={isSubmitting}
+                className="flex-1 bg-gradient-to-r from-indigo-600 to-blue-600 hover:from-indigo-700 hover:to-blue-700 text-white font-semibold py-3 rounded-lg shadow-md flex items-center justify-center space-x-3 transition duration-300 disabled:opacity-60 disabled:cursor-not-allowed focus:outline-none focus:ring-4 focus:ring-indigo-400"
+              >
+                {isSubmitting ? (
+                  <>
+                    <RefreshCcw className="w-5 h-5 animate-spin" />
+                    <span>Registering...</span>
+                  </>
+                ) : (
+                  <>
+                    <Save className="w-5 h-5" />
+                    <span>Register Patient</span>
+                  </>
+                )}
+              </button>
 
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">
-                        Age *
-                      </label>
-                      <input
-                        type="number"
-                        name="age"
-                        value={formData.age}
-                        onChange={handleInputChange}
-                        required
-                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                        placeholder="Enter Your First Name"
-                      />
-                    </div>
-
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">
-                        Gender *
-                      </label>
-                      <select
-                        name="gender"
-                        value={formData.gender}
-                        onChange={handleInputChange}
-                        required
-                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                      >
-                        <option value="">Select Gender</option>
-                        <option value="male">Male</option>
-                        <option value="female">Female</option>
-                        <option value="other">Other</option>
-                      </select>
-                    </div>
-
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">
-                        Mobile Number *
-                      </label>
-                      <input
-                        type="tel"
-                        name="mobile_no"
-                        value={formData.mobile_no}
-                        onChange={handleInputChange}
-                        required
-                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                        placeholder="Enter Your First Name"
-                      />
-                    </div>
-
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">
-                        Gaudian Name
-                      </label>
-                      <input
-                        type="text"
-                        name="gname"
-                        value={formData.gname}
-                        onChange={handleInputChange}
-                        required
-                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                        placeholder="Enter Your First Name"
-                      />
-                    </div>
-
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">
-                        Email
-                      </label>
-                      <input
-                        type="email"
-                        name="email"
-                        value={formData.email}
-                        onChange={handleInputChange}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                        placeholder="Enter Your First Name"
-                      />
-                    </div>
-
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">
-                        Blood Group
-                      </label>
-                      <select
-                        name="bloodGroup"
-                        value={formData.bloodGroup}
-                        onChange={handleInputChange}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                      >
-                        <option value="">Select Blood Group</option>
-                        <option value="A+">A+</option>
-                        <option value="A-">A-</option>
-                        <option value="B+">B+</option>
-                        <option value="B-">B-</option>
-                        <option value="AB+">AB+</option>
-                        <option value="AB-">AB-</option>
-                        <option value="O+">O+</option>
-                        <option value="O-">O-</option>
-                      </select>
-                    </div>
-
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">
-                        Address
-                      </label>
-                      <textarea
-                        name="address"
-                        value={formData.address}
-                        rows={2}
-                        onChange={handleInputChange}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                      />
-                    </div>
-                  </div>
-                </div>
-
-                {/* Action Buttons */}
-                <div className="flex flex-col sm:flex-row gap-4 pt-6 border-t border-gray-200">
-                  <button
-                    type="submit"
-                    onClick={handleSubmit}
-                    disabled={isSubmitting}
-                    className="flex-1 bg-gradient-to-r from-blue-600 to-indigo-600 text-white py-3 px-6 rounded-lg font-medium hover:from-blue-700 hover:to-indigo-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:cursor-not-allowed transition-all duration-200 flex items-center justify-center space-x-2"
-                  >
-                    {isSubmitting ? (
-                      <>
-                        <RefreshCcw className="h-5 w-5 animate-spin" />
-                        <span>Registering...</span>
-                      </>
-                    ) : (
-                      <>
-                        <Save className="h-5 w-5" />
-                        <span>Register Patient</span>
-                      </>
-                    )}
-                  </button>
-
-                  <button
-                    type="button"
-                    onClick={resetForm}
-                    disabled={isSubmitting}
-                    className="flex-1 bg-gray-600 text-white py-3 px-6 rounded-lg font-medium hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 flex items-center justify-center space-x-2"
-                  >
-                    <RefreshCw className="h-5 w-5" />
-                    <span>Reset Form</span>
-                  </button>
-                </div>
-              </div>
-            </form>
-          </div>
+              <button
+                type="button"
+                onClick={resetForm}
+                disabled={isSubmitting}
+                className="flex-1 bg-gray-600 hover:bg-gray-700 text-white font-semibold py-3 rounded-lg shadow-md flex items-center justify-center space-x-3 transition duration-300 disabled:opacity-60 disabled:cursor-not-allowed focus:outline-none focus:ring-4 focus:ring-gray-500"
+              >
+                <RefreshCw className="w-5 h-5" />
+                <span>Reset Form</span>
+              </button>
+            </div>
+          </form>
         </div>
       </div>
     </div>

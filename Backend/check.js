@@ -36,4 +36,7 @@ app.listen(port, () => {
 
 const now = new Date();
 const time = now.getTime().toString().slice(-4);
-console.log(time);
+
+  const timePart = now.getTime().toString().slice(-4);
+  // const randomNo = Math.floor(100 + Math.random() * 900);
+console.log(timePart);

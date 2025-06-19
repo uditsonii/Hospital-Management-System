@@ -1,30 +1,42 @@
 import React, { useEffect, useState } from "react";
-
+import Sidebar from "./Sidebar";
+import Navbar from "./Navbar";
 const DoctorAppointments = () => {
   const [appointments, setAppointments] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-
+ const [isSidebarOpen, setSidebarOpen] = useState(false);
+  const toggleSidebar = () => setSidebarOpen(!isSidebarOpen);
   useEffect(() => {
-    const fetchAppointments = async () => {
-      try {
-        setLoading(true);
+  const fetchAppointments = async () => {
+    try {
+      setLoading(true);
+      const token = localStorage.getItem("token");
 
-        const res = await fetch("http://localhost:8000/appointments");
-        const data = await res.json();
+      const res = await fetch("http://localhost:8000/api/doctor/appointments", {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
 
-        setAppointments(data.appointments || []);
-        setError(null);
-      } catch (err) {
-        console.error(err);
-        setError("Failed to load appointments");
-      } finally {
-        setLoading(false);
+      if (!res.ok) {
+        throw new Error(`HTTP error! status: ${res.status}`);
       }
-    };
 
-    fetchAppointments();
-  }, []);
+      const data = await res.json();
+      setAppointments(data.appointments || []);
+      setError(null);
+    } catch (err) {
+      console.error(err);
+      setError("Failed to load appointments");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  fetchAppointments();
+}, []);
 
   if (loading)
     return (
@@ -39,6 +51,15 @@ const DoctorAppointments = () => {
     );
 
   return (
+    <div className="min-h-screen flex bg-gray-50">
+      {/* Sidebar */}
+      <Sidebar isOpen={isSidebarOpen} toggleSidebar={toggleSidebar} />
+
+      {/* Main Content */}
+      <div className="flex-1 md:ml-64">
+        {/* Navbar */}
+        <Navbar toggleSidebar={toggleSidebar} />
+ 
     <div className="max-w-5xl mx-auto p-6">
       <h2 className="text-4xl font-extrabold mb-8 text-center text-blue-700 tracking-wide">
         🩺 My Appointments
@@ -106,6 +127,8 @@ const DoctorAppointments = () => {
         </div>
       )}
     </div>
+    </div>
+      </div>
   );
 };
 

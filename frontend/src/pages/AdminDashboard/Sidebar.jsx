@@ -10,7 +10,7 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
   const [appointmentMenuOpen, setAppointmentMenuOpen] = useState(false);
   const [reportMenuOpen, setReportMenuOpen] = useState(false);
     const [departmentMenuOpen, setDepartmentMenuOpen] = useState(false);
-
+    const [patientMenuOpen, setPatientMenuOpen] = useState(false);
   return (
     <>
       {isOpen && (
@@ -29,9 +29,8 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
             <Link to={"/"}>Admin Panel</Link>
           </div>
           <nav className="flex flex-col p-4 space-y-2">
-            <SidebarLink icon="🏠" label="Dashboard" to="/admin-dashboard" />
-            <SidebarLink icon="👥" label="Manage Patients" to="/managepatients" />
-
+            <SidebarLink icon="🏠" label="Dashboard" to="/admin/dashboard" />
+            <SidebarLink icon="👥" label="Manage Patients" to="/admin/managepatients" />
  <CollapsibleMenu
               label="Departments"
               icon="🏥"
@@ -49,8 +48,8 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
               isOpen={doctorMenuOpen}
               toggleOpen={() => setDoctorMenuOpen(!doctorMenuOpen)}
               links={[
-                { icon: "➕", label: "Add Doctor", to: "/admin/adddoctor" },
-                { icon: "📋", label: "View Doctors", to: "/admin/viewdoctor" },
+                { icon: "➕", label: "Add Doctor", to: "/admin/add-doctor" },
+                { icon: "📋", label: "View Doctors", to: "/admin/view-doctor" },
                 { icon: "📅", label: "Doctor Schedule", to: "/doctordetails" },
               ]}
             />
@@ -78,9 +77,15 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
                 { icon: "📊", label: "Doctor-Earning", to: "/admin/doctor-earning" },
               ]}
             />
+<hr className="my-2 border-t border-gray-300" />
 
-            {/* <SidebarLink icon={<BiLogOutCircle />} label="Log Out" to="/" /> */}
-            <Logout />
+            {/* ✅ Styled logout like sidebar link with hover */}
+            <div className="ml-2">
+              <div className="flex items-center gap-3 px-3 py-2 text-red-600 hover:bg-blue-100 rounded cursor-pointer transition">
+                <span className="text-lg">🔓</span>
+                <Logout />
+              </div>
+              </div>
           </nav>
         </div>
       </aside>

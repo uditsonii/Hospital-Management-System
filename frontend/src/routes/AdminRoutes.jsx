@@ -16,18 +16,24 @@ import DoctorEarning from "../pages/AdminDashboard/DoctorEarning";
 const AdminRoutes = () => {
   return (
     <Routes>
-      <Route path="/" element={<MainDashboard />} />
-      <Route path="/adddoctor" element={<AddDoctor />} />
+      <Route path="/dashboard" element={<MainDashboard />} />
+
+      <Route path="/add-doctor" element={<AddDoctor />} />
       <Route path="/doctordetails" element={<DoctorDetails />} />
-      <Route path="/viewdoctor" element={<ViewDoctor />} />
+      <Route path="/view-doctor" element={<ViewDoctor />} />
+
       <Route path="/profile" element={<Profile />} />
+      
       <Route path="/departments" element={<ViewDepartment />} />
       <Route path="/managepatients" element={<ManagePatients />} />
       <Route path="/upcoming" element={<UpcomingAppointments />} />
       <Route path="/adddepartment" element={<AddDepartment />} />
       <Route path="/opd" element={<Opd />} />
-      <Route path="labreport" element={<LabReports />} />
+      <Route path="/labreport" element={<LabReports />} />
       <Route path="/doctor-earning" element={<DoctorEarning />} />
+
+      {/* Optional fallback route */}
+      <Route path="*" element={<MainDashboard />} />
     </Routes>
   );
 };
