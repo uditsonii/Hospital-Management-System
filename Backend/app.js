@@ -24,7 +24,8 @@ app.use(cors());
 const server=http.createServer(app)
   const io = new Server(server, {
   cors: {
-    origin: "http://localhost:5173", // your frontend origin
+    // origin: "http://localhost:5173", // your frontend origin
+    origin: "*", // your frontend origin
     methods: ["GET", "POST"],
     credentials: true
   }
@@ -45,7 +46,7 @@ app.get("/test", (req, res) => res.send("Hospital Management"));
 initSocket(io)
 connectDB()
   .then(() => {
-    server.listen(process.env.PORT, () => {
+    server.listen(process.env.PORT || 8000, () => {
       console.log(`Example app listening on port ${process.env.PORT}`);
     });
   })
