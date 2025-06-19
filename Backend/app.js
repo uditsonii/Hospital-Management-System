@@ -51,7 +51,7 @@ app.get("/test", (req, res) => res.send("Hospital Management"));
 initSocket(io)
 connectDB()
   .then(() => {
-    server.listen(process.env.PORT || 8000, () => {
+    server.listen(process.env.PORT, () => {
       console.log(`Example app listening on port ${process.env.PORT}`);
     });
   })
