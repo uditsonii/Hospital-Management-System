@@ -106,7 +106,6 @@ const getDoctorById = async (req, res) => {
 const updateDoctor = async (req, res) => {
   const { id } = req.params;
   const fields = req.body;
-
   if (
     !fields.name ||
     !fields.mobile_no ||
@@ -134,7 +133,7 @@ const updateDoctor = async (req, res) => {
     const result = await db()
       .collection("management-registration")
       .findOneAndUpdate(
-        { _id: new ObjectId(id) },
+         { _id: new ObjectId(id) },
         {
           $set: {
             ...fields,
