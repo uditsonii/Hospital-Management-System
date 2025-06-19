@@ -21,7 +21,7 @@ const BookAppointment = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    fetch("http://localhost:8000/opd/book-appointments", {
+    fetch(`${process.env.REACT_APP_API_URL}/opd/book-appointments`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(form),

@@ -13,7 +13,7 @@ const DoctorAppointments = () => {
       setLoading(true);
       const token = localStorage.getItem("token");
 
-      const res = await fetch("http://localhost:8000/api/doctor/appointments", {
+      const res = await fetch(`${process.env.REACT_APP_API_URL}/api/doctor/appointments`, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,

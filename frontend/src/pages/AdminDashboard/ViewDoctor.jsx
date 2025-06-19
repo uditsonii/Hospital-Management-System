@@ -155,7 +155,7 @@ const handleDelete = async (id) => {
         return;
       }
 
-      const response = await fetch("http://localhost:8000/api/doctor/fetchdoctor", {
+      const response = await fetch(`${process.env.REACT_APP_API_URL}/api/doctor/fetchdoctor`, {
         method: "GET",
         headers: {
           "Authorization": `Bearer ${token}`,

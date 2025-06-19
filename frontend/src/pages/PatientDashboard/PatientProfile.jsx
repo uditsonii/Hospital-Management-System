@@ -59,7 +59,7 @@ const PatientProfile = ({ onClose }) => {
     setError("");
 
     try {
-      const response = await fetch(`http://localhost:8000/profile/${userId}`, {
+      const response = await fetch(`${process.env.REACT_APP_API_URL}/profile/${userId}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
