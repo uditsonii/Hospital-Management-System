@@ -18,7 +18,12 @@ require("dotenv").config();
 
 const app = express();
 app.use(express.json()); //middelware
-app.use(cors());
+// app.use(cors());
+app.use(cors({
+  origin: "https://hospital-management-systemm.vercel.app/", // or "*" if testing
+  methods: ["GET", "POST", "PUT", "DELETE"],
+  credentials: true
+}));
 
 //crete a express app,create a http server, create a socket.io server
 const server=http.createServer(app)
