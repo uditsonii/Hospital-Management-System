@@ -30,11 +30,13 @@ const NewPatient = async (req, res) => {
   }
   try {
     // Check for Existing Patient
-    const existingPatient = await db().collection("patient-registration").findOne({
-      name: pData.name,
-      mobile_no: pData.mobile_no,
-      gender: pData.gender,
-    });
+    const existingPatient = await db()
+      .collection("patient-registration")
+      .findOne({
+        name: pData.name,
+        mobile_no: pData.mobile_no,
+        gender: pData.gender,
+      });
     if (existingPatient) {
       return res.status(409).json({
         message: "Patient already exists",
@@ -72,7 +74,9 @@ const NewPatient = async (req, res) => {
 
       // if (pData.bloodGroup) patient.bloodGroup = pData.bloodGroup;
 
-      const result = await db().collection("patient-registration").insertOne(patient);
+      const result = await db()
+        .collection("patient-registration")
+        .insertOne(patient);
 
       return res.status(200).json({
         success: true,
@@ -110,10 +114,10 @@ const SendDetailThroughPID = async (req, res) => {
 
 // Fills Visits or Fills OPD
 const OPDRegister = async (req, res) => {
-  const { pid, department, doctor, diagnosis, fee, referredBy, visitType } =
+  const { query, department, doctor, diagnosis, fee, referredBy, visitType } =
     req.body;
 
-  if (!pid || !department || !doctor ) {
+  if (!pid || !department || !doctor) {
     return res
       .status(400)
       .json({ message: "All required fields must be provided." });
@@ -121,7 +125,9 @@ const OPDRegister = async (req, res) => {
 
   try {
     // find patient by pid
-    const patient = await db().collection("patient-registration").findOne({ pid });
+    const patient = await db()
+      .collection("patient-registration")
+      .findOne({ pid });
     if (!patient) {
       return res.status(404).json({ message: "Patient not found with pid" });
     }
@@ -133,7 +139,7 @@ const OPDRegister = async (req, res) => {
       doctor,
       diagnosis: diagnosis || null,
       visitDate: new Date(),
-      fee: fee||null,
+      fee: fee || null,
       visitType: visitType || null,
       referredBy: referredBy || null,
     };
@@ -152,8 +158,42 @@ const OPDRegister = async (req, res) => {
     });
   }
 };
-// for book Appointment from user
 
+// opd search to find patient in registration collection
+const searchPatientForOpd = async (req, res) => {
+  try {
+    const { query } = req.query;
+
+    console.log(query);
+    if (!query || query.trim() === "") {
+      return res.status(400).json({ message: "Search query is required" });
+    }
+
+    const result = await db()
+      .collection("patient-registration")
+      .find({
+        $or: [
+          { name: { $regex: query, $options: "i" } },
+          { mobile_no: { $regex: query, $options: "i" } },
+        ],
+      })
+      .toArray();
+    console.log(result);
+
+    if (result.length === 0) {
+      return res.status(404).json({ message: "No Patients found" });
+    }
+
+    return res.status(200).json({ success: true, data: result });
+  } catch (error) {
+    console.log("Error in OPD search: ", error);
+    return res
+      .status(500)
+      .json({ success: false, message: "Internal Server Error" });
+  }
+};
+
+// for book Appointment from user
 const bookAppointmentFromUser = async (req, res) => {
   try {
     const { name, pid, doctor, date, diagnosis, department } = req.body;
@@ -170,18 +210,25 @@ const bookAppointmentFromUser = async (req, res) => {
       pid,
       doctor,
       date,
-      diagnosis:diagnosis||null,
+      diagnosis: diagnosis || null,
       department,
       status: "pending",
       createdAt: new Date(),
     });
 
     if (!result.acknowledged) {
-      return res.status(500).send({ status: 500, message: "problem while booking appointement from user" });
+      return res
+        .status(500)
+        .send({
+          status: 500,
+          message: "problem while booking appointement from user",
+        });
     }
 
     // Fetch the actual saved appointment
-    const savedAppointment = await collection.findOne({ _id: result.insertedId });
+    const savedAppointment = await collection.findOne({
+      _id: result.insertedId,
+    });
 
     // Emit the real saved DB document
     emitNewAppointment(savedAppointment);
@@ -202,33 +249,28 @@ const bookAppointmentFromUser = async (req, res) => {
     });
   }
 };
+
 const getPendingRequests = async (req, res) => {
   try {
     let db = await getDB();
     let collection = db.collection("appointments");
     const result = await collection.find({ status: "pending" }).toArray();
     if (!result)
-      res
-        .status(401)
-        .json({
-          status: 401,
-          message: "problem while fetching pending requests",
-        });
+      res.status(401).json({
+        status: 401,
+        message: "problem while fetching pending requests",
+      });
 
-    res
-      .status(200)
-      .json({
-        status: 200,
-        message: "successfully fetched pending requests",
-        data: result,
-      });
+    res.status(200).json({
+      status: 200,
+      message: "successfully fetched pending requests",
+      data: result,
+    });
   } catch (error) {
-    res
-      .status(500)
-      .json({
-        status: 500,
-        message: "Internal server error while fetching pending requests",
-      });
+    res.status(500).json({
+      status: 500,
+      message: "Internal server error while fetching pending requests",
+    });
   }
 };
 
@@ -239,7 +281,7 @@ const updateAppointmentStatus = async (req, res) => {
     if (!id || !status) {
       return res.status(401).json({
         status: 401,
-        message: "Provide appropriate ID and status to update the record"
+        message: "Provide appropriate ID and status to update the record",
       });
     }
     let db = await getDB();
@@ -255,28 +297,28 @@ const updateAppointmentStatus = async (req, res) => {
     if (result.matchedCount === 0) {
       return res.status(404).json({
         status: 404,
-        message: "Appointment not found"
+        message: "Appointment not found",
       });
     }
 
     res.status(200).json({
       status: 200,
-      message: "Appointment status updated successfully"
+      message: "Appointment status updated successfully",
     });
-
   } catch (error) {
     res.status(500).json({
       status: 500,
       message: "Internal server error while updating appointment status",
-      error: error.message || error
+      error: error.message || error,
     });
   }
 };
 module.exports = {
   NewPatient,
   OPDRegister,
+  searchPatientForOpd,
   SendDetailThroughPID,
   bookAppointmentFromUser,
   getPendingRequests,
-  updateAppointmentStatus
+  updateAppointmentStatus,
 };

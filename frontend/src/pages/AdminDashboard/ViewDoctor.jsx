@@ -230,8 +230,8 @@ const handleDelete = async (id) => {
                         <td className="py-3 px-6 text-left">{doctor.deptid}</td>
                         <td className="py-3 px-6 text-left">{doctor.email}</td>
                         <td className="py-3 px-6 text-left">{doctor.mobile_no}</td>
-                        <td className="py-3 px-6 text-left">{doctor.speciality}</td>
-                        <td className="py-3 px-6 text-left">{doctor.degree}</td>
+                        <td className="py-3 px-6 text-left">{doctor.specialization}</td>
+                        <td className="py-3 px-6 text-left">{doctor.deptid}</td>
                         <td className="py-3 px-6 text-left">{doctor.gender}</td>
                         <td className="py-3 px-6 text-center">{doctor.age}</td>
                         <td className="py-3 px-6 text-center flex gap-3 justify-center">

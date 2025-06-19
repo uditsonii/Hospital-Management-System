@@ -5,6 +5,8 @@ import Swal from "sweetalert2";
 import { useNavigate } from "react-router-dom";
 
 const AddDoctor = () => {
+   const [isSidebarOpen, setSidebarOpen] = useState(false);
+    const toggleSidebar = () => setSidebarOpen(!isSidebarOpen);
   const [doctor, setDoctor] = useState({
     deptid: "",
     name: "",
@@ -48,7 +50,6 @@ const AddDoctor = () => {
 
   const token = localStorage.getItem("token");
 
-  const handleSubmit = async (e) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     console.log(doctor);
@@ -249,5 +250,4 @@ const AddDoctor = () => {
     </div>
   );
 };
-}
 export default AddDoctor;
