@@ -29,7 +29,7 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
             <Link to={"/"}>Admin Panel</Link>
           </div>
           <nav className="flex flex-col p-4 space-y-2">
-            <SidebarLink icon="🏠" label="Dashboard" to="/admin-dashboard" />
+            <SidebarLink icon="🏠" label="Dashboard" to="/admin/dashboard" />
             <SidebarLink icon="👥" label="Manage Patients" to="/admin/managepatients" />
  <CollapsibleMenu
               label="Departments"

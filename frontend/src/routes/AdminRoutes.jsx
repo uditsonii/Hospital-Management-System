@@ -16,7 +16,7 @@ import DoctorEarning from "../pages/AdminDashboard/DoctorEarning";
 const AdminRoutes = () => {
   return (
     <Routes>
-      <Route path="/" element={<MainDashboard />} />
+      <Route path="/dashboard" element={<MainDashboard />} />
 
       <Route path="/add-doctor" element={<AddDoctor />} />
       <Route path="/doctordetails" element={<DoctorDetails />} />

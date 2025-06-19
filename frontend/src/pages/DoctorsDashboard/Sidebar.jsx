@@ -1,5 +1,5 @@
 import React from 'react';
-import { NavLink } from 'react-router-dom';
+import { Link, NavLink } from 'react-router-dom';
 import Logout from '../../components/Logout';
 const Sidebar = ({ isOpen, toggleSidebar }) => {
   return (
@@ -21,7 +21,7 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
         <div>
           {/* Sidebar Header */}
           <div className="text-xl font-bold p-6 text-center text-blue-600 border-b">
-            Doctor Panel
+            <Link to={"/"}>Doctor Panel</Link>
           </div>
 
           {/* Navigation Links */}
