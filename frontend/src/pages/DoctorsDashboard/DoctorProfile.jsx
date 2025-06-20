@@ -39,7 +39,7 @@ export default function DoctorProfile() {
       return;
     }
 
-    fetch(`${process.env.REACT_APP_API_URL}/api/doctor/profile`, {
+    fetch(`${import.meta.env.VITE_API_URL}/api/doctor/profile`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -69,7 +69,7 @@ export default function DoctorProfile() {
   const handleSave = () => {
     const token = localStorage.getItem("token");
 
-    fetch(`${process.env.REACT_APP_API_URL}/api/doctor/profile`, {
+    fetch(`${import.meta.env.VITE_API_URL}/api/doctor/profile`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",

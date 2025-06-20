@@ -40,7 +40,7 @@ const Login = () => {
         body: JSON.stringify(formData),
       };
 
-      const res = await fetch(`${process.env.REACT_APP_API_URL}/login`, option);
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/login`, option);
       const data = await res.json();
 
       if (res.ok) {

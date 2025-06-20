@@ -10,7 +10,7 @@ const DoctorAppointments = () => {
       try {
         setLoading(true);
 
-        const res = await fetch(`${process.env.REACT_APP_API_URL}/appointments`);
+        const res = await fetch(`${import.meta.env.VITE_API_URL}/appointments`);
         const data = await res.json();
 
         setAppointments(data.appointments || []);

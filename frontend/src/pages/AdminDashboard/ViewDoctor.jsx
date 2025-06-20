@@ -104,7 +104,7 @@ const handleEdit = async (id) => {
 
   if (formValues) {
     try {
-      await axios.put(`${process.env.REACT_APP_API_URL}/api/doctor/${id}`, formValues);
+      await axios.put(`${import.meta.env.VITE_API_URL}/api/doctor/${id}`, formValues);
       setDoctors((prev) =>
         prev.map((doc) =>
           (doc._id) === id ? { ...doc, ...formValues } : doc
@@ -132,7 +132,7 @@ const handleDelete = async (id) => {
 
   if (result.isConfirmed) {
     try {
-      await axios.delete(`${process.env.REACT_APP_API_URL}/api/doctor/${id}`);
+      await axios.delete(`${import.meta.env.VITE_API_URL}/api/doctor/${id}`);
       setDoctors(prev => prev.filter(doc => (doc._id || doc.id) !== id));
       Swal.fire(
         'Deleted!',
@@ -155,7 +155,7 @@ const handleDelete = async (id) => {
         return;
       }
 
-      const response = await fetch(`${process.env.REACT_APP_API_URL}/api/doctor/fetchdoctor`, {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/doctor/fetchdoctor`, {
         method: "GET",
         headers: {
           "Authorization": `Bearer ${token}`,

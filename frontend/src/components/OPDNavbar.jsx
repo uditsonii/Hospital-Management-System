@@ -34,7 +34,7 @@ const OPDNavbar = ({ toggleSidebar }) => {
     try {
       // console.log(query);
       const res = await fetch(
-        `${process.env.REACT_APP_API_URL}/opd/search?query=${query}`
+        `${import.meta.env.VITE_API_URL}/opd/search?query=${query}`
       );
       const data = await res.json();
       // console.log(data);

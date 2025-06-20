@@ -67,7 +67,7 @@ function OPDFillSlip() {
     }
 
     try {
-      const res = await fetch(`${process.env.REACT_APP_API_URL}/opd/patient-pid/${pid}`);
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/opd/patient-pid/${pid}`);
       const data = await res.json();
 
       if (!res.ok) {
@@ -98,7 +98,7 @@ function OPDFillSlip() {
     setIsSubmitting(true);
 
     try {
-      const res = await fetch(`${process.env.REACT_APP_API_URL}/opd/fill-slip`, {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/opd/fill-slip`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),

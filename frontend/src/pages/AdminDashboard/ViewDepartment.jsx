@@ -21,7 +21,7 @@ const ViewDepartment = () => {
   useEffect(() => {
     const fetchDepartments = async () => {
       try {
-        const res = await fetch(`${process.env.REACT_APP_API_URL}/api/departments`);
+        const res = await fetch(`${import.meta.env.VITE_API_URL}/api/departments`);
         if (!res.ok) throw new Error("Failed to fetch departments");
 
         const data = await res.json();
@@ -57,7 +57,7 @@ const ViewDepartment = () => {
     setUpdateError(null);
 
     try {
-      const response = await fetch(`${process.env.REACT_APP_API_URL}/api/departments/${currentDept._id}`, {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/departments/${currentDept._id}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -100,7 +100,7 @@ const ViewDepartment = () => {
 
     if (confirm.isConfirmed) {
       try {
-        const res = await fetch(`${process.env.REACT_APP_API_URL}/api/departments/${_id}`, {
+        const res = await fetch(`${import.meta.env.VITE_API_URL}/api/departments/${_id}`, {
           method: "DELETE",
         });
 

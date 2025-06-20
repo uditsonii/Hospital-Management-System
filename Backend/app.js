@@ -21,8 +21,7 @@ app.use(express.json()); //middelware
 // app.use(cors());
 app.use(cors({
   origin: "https://hospital-management-systemm.vercel.app/", // or "*" if testing
-  methods: ["GET", "POST", "PUT", "DELETE"],
-  credentials: true
+  methods: ["GET", "POST", "PUT", "DELETE", "PATCH"]
 }));
 
 //crete a express app,create a http server, create a socket.io server
@@ -30,7 +29,7 @@ const server=http.createServer(app)
   const io = new Server(server, {
   cors: {
     // origin: "http://localhost:5173", // your frontend origin
-    origin: "*", // your frontend origin
+    origin: "https://hospital-management-systemm.vercel.app/", // your frontend origin
     methods: ["GET", "POST"],
     credentials: true
   }

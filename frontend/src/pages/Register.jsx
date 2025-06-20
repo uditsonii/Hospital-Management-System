@@ -34,9 +34,9 @@ const Register = () => {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(form),
       };
-      // const res = await fetch(`${process.env.REACT_APP_API_URL}/register`, option);
+      // const res = await fetch(`${import.meta.env.VITE_API_URL}/register`, option);
       const res = await fetch(
-        `${process.env.REACT_APP_API_URL}/opd/register-new-patient`,
+        `${import.meta.env.VITE_API_URL}/opd/register-new-patient`,
         option
       );
 
