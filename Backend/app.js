@@ -18,10 +18,17 @@ require("dotenv").config();
 
 const app = express();
 app.use(express.json()); //middelware
+
+const allowedOrigins = [
+  "https://hospital-management-systemm.vercel.app/",     // Production frontend on Vercel
+  "https://hospital-management-system-u30p.onrender.com",   // Optional, if frontend is also on Render
+  "http://localhost:5173/"                 // For local testing
+];
 // app.use(cors());
 app.use(cors({
   // origin: "https://hospital-management-systemm.vercel.app/", // or "*" if testing
-  origin: "https://hospital-management-system-u30p.onrender.com", // or "*" if testing
+  // origin: "https://hospital-management-system-u30p.onrender.com", // or "*" if testing
+  origin: allowedOrigins,
   methods: ["GET", "POST", "PUT", "DELETE", "PATCH"]
 }));
 
@@ -30,8 +37,7 @@ const server=http.createServer(app)
   const io = new Server(server, {
   cors: {
     // origin: "http://localhost:5173", // your frontend origin
-    // origin: "https://hospital-management-systemm.vercel.app/", // your frontend origin
-    origin: "https://hospital-management-system-u30p.onrender.com", // your frontend origin
+    origin: allowedOrigins,
     methods: ["GET", "POST"],
     credentials: true
   }

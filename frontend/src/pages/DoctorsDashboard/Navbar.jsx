@@ -1,10 +1,11 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { data, Link } from 'react-router-dom';
 import Logout from '../../components/Logout';
 
 const Navbar = ({ toggleSidebar, userId = 'defaultUserId' }) => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const dropdownRef = useRef();
+  const [data, setData] = useState();
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -15,6 +16,13 @@ const Navbar = ({ toggleSidebar, userId = 'defaultUserId' }) => {
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
+
+  useEffect(() => {
+      const data = localStorage.getItem('user');
+      if (data) {
+        setData(JSON.parse(data));
+      }
+    }, []);
 
   return (
     <header className="bg-white shadow px-4 md:px-8 py-3 flex items-center justify-between w-full z-40">
@@ -27,7 +35,7 @@ const Navbar = ({ toggleSidebar, userId = 'defaultUserId' }) => {
           ☰
         </button>
         <span className="text-lg md:text-2xl font-semibold text-blue-600 whitespace-nowrap">
-          Welcome Dr. John Doe 👋
+          Welcome {data?.name || "Doctor"} 👋
         </span>
       </div>
 

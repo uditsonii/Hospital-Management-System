@@ -56,13 +56,13 @@ const OPDNavbar = ({ toggleSidebar }) => {
       <div className="max-w-screen-xl mx-auto px-6 py-3 flex items-center justify-between">
         {/* Left Section: OPD Branding + Sidebar Toggle */}
         <div className="flex items-center gap-4">
-          <button
+          {/* <button
             onClick={toggleSidebar}
             className="md:hidden bg-blue-200 hover:bg-blue-300 text-blue-700 px-3 py-2 rounded-full shadow-sm transition focus:outline-none focus:ring-2 focus:ring-blue-400"
             aria-label="Toggle Sidebar"
           >
             ☰
-          </button>
+          </button> */}
           <h1 className="text-2xl font-extrabold text-blue-700 tracking-wide select-none">
             OPD System
           </h1>
@@ -187,7 +187,7 @@ const OPDNavbar = ({ toggleSidebar }) => {
       </div>
 
       {/* Mobile Search Bar */}
-      <div className="md:hidden px-6 pb-4 bg-blue-50">
+      {/* <div className="md:hidden px-6 pb-4 bg-blue-50">
         <input
           type="text"
           value={query}
@@ -195,7 +195,7 @@ const OPDNavbar = ({ toggleSidebar }) => {
           className="w-full px-4 py-2 text-gray-700 text-sm bg-white rounded-full placeholder-blue-400 focus:outline-none focus:ring-2 focus:ring-blue-300 shadow-sm"
           onChange={(e) => console.log(e.target.value)}
         />
-      </div>
+      </div> */}
     </header>
   );
 };

@@ -6,34 +6,44 @@ const getDoctorAppointments = async (req, res) => {
   try {
     const doctorName = req.user?.name;
     if (!doctorName) {
-      return res.status(400).json({ message: "Doctor name not found in token" });
+      return res
+        .status(400)
+        .json({ message: "Doctor name not found in token" });
     }
 
     const db = getDB();
-    const visits = await db.collection("visits").find(
-      { "visitData.doctor": doctorName },
-      { projection: { 
-          "visitData.pid": 1,
-          "visitData.visitDate": 1,
-          "visitData.diagnosis": 1,
-          _id: 1
-        } }
-    ).toArray();
+    const visits = await db
+      .collection("visits")
+      .find(
+        { "visitData.doctor": doctorName },
+        {
+          projection: {
+            "visitData.pid": 1,
+            "visitData.visitDate": 1,
+            "visitData.diagnosis": 1,
+            _id: 1,
+          },
+        }
+      )
+      .toArray();
 
-    const formattedVisits = visits.map(v => ({
+    const formattedVisits = visits.map((v) => ({
       id: v._id,
       pid: v.visitData.pid,
       visitDate: v.visitData.visitDate,
       diagnosis: v.visitData.diagnosis || "N/A", // default to "N/A" if null/undefined
     }));
 
-    return res.status(200).json({ success: true, appointments: formattedVisits });
+    return res
+      .status(200)
+      .json({ success: true, appointments: formattedVisits });
   } catch (error) {
     console.error("Error fetching doctor visits:", error);
-    return res.status(500).json({ message: "Failed to fetch appointments", error: error.message });
+    return res
+      .status(500)
+      .json({ message: "Failed to fetch appointments", error: error.message });
   }
 };
-
 
 // Update status of a visit (e.g., completed/cancelled)
 const updateAppointmentStatus = async (req, res) => {
@@ -42,18 +52,21 @@ const updateAppointmentStatus = async (req, res) => {
     const visitId = new ObjectId(req.params.id);
     const { status } = req.body;
 
-    const result = await db.collection("visits").updateOne(
-      { _id: visitId },
-      { $set: { status } }
-    );
+    const result = await db
+      .collection("visits")
+      .updateOne({ _id: visitId }, { $set: { status } });
 
     if (result.modifiedCount === 0) {
-      return res.status(404).json({ message: "Visit not found or already updated" });
+      return res
+        .status(404)
+        .json({ message: "Visit not found or already updated" });
     }
 
     res.status(200).json({ message: "Visit status updated successfully" });
   } catch (error) {
-    return res.status(500).json({ message: "Internal Server Error", error: error.message });
+    return res
+      .status(500)
+      .json({ message: "Internal Server Error", error: error.message });
   }
 };
 
@@ -63,17 +76,27 @@ const getMyPatients = async (req, res) => {
     const db = getDB();
     const doctorName = req.user.name;
 
-    const visits = await db.collection("visits").find({ "visitData.doctor": doctorName }).toArray();
-    const patientIds = [...new Set(visits.map(v => v.visitData?.patientId))].filter(Boolean);
+    const visits = await db
+      .collection("visits")
+      .find({ "visitData.doctor": doctorName })
+      .toArray();
+    const patientIds = [
+      ...new Set(visits.map((v) => v.visitData?.patientId)),
+    ].filter(Boolean);
 
-    const patients = await db.collection("patient-registration").find({
-      _id: { $in: patientIds.map(id => new ObjectId(id)) },
-      role: "patient"
-    }).toArray();
+    const patients = await db
+      .collection("patient-registration")
+      .find({
+        _id: { $in: patientIds.map((id) => new ObjectId(id)) },
+        role: "patient",
+      })
+      .toArray();
 
     res.status(200).json({ patients });
   } catch (error) {
-    return res.status(500).json({ message: "Failed to fetch patients", error: error.message });
+    return res
+      .status(500)
+      .json({ message: "Failed to fetch patients", error: error.message });
   }
 };
 
@@ -88,12 +111,16 @@ const addDiagnosis = async (req, res) => {
       patientId,
       notes,
       prescription,
-      date: new Date()
+      date: new Date(),
     });
 
-    res.status(201).json({ message: "Diagnosis added", diagnosisId: result.insertedId });
+    res
+      .status(201)
+      .json({ message: "Diagnosis added", diagnosisId: result.insertedId });
   } catch (error) {
-    return res.status(500).json({ message: "Error adding diagnosis", error: error.message });
+    return res
+      .status(500)
+      .json({ message: "Error adding diagnosis", error: error.message });
   }
 };
 
@@ -101,7 +128,9 @@ const addDiagnosis = async (req, res) => {
 const getDoctorProfile = async (req, res) => {
   try {
     const db = getDB();
-    const doctor = await db.collection("management-registration").findOne({ _id: new ObjectId(req.user._id) });
+    const doctor = await db
+      .collection("management-registration")
+      .findOne({ _id: new ObjectId(req.user._id) });
 
     if (!doctor || doctor.role !== "doctor") {
       return res.status(404).json({ message: "Doctor not found" });
@@ -109,42 +138,58 @@ const getDoctorProfile = async (req, res) => {
 
     res.status(200).json({ profile: doctor });
   } catch (error) {
-    return res.status(500).json({ message: "Failed to fetch profile", error: error.message });
+    return res
+      .status(500)
+      .json({ message: "Failed to fetch profile", error: error.message });
   }
 };
+
 // Update logged-in doctor's profile
 const updateDoctorProfile = async (req, res) => {
+  const db = getDB();
+  const { id } = req.params;
+  const fields = req.body;
+  if (
+    !fields.name ||
+    !fields.mobile_no ||
+    !fields.gender ||
+    !fields.age ||
+    !fields.degree
+  ) {
+    return res.status(400).json({ message: "All Fields are Required" });
+  }
+  // const { name, email, gender, age, mobile_no, degree } = req.body;
+  if (!ObjectId.isValid(id)) {
+    return res.status(400).json({ message: "Invalid Doctor ID" });
+  }
+
   try {
-    const db = getDB();
-    const doctorId = new ObjectId(req.user._id);
-    const { name, email, gender, age, mobile_no, degree } = req.body;
+    const result = await db
+      .collection("management-registration")
+      .findOneAndUpdate(
+        { _id: new ObjectId(id), role: "doctor" },
+        {
+          $set: {
+            ...fields,
+            updatedAt: new Date(),
+          },
+        },
+        { returnDocument: "after" }
+      );
 
-    const updateFields = {};
-    if (name) updateFields.name = name;
-    if (email) updateFields.email = email;
-    if (gender) updateFields.gender = gender;
-    if (age) updateFields.age = age;
-    if (mobile_no) updateFields.mobile_no = mobile_no;
-    if (degree) updateFields.degree = degree;
-
-    const result = await db.collection("management-registration").updateOne(
-      { _id: doctorId, role: "doctor" },
-      { $set: updateFields }
-    );
-
-    if (result.matchedCount === 0) {
-      return res.status(404).json({ message: "Doctor not found" });
+    if (!result) {
+      return res.status(404).json({ message: "Doctor not Found" });
     }
-
-    const updatedDoctor = await db.collection("management-registration").findOne({ _id: doctorId });
-
-    return res.status(200).json({ message: "Profile updated successfully", updatedDoctor });
+    return res
+      .status(200)
+      .json({ message: "Profile updated successfully", doctor: result });
   } catch (error) {
     console.error("Error updating doctor profile:", error);
-    return res.status(500).json({ message: "Failed to update profile", error: error.message });
+    return res
+      .status(500)
+      .json({ message: "Failed to update profile", error: error.message });
   }
 };
-
 
 module.exports = {
   getDoctorAppointments,
@@ -152,5 +197,5 @@ module.exports = {
   getMyPatients,
   addDiagnosis,
   getDoctorProfile,
-  updateDoctorProfile
+  updateDoctorProfile,
 };

@@ -72,6 +72,7 @@ const db = () => getDB();
 //   }
 // };
 
+
 // Login for all Roles(patient, doctor, admin, opd)
 const login = async (req, res) => {
   const { name, mobile_no, password } = req.body;
@@ -79,7 +80,7 @@ const login = async (req, res) => {
   try {
     const roleWithMobile = ["patient", "doctor"];
     const roleWithoutMobile = ["admin", "opd"];
-    const allRoles = [...roleWithMobile, ...roleWithoutMobile];
+    // const allRoles = [...roleWithMobile, ...roleWithoutMobile];
 
     let user;
 
@@ -109,6 +110,9 @@ const login = async (req, res) => {
               .status(400)
               .json({ message: "Mobile number is required" });
           }
+        }
+        else{
+          return res.status(404).json({ message: "Invalid Credentials" });
         }
       }
     } else {
