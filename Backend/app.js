@@ -22,7 +22,7 @@ app.use(express.json()); //middelware
 const allowedOrigins = [
   "https://hospital-management-systemm.vercel.app/",     // Production frontend on Vercel
   "https://hospital-management-system-u30p.onrender.com",   // Optional, if frontend is also on Render
-  "http://localhost:5173/"                 // For local testing
+  "http://localhost:5173"                 // For local testing
 ];
 // app.use(cors());
 app.use(cors({
