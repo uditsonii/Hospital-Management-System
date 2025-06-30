@@ -16,7 +16,7 @@ const ManagePatients = () => {
   const fetchPatients = async () => {
     setLoading(true);
     try {
-      const res = await fetch("http://localhost:8000/api/patients");
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/api/patients`);
       const data = await res.json();
       setPatients(data);
     } catch (err) {
@@ -53,7 +53,7 @@ const ManagePatients = () => {
   if (!editingId) return;
 
   try {
-    const res = await fetch(`http://localhost:8000/api/patients/${editingId}`, {
+    const res = await fetch(`${import.meta.env.VITE_API_URL}/api/patients/${editingId}`, {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({

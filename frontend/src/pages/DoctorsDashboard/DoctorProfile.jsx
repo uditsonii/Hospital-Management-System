@@ -27,39 +27,48 @@ export default function DoctorProfile() {
   const [loading, setLoading] = useState(true);
   const [editMode, setEditMode] = useState(false);
   const [formData, setFormData] = useState({});
+  const [userData, setUser] = useState(null);
   
   const [error, setError] = useState(null);
  const [isSidebarOpen, setSidebarOpen] = useState(false);
    const toggleSidebar = () => setSidebarOpen(!isSidebarOpen);
-  useEffect(() => {
-    const token = localStorage.getItem("token");
-    if (!token) {
-      setLoading(false);
-      console.error("No token found, please login");
-      return;
-    }
+  // useEffect(() => {
+  //   const token = localStorage.getItem("token");
+  //   if (!token) {
+  //     setLoading(false);
+  //     console.error("No token found, please login");
+  //     return;
+  //   }
 
-    fetch("http://localhost:8000/api/doctor/profile", {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-    })
-      .then((res) => {
-        if (!res.ok) throw new Error("Unauthorized or server error");
-        return res.json();
-      })
-      .then((data) => {
-        setDoctor(data.profile);
-        setFormData(data.profile);
-        setLoading(false);
-      })
-      .catch((err) => {
-        console.error("Failed to fetch doctor profile:", err);
-        setLoading(false);
-      });
-  }, []);
+  //   fetch(`${import.meta.env.VITE_API_URL}/api/doctor/profile`, {
+  //     method: "GET",
+  //     headers: {
+  //       "Content-Type": "application/json",
+  //       Authorization: `Bearer ${token}`,
+  //     },
+  //   })
+  //     .then((res) => {
+  //       if (!res.ok) throw new Error("Unauthorized or server error");
+  //       return res.json();
+  //     })
+  //     .then((data) => {
+  //       setDoctor(data.profile);
+  //       setFormData(data.profile);
+  //       setLoading(false);
+  //     })
+  //     .catch((err) => {
+  //       console.error("Failed to fetch doctor profile:", err);
+  //       setLoading(false);
+  //     });
+  // }, []);
+
+   useEffect(() => {
+      const userData = localStorage.getItem('user');
+      if (userData) {
+        setUser(JSON.parse(userData));
+      }
+      console.log(userData)
+    }, []);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -69,7 +78,7 @@ export default function DoctorProfile() {
   const handleSave = () => {
     const token = localStorage.getItem("token");
 
-    fetch("http://localhost:8000/api/doctor/profile", {
+    fetch(`${import.meta.env.VITE_API_URL}/api/doctor/profile/${userData._id}`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",

@@ -30,7 +30,7 @@ const OpdRequests = () => {
   // Fetch pending appointments
   const fetchPendingAppointments = async () => {
     try {
-      const res = await axios.post("http://localhost:8000/opd/get-pending-requests");
+      const res = await axios.post(`${import.meta.env.VITE_API_URL}/opd/get-pending-requests`);
       setAppointments(res.data.data);
     } catch (error) {
       console.error("Failed to load appointments:", error);
@@ -52,11 +52,11 @@ const OpdRequests = () => {
     );
 
     try {
-      await axios.patch("http://localhost:8000/opd/update-appointment-status", {
+      await axios.patch(`${import.meta.env.VITE_API_URL}/opd/update-appointment-status`, {
         id,
         status: "accepted",
       });
-      await axios.post("http://localhost:8000/opd/fill-slip", patient);
+      await axios.post(`${import.meta.env.VITE_API_URL}/opd/fill-slip`, patient);
 
     } catch (error) {
       console.error("Failed to accept appointment:", error);
@@ -79,7 +79,7 @@ const OpdRequests = () => {
     );
 
     try {
-      await axios.patch("http://localhost:8000/opd/update-appointment-status", {
+      await axios.patch(`${import.meta.env.VITE_API_URL}/opd/update-appointment-status`, {
         id,
         status: "declined",
       });
@@ -113,7 +113,7 @@ const OpdRequests = () => {
 
   // Socket connection for real-time updates
   useEffect(() => {
-    const socket = io("http://localhost:8000");
+    const socket = io(`${import.meta.env.VITE_API_URL}`);
     socket.on("new-appointment", (appointment) => {
       setAppointments((prev) => [appointment, ...prev]);
       const toastMessage = `${appointment.name} booked an appointment at ${appointment.date}`;

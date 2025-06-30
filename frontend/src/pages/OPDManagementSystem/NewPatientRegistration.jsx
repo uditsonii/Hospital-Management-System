@@ -30,7 +30,7 @@ const NewPatientRegistration = () => {
     setIsSubmitting(true);
 
     try {
-      const res = await fetch("http://localhost:8000/opd/register-new-patient", {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/opd/register-new-patient`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),

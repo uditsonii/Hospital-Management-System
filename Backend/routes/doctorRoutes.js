@@ -12,7 +12,7 @@ doctorRoutes.patch("/appointments/:id/status", doctorController.updateAppointmen
 doctorRoutes.get("/patients", doctorController.getMyPatients);
 doctorRoutes.post("/diagnosis", doctorController.addDiagnosis);
 doctorRoutes.get("/profile", doctorController.getDoctorProfile);
-doctorRoutes.put("/profile", doctorController.updateDoctorProfile);
+doctorRoutes.put("/profile/:id", doctorController.updateDoctorProfile);
 
 // crud
 doctorRoutes.post("/", createDoctor)  //create

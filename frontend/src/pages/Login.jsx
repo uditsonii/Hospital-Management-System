@@ -40,7 +40,7 @@ const Login = () => {
         body: JSON.stringify(formData),
       };
 
-      const res = await fetch("http://localhost:8000/login", option);
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/login`, option);
       const data = await res.json();
 
       if (res.ok) {

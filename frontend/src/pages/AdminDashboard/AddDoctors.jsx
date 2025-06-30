@@ -25,7 +25,7 @@ const AddDoctor = () => {
   useEffect(() => {
     const fetchDepartments = async () => {
       try {
-        const res = await fetch("http://localhost:8000/api/departments")
+        const res = await fetch(`${import.meta.env.VITE_API_URL}/api/departments`)
         const data = await res.json();
         setDepartments(data)
       } catch (error) {
@@ -54,7 +54,7 @@ const AddDoctor = () => {
     e.preventDefault();
     console.log(doctor);
     try {
-      const res = await fetch("http://localhost:8000/api/doctor", {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/api/doctor`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(doctor),
