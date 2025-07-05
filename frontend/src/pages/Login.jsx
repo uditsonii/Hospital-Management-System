@@ -75,12 +75,12 @@ const Login = () => {
   };
 
   return (
-    <div className="flex flex-col min-h-screen bg-gradient-to-b from-[#e3f2fd] to-[#90caf9]">
+    <div className="flex flex-col min-h-screen bg-gradient-to-br from-blue-100 via-blue-200 to-blue-300 animate-background-pan">
       <IndexNavbar />
 
       <PageContainer>
         <div className="flex items-center justify-center py-16 px-4 sm:px-6 lg:px-8">
-          <div className="max-w-md w-full bg-white bg-opacity-90 backdrop-blur-md rounded-xl shadow-lg p-10 border border-blue-300">
+          <div className="max-w-md w-full bg-white bg-opacity-80 backdrop-blur-md rounded-3xl shadow-2xl p-10 border border-blue-200 animate-fade-in-up transition-all duration-700">
             <div className="text-center mb-10">
               <FaHospitalAlt className="mx-auto text-blue-600 mb-2 w-14 h-14" />
               <h2 className="text-3xl font-extrabold text-blue-700 tracking-tight">
@@ -112,7 +112,7 @@ const Login = () => {
                 onChange={handleChange}
                 placeholder="Your Name"
                 required
-                className="input-blue"
+                className="w-full px-4 py-3 border border-blue-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent transition-all duration-300"
               />
 
               <FormInput
@@ -122,7 +122,7 @@ const Login = () => {
                 value={formData.mobile_no}
                 onChange={handleChange}
                 placeholder="10-digit mobile number"
-                className="input-blue"
+                className="w-full px-4 py-3 border border-blue-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent transition-all duration-300"
               />
 
               <div className="relative">
@@ -134,12 +134,12 @@ const Login = () => {
                   onChange={handleChange}
                   placeholder="Your Password"
                   required
-                  className="input-blue"
+                  className="w-full px-4 py-3 border border-blue-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent transition-all duration-300"
                 />
                 <button
                   type="button"
                   onClick={toggleShowPassword}
-                  className="absolute top-10 right-3 text-blue-600 hover:text-blue-800 transition-colors"
+                  className="absolute top-10 right-3 text-blue-600 hover:text-blue-800 transition-transform duration-300 hover:scale-110"
                   aria-label={showPassword ? "Hide password" : "Show password"}
                 >
                   {showPassword ? <FaEyeSlash /> : <FaEye />}
@@ -149,7 +149,7 @@ const Login = () => {
               <div>
                 <button
                   type="submit"
-                  className="w-full py-3 rounded-lg bg-gradient-to-r from-blue-500 to-blue-700 text-white font-semibold shadow-md hover:brightness-110 transition-transform transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-blue-300"
+                  className="w-full py-3 rounded-lg bg-gradient-to-r from-blue-500 to-blue-700 text-white font-semibold shadow-md hover:shadow-xl hover:scale-[1.03] transition-all duration-300 focus:outline-none focus:ring-4 focus:ring-blue-300"
                 >
                   Sign In
                 </button>

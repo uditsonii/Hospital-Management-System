@@ -27,48 +27,25 @@ export default function DoctorProfile() {
   const [loading, setLoading] = useState(true);
   const [editMode, setEditMode] = useState(false);
   const [formData, setFormData] = useState({});
-  const [userData, setUser] = useState(null);
-  
-  const [error, setError] = useState(null);
- const [isSidebarOpen, setSidebarOpen] = useState(false);
-   const toggleSidebar = () => setSidebarOpen(!isSidebarOpen);
-  // useEffect(() => {
-  //   const token = localStorage.getItem("token");
-  //   if (!token) {
-  //     setLoading(false);
-  //     console.error("No token found, please login");
-  //     return;
-  //   }
+  const [isSidebarOpen, setSidebarOpen] = useState(false);
+  const toggleSidebar = () => setSidebarOpen(!isSidebarOpen);
 
-  //   fetch(`${import.meta.env.VITE_API_URL}/api/doctor/profile`, {
-  //     method: "GET",
-  //     headers: {
-  //       "Content-Type": "application/json",
-  //       Authorization: `Bearer ${token}`,
-  //     },
-  //   })
-  //     .then((res) => {
-  //       if (!res.ok) throw new Error("Unauthorized or server error");
-  //       return res.json();
-  //     })
-  //     .then((data) => {
-  //       setDoctor(data.profile);
-  //       setFormData(data.profile);
-  //       setLoading(false);
-  //     })
-  //     .catch((err) => {
-  //       console.error("Failed to fetch doctor profile:", err);
-  //       setLoading(false);
-  //     });
-  // }, []);
-
-   useEffect(() => {
-      const userData = localStorage.getItem('user');
-      if (userData) {
-        setUser(JSON.parse(userData));
-      }
-      console.log(userData)
-    }, []);
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      setLoading(false);
+      console.error("No token found, please login");
+      return;
+    }
+    const userData = localStorage.getItem("user");
+    if (userData) {
+      const parsed = JSON.parse(userData);
+      setDoctor(parsed);
+      setFormData(parsed)
+    }
+    setLoading(false)
+    console.log(userData);
+  }, []);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -76,23 +53,33 @@ export default function DoctorProfile() {
   };
 
   const handleSave = () => {
-    const token = localStorage.getItem("token");
 
-    fetch(`${import.meta.env.VITE_API_URL}/api/doctor/profile/${userData._id}`, {
-      method: "PUT",
+    const {
+    _id,
+    createdAt,
+    updatedAt,
+    password,
+    role,
+    ...cleanedFormData
+  } = formData;
+
+    fetch(`${import.meta.env.VITE_API_URL}/api/doctor/profile/${doctor._id}`, {
+      method: "put",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
       },
-      body: JSON.stringify(formData),
+      body: JSON.stringify(cleanedFormData)
     })
-      .then((res) => {
-        if (!res.ok) throw new Error("Failed to update profile");
-        return res.json();
-      })
+      .then((res) => res.json())
       .then((data) => {
-        setDoctor(data.updatedDoctor || formData);
-        setEditMode(false);
+        if (data.updatedDoctor) {
+  setDoctor(data.updatedDoctor);
+  localStorage.setItem("user", JSON.stringify(data.updatedDoctor));
+} else {
+  console.warn("No updated doctor returned");
+}
+
+        console.log(data);
 
         Swal.fire({
           icon: "success",
@@ -133,11 +120,10 @@ export default function DoctorProfile() {
         {/* Navbar */}
         <Navbar toggleSidebar={toggleSidebar} />
 
-    <>
-    
-      <style
-        dangerouslySetInnerHTML={{
-          __html: `
+        <>
+          <style
+            dangerouslySetInnerHTML={{
+              __html: `
             body {
               background: linear-gradient(135deg, #e0f0ff 0%, #f7fbff 100%);
               font-family: 'Poppins', sans-serif;
@@ -253,64 +239,64 @@ export default function DoctorProfile() {
               background-color: #3354dd;
             }
           `,
-        }}
-      />
+            }}
+          />
 
-      <motion.div
-        className="profile-container"
-        initial={{ opacity: 0, y: 30 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
-      >
-        <div className="avatar">{getInitials(doctor.name || "Dr")}</div>
-        <h1>{doctor.name || "N/A"}</h1>
+          <motion.div
+            className="profile-container"
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+          >
+            <div className="avatar">{getInitials(doctor.name || "Dr")}</div>
+            <h1>{doctor.name || "N/A"}</h1>
 
-        <div className="form-grid">
-          {[
-            { icon: <FaVenusMars />, label: "Gender", field: "gender" },
-            { icon: <FaBirthdayCake />, label: "Age", field: "age" },
-            { icon: <FaPhone />, label: "Phone", field: "mobile_no" },
-            { icon: <FaEnvelope />, label: "Email", field: "email" },
-            { icon: <FaGraduationCap />, label: "Degree", field: "degree" },
-            {
-              icon: <FaCalendarAlt />,
-              label: "Joined",
-              field: "createdAt",
-              readonly: true,
-            },
-          ].map(({ icon, label, field, readonly }) => (
-            <div className="form-field" key={field}>
-              <div className="label">
-                {icon}
-                {label}:
-              </div>
-              {editMode && !readonly ? (
-                <input
-                  className="edit-input"
-                  name={field}
-                  value={formData[field] || ""}
-                  onChange={handleChange}
-                />
-              ) : (
-                <div className="value">
-                  {field === "createdAt"
-                    ? new Date(doctor[field]).toLocaleDateString()
-                    : doctor[field] || "N/A"}
+            <div className="form-grid">
+              {[
+                { icon: <FaVenusMars />, label: "Gender", field: "gender" },
+                { icon: <FaBirthdayCake />, label: "Age", field: "age" },
+                { icon: <FaPhone />, label: "Phone", field: "mobile_no" },
+                { icon: <FaEnvelope />, label: "Email", field: "email" },
+                { icon: <FaGraduationCap />, label: "Degree", field: "degree" },
+                {
+                  icon: <FaCalendarAlt />,
+                  label: "Joined",
+                  field: "createdAt",
+                  readonly: true,
+                },
+              ].map(({ icon, label, field, readonly }) => (
+                <div className="form-field" key={field}>
+                  <div className="label">
+                    {icon}
+                    {label}:
+                  </div>
+                  {editMode && !readonly ? (
+                    <input
+                      className="edit-input"
+                      name={field}
+                      value={formData[field] || ""}
+                      onChange={handleChange}
+                    />
+                  ) : (
+                    <div className="value">
+                      {field === "createdAt"
+                        ? new Date(doctor[field]).toLocaleDateString()
+                        : doctor[field] || "N/A"}
+                    </div>
+                  )}
                 </div>
-              )}
+              ))}
             </div>
-          ))}
-        </div>
 
-        <button
-          className="edit-btn"
-          onClick={editMode ? handleSave : () => setEditMode(true)}
-        >
-          {editMode ? "Save Profile" : "Edit Profile"}
-        </button>
-      </motion.div>
-    </>
-    </div>
+            <button
+              className="edit-btn"
+              onClick={editMode ? handleSave : () => setEditMode(true)}
+            >
+              {editMode ? "Save Profile" : "Edit Profile"}
+            </button>
+          </motion.div>
+        </>
       </div>
+    </div>
   );
 }

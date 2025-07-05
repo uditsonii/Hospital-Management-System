@@ -1,3 +1,6 @@
+import React from "react";
+import { motion } from "framer-motion";
+
 const specialists = [
   {
     name: "Dr. Suresh Bishnoi",
@@ -14,7 +17,7 @@ const specialists = [
   {
     name: "Dr. Sunil Kumar",
     title: "Physiotherapist",
-    image:"https://www.internationalinsurance.com/wp-content/uploads/2021/04/Indian-doctor-at-desk-scaled.jpg",
+    image: "https://www.internationalinsurance.com/wp-content/uploads/2021/04/Indian-doctor-at-desk-scaled.jpg",
     des: "Helping patients recover mobility and live pain-free through advanced therapy.",
   },
   {
@@ -32,17 +35,17 @@ const Doctors = () => {
         <div className="space-y-16">
           {specialists.map((doc, index) => {
             const isEven = index % 2 === 0;
+
             return (
-              <div
+              <motion.div
                 key={index}
                 className={`flex flex-col md:flex-row items-center gap-10 md:gap-16 ${
                   !isEven ? "md:flex-row-reverse" : ""
-                } fade-in-up`}
-                style={{
-                  animationDelay: `${index * 0.3}s`,
-                  animationDuration: "0.6s",
-                  animationFillMode: "both",
-                }}
+                }`}
+                initial={{ opacity: 0, y: 50 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, amount: 0.3 }}
+                transition={{ duration: 0.6, delay: index * 0.2 }}
               >
                 <img
                   src={doc.image}
@@ -54,7 +57,7 @@ const Doctors = () => {
                   <p className="text-blue-600 font-medium">{doc.title}</p>
                   <p className="mt-2 text-gray-700">{doc.des}</p>
                 </div>
-              </div>
+              </motion.div>
             );
           })}
         </div>
@@ -62,4 +65,5 @@ const Doctors = () => {
     </section>
   );
 };
+
 export default Doctors;

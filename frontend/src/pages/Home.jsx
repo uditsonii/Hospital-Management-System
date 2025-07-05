@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import bgImage from '../assets/bgImage/bgImage.jpg';
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import {
@@ -31,7 +32,8 @@ const services = [
   {
     icon: <FaProcedures className="text-white text-4xl" />,
     title: "Advanced Procedures",
-    description: "Utilizing cutting-edge technologies for effective treatments.",
+    description:
+      "Utilizing cutting-edge technologies for effective treatments.",
   },
   {
     icon: <FaFlask className="text-white text-4xl" />,
@@ -81,6 +83,34 @@ const cardVariants = {
 const Home = () => {
   const [showEmergency, setShowEmergency] = useState(false);
   const [isChatOpen, setIsChatOpen] = useState(false);
+  const fullText = "City Hospital";
+  const [typewriterText, setTypewriterText] = useState("");
+  const [isDeleting, setIsDeleting] = useState(false);
+  const [i, setI] = useState(0);
+
+  useEffect(() => {
+    const typewriter = () => {
+      if (!isDeleting) {
+        if (i < fullText.length) {
+          setTypewriterText(fullText.slice(0, i + 1));
+          setI(i + 1);
+        } else {
+          setTimeout(() => setIsDeleting(true), 2000); // Wait before deleting
+          return;
+        }
+      } else {
+        if (i > 0) {
+          setTypewriterText(fullText.slice(0, i - 1));
+          setI(i - 1);
+        } else {
+          setIsDeleting(false); // Reset to typing
+        }
+      }
+    };
+
+    const timeout = setTimeout(typewriter, isDeleting ? 50 : 100);
+    return () => clearTimeout(timeout);
+  }, [i, isDeleting]);
 
   useEffect(() => {
     function handleScroll() {
@@ -94,33 +124,47 @@ const Home = () => {
   }, []);
 
   return (
-    <div className="flex flex-col min-h-screen">
+    <div className="flex flex-col min-h-screen overflow-x-hidden">
       <IndexNavbar />
       <main>
         {/* Hero Section */}
         <section
-          className="relative bg-cover bg-center bg-no-repeat text-[var(--text-light)] py-32 text-center animate-fadeIn h-[600px]"
+          className="relative bg-cover bg-center bg-no-repeat text-white py-24 px-4 sm:py-32 text-center h-[600px]"
           style={{
-            backgroundImage:
-              "url('https://www.zmartbuild.com/wp-content/uploads/2021/10/38054.jpg')",
+            // backgroundImage: "url('https://www.zmartbuild.com/wp-content/uploads/2021/10/38054.jpg')",
+             backgroundImage: `url(${bgImage})`,
           }}
         >
           <div className="absolute inset-0 bg-black bg-opacity-60 z-0"></div>
-          <div className="relative z-10 max-w-6xl mx-auto px-4">
-            <h1 className="text-5xl sm:text-6xl font-extrabold mb-4">
+          <div className="relative z-10 max-w-6xl mx-auto flex flex-col justify-center items-center h-full">
+            {/* <h1 className="text-5xl sm:text-6xl font-extrabold mb-4">
               Welcome to{" "}
               <span className="text-blue-500 drop-shadow-[3px_3px_6px_rgba(0,0,0,0.6)]">
-                Jeevan Jyoti Hospital
+                City Hospital
+              </span>
+            </h1> */}
+            <h1 className="text-3xl sm:text-5xl font-extrabold text-white text-center mb-6">
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-sky-400 via-blue-500 to-sky-400 animate-gradientWave bg-[length:200%_200%]">
+                Welcome to{" "}
+              </span>
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-sky-300 via-blue-400 to-sky-300 animate-gradientWave bg-[length:200%_200%] inline-block border-r-2 border-white pr-1 animate-blink">
+                {typewriterText}
               </span>
             </h1>
-            <p className="text-xl max-w-2xl mx-auto mt-4 text-slate-100">
+            <p className="text-lg sm:text-xl max-w-2xl mx-auto mt-4 text-slate-100">
               Your health is our priority. Compassionate care, advanced
               technology.
             </p>
             <div className="mt-40 flex flex-col sm:flex-row gap-4 justify-center">
-              <Link
+              {/* <Link
                 to="/opd"
                 className="px-6 py-3 bg-[var(--text-light)] text-[var(--primary-start)] font-semibold rounded-lg shadow hover:scale-105 transition"
+              >
+                Book Appointment
+              </Link> */}
+              <Link
+                to="/opd"
+                className="px-6 py-3 bg-gradient-to-r from-blue-500 to-sky-400 text-white font-semibold rounded-lg shadow-xl hover:shadow-blue-400/40 hover:scale-105 transition-all"
               >
                 Book Appointment
               </Link>
@@ -136,12 +180,20 @@ const Home = () => {
 
         {/* Emergency Popup */}
         {showEmergency && (
-          <div
-            className="fixed inset-0 bg-black bg-opacity-80 flex justify-center items-center z-50 p-4"
+          // <div
+          //   className="fixed inset-0 bg-black bg-opacity-80 flex justify-center items-center z-50 p-4"
+          //   onClick={() => setShowEmergency(false)}
+          // >
+
+          <motion.div
+            className="fixed inset-0 bg-black bg-opacity-80 flex justify-center items-center z-50 px-4"
             onClick={() => setShowEmergency(false)}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
           >
             <div
-              className="bg-white rounded-3xl p-8 max-w-md w-full relative shadow-2xl flex flex-col items-center gap-6 animate-zoomIn"
+              className="bg-white rounded-2xl px-4 py-6 w-full max-w-sm sm:max-w-md md:max-w-lg relative shadow-2xl flex flex-col items-center gap-6 animate-zoomIn max-h-[90vh] overflow-y-auto"
               onClick={(e) => e.stopPropagation()}
             >
               <button
@@ -153,9 +205,11 @@ const Home = () => {
               <img
                 src="https://images.pexels.com/photos/263402/pexels-photo-263402.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=150"
                 alt="Emergency Services"
-                className="rounded-2xl w-full object-cover shadow-lg"
+                // className="rounded-2xl w-full object-cover shadow-lg max-h-48 sm:max-h-64"
+                className="rounded-xl w-full h-auto object-cover shadow-md"
               />
-              <div className="flex items-center gap-3 text-red-700 font-extrabold text-xl mt-4 mb-2">
+              {/* <div className="flex items-center gap-3 text-red-700 font-extrabold text-xl mt-4 mb-2"> */}
+              <div className="flex flex-wrap items-center gap-2 text-red-700 font-extrabold text-lg sm:text-xl mt-4 mb-2">
                 <FaHospitalAlt className="text-3xl" />
                 <span>Hospital Emergency:</span>
                 <a
@@ -183,7 +237,7 @@ const Home = () => {
                 </li>
               </ul>
             </div>
-          </div>
+          </motion.div>
         )}
 
         {/* Our Specialists Section */}
@@ -194,10 +248,12 @@ const Home = () => {
           viewport={{ once: true }}
           transition={{ duration: 0.8 }}
         >
-          <h2 className="text-5xl font-extrabold text-center mb-16 text-transparent bg-clip-text bg-gradient-to-r from-sky-600 to-blue-400 drop-shadow-xl">
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-center mb-16 text-transparent bg-clip-text bg-gradient-to-r from-sky-600 to-blue-400 drop-shadow-xl">
             Our Specialists
           </h2>
-          <Doctors />
+          <div className="px-4 sm:px-6 lg:px-8">
+            <Doctors />
+          </div>
         </motion.section>
 
         {/* Our Facilities Section */}
@@ -209,7 +265,7 @@ const Home = () => {
           transition={{ duration: 0.8, ease: "easeOut" }}
         >
           <div className="max-w-7xl mx-auto px-4">
-            <h2 className="text-5xl font-extrabold text-center mb-16 text-transparent bg-clip-text bg-gradient-to-r from-sky-600 to-blue-400 drop-shadow-xl">
+            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-center mb-16 text-transparent bg-clip-text bg-gradient-to-r from-sky-600 to-blue-400 drop-shadow-xl">
               Our Facilities
             </h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-12">
@@ -257,8 +313,11 @@ const Home = () => {
                     "Advanced intensive care units staffed by experienced professionals.",
                 },
               ].map((facility, index) => (
-                <div key={index} className="group [perspective:1000px]">
-                  <div className="relative h-80 w-full transition-transform duration-700 [transform-style:preserve-3d] group-hover:[transform:rotateY(180deg)] shadow-2xl rounded-2xl">
+                <div
+                  key={index}
+                  className="group [perspective:1000px] hover:shadow-2xl transition duration-500"
+                >
+                  <div className="relative h-80 w-full transition-transform duration-700 ease-in-out [transform-style:preserve-3d] group-hover:[transform:rotateY(180deg)] shadow-2xl rounded-2xl">
                     {/* Front */}
                     <div className="absolute inset-0 backface-hidden [backface-visibility:hidden]">
                       <img
@@ -269,11 +328,33 @@ const Home = () => {
                     </div>
 
                     {/* Back */}
-                    <div className="absolute inset-0 bg-gray-50 p-6 rounded-2xl [transform:rotateY(180deg)] [backface-visibility:hidden] flex flex-col justify-center items-center text-center">
+                    {/* <div className="absolute inset-0 bg-gray-50 p-6 rounded-2xl [transform:rotateY(180deg)] [backface-visibility:hidden] flex flex-col justify-center items-center text-center">
                       <h3 className="text-xl font-semibold text-blue-700 mb-2">
                         {facility.backTitle}
                       </h3>
-                      <p className="text-gray-600 text-sm">{facility.backText}</p>
+                      <p className="text-gray-600 text-sm">
+                        {facility.backText}
+                      </p>
+                    </div> */}
+                    {/* Back */}
+                    <div className="absolute inset-0 rounded-2xl overflow-hidden [transform:rotateY(180deg)] [backface-visibility:hidden] flex items-center justify-center text-center">
+                      {/* Blurred Background Image Layer */}
+                      <div
+                        className="absolute inset-0 bg-cover bg-center scale-105 filter blur-sm brightness-75"
+                        style={{
+                          backgroundImage: `url(${facility.front})`,
+                        }}
+                      ></div>
+
+                      {/* Overlay Content */}
+                      <div className="relative z-10 bg-white/60 backdrop-blur-md rounded-xl px-4 py-2 shadow-lg max-w-xs">
+                        <h3 className="text-xl font-semibold text-blue-700 mb-2">
+                          {facility.backTitle}
+                        </h3>
+                        <p className="text-gray-800 text-sm">
+                          {facility.backText}
+                        </p>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -291,19 +372,24 @@ const Home = () => {
           viewport={{ once: true, amount: 0.3 }}
         >
           <div className="max-w-7xl mx-auto px-4">
-            <h2 className="text-5xl font-extrabold text-center mb-16 text-transparent bg-clip-text bg-gradient-to-r from-sky-600 to-blue-400 drop-shadow-xl">
+            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-center mb-16 text-transparent bg-clip-text bg-gradient-to-r from-sky-600 to-blue-400 drop-shadow-xl">
               Our Services
             </h2>
             <motion.div className="grid md:grid-cols-2 lg:grid-cols-3 gap-10">
               {services.map((service, idx) => (
                 <motion.div
                   key={idx}
-                  className="p-8 rounded-2xl bg-gradient-to-br from-sky-400 to-sky-600 text-white shadow-xl hover:scale-105 transform transition duration-300 cursor-pointer"
+                  className="p-8 rounded-2xl bg-gradient-to-br from-indigo-500 via-blue-500 to-sky-400 text-white shadow-2xl hover:scale-105 transition-transform duration-300"
+                  // className="p-8 rounded-2xl bg-gradient-to-br from-sky-400 to-sky-600 text-white shadow-xl hover:scale-105 transform transition duration-300 cursor-pointer"
                   variants={cardVariants}
                 >
                   <div className="mb-5">{service.icon}</div>
-                  <h3 className="text-2xl font-semibold mb-3">{service.title}</h3>
-                  <p className="text-base leading-relaxed">{service.description}</p>
+                  <h3 className="text-2xl font-semibold mb-3">
+                    {service.title}
+                  </h3>
+                  <p className="text-base leading-relaxed">
+                    {service.description}
+                  </p>
                 </motion.div>
               ))}
             </motion.div>
@@ -331,7 +417,9 @@ const Home = () => {
               <p className="text-gray-600 text-sm">Director</p>
             </div>
             <div>
-              <h2 className="text-4xl font-bold text-blue-600 mb-8">We Value the Life</h2>
+              <h2 className="text-4xl font-bold text-blue-600 mb-8">
+                We Value the Life
+              </h2>
               <div className="space-y-6">
                 <div className="flex items-start gap-4">
                   <div className="bg-blue-500 text-white p-3 rounded-full text-xl">
@@ -340,7 +428,8 @@ const Home = () => {
                   <div>
                     <h4 className="font-bold text-lg">Patient First</h4>
                     <p className="text-gray-700 text-sm">
-                      For us, patient care comes first & we put patient's needs above all...
+                      For us, patient care comes first & we put patient's needs
+                      above all...
                     </p>
                   </div>
                 </div>
@@ -351,7 +440,8 @@ const Home = () => {
                   <div>
                     <h4 className="font-bold text-lg">Quality & Affordable</h4>
                     <p className="text-gray-700 text-sm">
-                      Quality care is the key component of the right to health...
+                      Quality care is the key component of the right to
+                      health...
                     </p>
                   </div>
                 </div>
@@ -360,9 +450,12 @@ const Home = () => {
                     <FaHospitalAlt />
                   </div>
                   <div>
-                    <h4 className="font-bold text-lg">All Services under One Roof</h4>
+                    <h4 className="font-bold text-lg">
+                      All Services under One Roof
+                    </h4>
                     <p className="text-gray-700 text-sm">
-                      We bring unparalleled medical services and diagnostic facilities...
+                      We bring unparalleled medical services and diagnostic
+                      facilities...
                     </p>
                   </div>
                 </div>
@@ -380,7 +473,7 @@ const Home = () => {
           transition={{ duration: 0.7 }}
         >
           <div className="max-w-7xl mx-auto px-4">
-            <h2 className="text-5xl font-extrabold text-center mb-16 text-transparent bg-clip-text bg-gradient-to-r from-sky-600 to-blue-400 drop-shadow-xl">
+            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-center mb-16 text-transparent bg-clip-text bg-gradient-to-r from-sky-600 to-blue-400 drop-shadow-xl">
               Our Media
             </h2>
             <HorizontalVideoScroll />
@@ -395,14 +488,25 @@ const Home = () => {
           viewport={{ once: true }}
           transition={{ duration: 0.8 }}
         >
-          <TPAPartners />
+          <div className="px-4 sm:px-6 lg:px-8">
+            <TPAPartners />
+          </div>
         </motion.div>
 
         {/* Floating Chatbot Component */}
-<div className="fixed bottom-6 right-6 z-50 w-[370px]">
-  <MedicalChatbot />
-</div>
-
+        {/* <div className="fixed bottom-6 right-6 z-50 w-[370px]"> */}
+        {/* <div className="fixed bottom-6 right-6 z-50 w-[370px] rounded-2xl shadow-lg ring-2 ring-blue-400 animate-pulse hover:animate-none transition-all duration-300">
+          <MedicalChatbot />
+        </div> */}
+        <div
+          className="fixed right-2 sm:right-6 w-[90vw] sm:w-96 z-50 
+             rounded-2xl shadow-2xl ring-2 ring-blue-400 
+             animate-bounce-slow hover:animate-none 
+             opacity-70 hover:opacity-100 
+             transition-all duration-500 ease-in-out cursor-pointer group"
+        >
+          <MedicalChatbot />
+        </div>
       </main>
       <Footer />
     </div>

@@ -1,8 +1,8 @@
-import React, { useState, useRef, useEffect } from 'react';
-import { data, Link } from 'react-router-dom';
-import Logout from '../../components/Logout';
+import React, { useState, useRef, useEffect } from "react";
+import { data, Link } from "react-router-dom";
+import Logout from "../../components/Logout";
 
-const Navbar = ({ toggleSidebar, userId = 'defaultUserId' }) => {
+const Navbar = ({ toggleSidebar }) => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const dropdownRef = useRef();
   const [data, setData] = useState();
@@ -13,19 +13,19 @@ const Navbar = ({ toggleSidebar, userId = 'defaultUserId' }) => {
         setDropdownOpen(false);
       }
     };
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
   useEffect(() => {
-      const data = localStorage.getItem('user');
-      if (data) {
-        setData(JSON.parse(data));
-      }
-    }, []);
+    const data = localStorage.getItem("user");
+    if (data) {
+      setData(JSON.parse(data));
+    }
+  }, []);
 
   return (
-    <header className="bg-white shadow px-4 md:px-8 py-3 flex items-center justify-between w-full z-40">
+    <header className="bg-white shadow px-4 py-3 md:px-8 flex items-center justify-between w-full z-50">
       {/* Left: Menu button (mobile) + Welcome */}
       <div className="flex items-center gap-3">
         <button
@@ -63,7 +63,7 @@ const Navbar = ({ toggleSidebar, userId = 'defaultUserId' }) => {
             onMouseLeave={() => setDropdownOpen(false)}
           >
             <Link
-              to={`/profile/${userId}`}
+              to={"/doctor-dashboard/profile"}
               className="flex items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
             >
               <span>👤</span> Profile

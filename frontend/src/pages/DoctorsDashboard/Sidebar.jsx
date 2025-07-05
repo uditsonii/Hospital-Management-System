@@ -27,11 +27,11 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
           {/* Navigation Links */}
           <nav className="flex flex-col p-5 space-y-3 text-gray-800 text-sm">
             <SidebarLink icon="🏠" label="Dashboard" to="/doctor-dashboard" />
-            <SidebarLink icon="👥" label="My Patients" to="/patients" />
+            <SidebarLink icon="👥" label="My Patients" to="/doctor-dashboard/patients" />
             <SidebarLink icon="📅" label="Appointments" to="/doctor-dashboard/appointments" />
-            <SidebarLink icon="📝" label="Prescriptions" to="/prescriptions" />
-            <SidebarLink icon="🧪" label="Lab Reports" to="/lab-reports" />
-            <SidebarLink icon="📊" label="Analytics" to="/analytics" />
+            <SidebarLink icon="📝" label="Prescriptions" to="/doctor-dashboard/prescriptions" />
+            <SidebarLink icon="🧪" label="Lab Reports" to="/doctor-dashboard/lab-reports" />
+            <SidebarLink icon="📊" label="Analytics" to="/doctor-dashboard/analytics" />
             <SidebarLink icon="👤" label="Profile" to="/doctor-dashboard/profile" />
              <hr className="my-2 border-t border-gray-300" />
 
@@ -47,7 +47,7 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
 
         {/* Optional Footer */}
         <div className="p-4 border-t text-sm text-gray-600 text-center">
-          &copy; {new Date().getFullYear()} Jeevan Jyoti Hospital. All rights reserved.
+          &copy; {new Date().getFullYear()} City Hospital. All rights reserved.
         </div>
       </aside>
     </>

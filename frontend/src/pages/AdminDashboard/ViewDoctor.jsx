@@ -197,8 +197,8 @@ const handleDelete = async (id) => {
               <p className="text-red-600 p-4">{error}</p>
             )}
 
-            <div className="overflow-x-auto">
-              <table className="min-w-full bg-white">
+            <div className="w-full overflow-x-auto">
+  <table className="min-w-[700px] w-full text-xs sm:text-sm md:text-base bg-white">
                 <thead>
                   <tr className="bg-blue-100 text-blue-800 uppercase text-xs leading-normal">
                     <th className="py-3 px-6 text-left">Name</th>

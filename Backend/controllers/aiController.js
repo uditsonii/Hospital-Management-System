@@ -6,7 +6,7 @@ const handleMedicalChat = async (req, res) => {
   if (greetings.includes(userMessage)) {
     return res.json({
       reply:
-        "👋 Hello! I'm Jeevan Jyoti hospital assistant. You can ask me anything related to doctors, appointments, reports, symptoms, or treatments.",
+        "👋 Hello! I'm City hospital assistant. You can ask me anything related to doctors, appointments, reports, symptoms, or treatments.",
     });
   }
 

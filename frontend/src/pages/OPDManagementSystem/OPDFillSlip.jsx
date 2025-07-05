@@ -539,13 +539,13 @@ function OPDFillSlip() {
               </div>
 
               {/* show doctor */}
-              <div className="bg-white text-blue-700 px-4 py-2 rounded-lg shadow-md min-w-[220px]">
+              {/* <div className="bg-white text-blue-700 px-4 py-2 rounded-lg shadow-md min-w-[220px]">
                 <p className="font-semibold">Dr. Ramesh Sharma</p>
                 <p className="text-sm">General Medicine</p>
                 <p className="text-xs text-gray-600">
                   Today: 10:00 AM - 2:00 PM
                 </p>
-              </div>
+              </div> */}
             </div>
           </div>
         </div>

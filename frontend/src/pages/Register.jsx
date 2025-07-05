@@ -68,17 +68,17 @@ const Register = () => {
           </h2>
 
           <div className="flex flex-col gap-4">
-            <label>Name *</label>
+            <label className="text-sm font-medium text-gray-700">Name *</label>
             <input
               name="name"
               placeholder="👤 Full Name"
               value={form.name}
               onChange={handleChange}
               required
-              className="px-3 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
+              className="px-3 py-2 text-sm border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200"
             />
 
-            <label>Age *</label>
+            <label className="text-sm font-medium text-gray-700">Age *</label>
             <input
               name="age"
               type="number"
@@ -86,10 +86,10 @@ const Register = () => {
               value={form.age}
               onChange={handleChange}
               required
-              className="px-3 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
+              className="px-3 py-2 text-sm border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200"
             />
 
-            <label>Gender *</label>
+            <label className="text-sm font-medium text-gray-700">Gender *</label>
             <select
               name="gender"
               value={form.gender}
@@ -105,26 +105,26 @@ const Register = () => {
               <option value="other">⚧️ Other</option>
             </select>
 
-            <label>Mobile Number *</label>
+            <label className="text-sm font-medium text-gray-700">Mobile Number *</label>
             <input
               name="mobile_no"
               placeholder="📱 Mobile Number"
               value={form.mobile_no}
               onChange={handleChange}
               required
-              className="px-3 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
+              className="px-3 py-2 text-sm border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200"
             />
 
-            <label>Guardian's Name</label>
+            <label className="text-sm font-medium text-gray-700">Guardian's Name</label>
             <input
               name="gname"
               placeholder="👪 Guardian's Name"
               value={form.gname}
               onChange={handleChange}
-              className="px-3 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
+              className="px-3 py-2 text-sm border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200"
             />
 
-            <label>Password *</label>
+            <label className="text-sm font-medium text-gray-700">Password *</label>
             <input
               name="password"
               type="password"
@@ -132,10 +132,10 @@ const Register = () => {
               value={form.password}
               onChange={handleChange}
               required
-              className="px-3 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
+              className="px-3 py-2 text-sm border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200"
             />
 
-            <label>Confirm Password *</label>
+            <label className="text-sm font-medium text-gray-700">Confirm Password *</label>
             <input
               name="confirmPassword"
               type="password"
@@ -143,16 +143,16 @@ const Register = () => {
               value={form.confirmPassword}
               onChange={handleChange}
               required
-              className="px-3 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
+              className="px-3 py-2 text-sm border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200"
             />
 
-            <label>Email</label>
+            <label className="text-sm font-medium text-gray-700">Email</label>
             <input
               name="email"
               placeholder="email"
               value={form.email}
               onChange={handleChange}
-              className="px-3 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
+              className="px-3 py-2 text-sm border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200"
             />
 
             <div>

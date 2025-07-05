@@ -121,7 +121,7 @@ const ContactUs = () => {
                 <div className="flex items-start">
                   <FaMapMarkerAlt className="text-2xl text-[var(--primary-start)] mr-3 mt-1 flex-shrink-0" />
                   <p>
-                    Jeevan Jyoti Hospital
+                    City Hospital
                     <br />
                     123 Health Street, Wellness City, PIN 543210
                     <br />
@@ -173,7 +173,7 @@ const ContactUs = () => {
                 style={{ border: 0 }}
                 allowFullScreen=""
                 loading="lazy"
-                title="Jeevan Jyoti Hospital Location"
+                title="City Hospital Location"
               ></iframe>
             </div>
           </div>

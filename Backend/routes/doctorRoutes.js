@@ -11,7 +11,7 @@ doctorRoutes.get("/appointments", doctorController.getDoctorAppointments);
 doctorRoutes.patch("/appointments/:id/status", doctorController.updateAppointmentStatus);
 doctorRoutes.get("/patients", doctorController.getMyPatients);
 doctorRoutes.post("/diagnosis", doctorController.addDiagnosis);
-doctorRoutes.get("/profile", doctorController.getDoctorProfile);
+// doctorRoutes.get("/profile", doctorController.getDoctorProfile);
 doctorRoutes.put("/profile/:id", doctorController.updateDoctorProfile);
 
 // crud

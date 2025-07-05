@@ -115,27 +115,27 @@ const ViewDepartment = () => {
   };
 
   return (
-    <div className="min-h-screen flex bg-gray-50">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-white p-3 sm:p-4 md:p-6">
       <Sidebar isOpen={isSidebarOpen} toggleSidebar={toggleSidebar} />
       <div className="flex-1 md:ml-64">
         <Navbar toggleSidebar={toggleSidebar} />
 
         <div className="min-h-screen bg-gradient-to-br from-blue-50 to-white p-6">
           <div className="max-w-7xl mx-auto">
-            <h1 className="text-4xl font-bold text-blue-900 mb-10">🏥 Hospital Departments</h1>
+            <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-blue-900 mb-6 sm:mb-10">🏥 Hospital Departments</h1>
 
             {loading && <p className="text-blue-700 font-semibold">Loading departments...</p>}
             {error && <p className="text-red-600 font-semibold">Error: {error}</p>}
 
             {!loading && !error && (
-              <div className="overflow-x-auto bg-white rounded-xl shadow-xl border border-blue-100">
-                <table className="min-w-full table-auto">
+              <div className="w-full overflow-x-auto bg-white rounded-xl shadow-xl border border-blue-100">
+  <table className="min-w-[600px] w-full table-auto text-sm sm:text-base">
                   <thead className="bg-blue-200 text-blue-900">
                     <tr>
-                      <th className="px-6 py-3 text-left">Name</th>
-                      <th className="px-6 py-3 text-left">Head</th>
-                      <th className="px-6 py-3 text-left">Description</th>
-                      <th className="px-6 py-3 text-left flex items-center gap-1">
+                      <th className="px-3 sm:px-4 py-2 sm:py-3 text-left text-xs sm:text-sm">Name</th>
+                      <th className="px-3 sm:px-4 py-2 sm:py-3 text-left text-xs sm:text-sm">Head</th>
+                      <th className="px-3 sm:px-4 py-2 sm:py-3 text-left text-xs sm:text-sm">Description</th>
+                      <th className="px-3 sm:px-4 py-2 sm:py-3 text-left text-xs sm:text-sm flex items-center gap-1">
                         <FaUserMd /> Associated Doctors
                       </th>
                       <th className="px-6 py-3 text-center">Actions</th>
@@ -144,13 +144,13 @@ const ViewDepartment = () => {
                   <tbody>
                     {departments.map((dept) => (
                       <tr key={dept._id} className="border-t border-blue-100 hover:bg-blue-50 transition">
-                        <td className="px-6 py-4 font-semibold text-blue-800 flex items-center gap-2">
+                        <td className="px-3 sm:px-4 py-2 text-xs sm:text-sm font-semibold text-blue-800 flex items-center gap-2">
                           <FaStethoscope className="text-blue-600" /> {dept.name}
                         </td>
-                        <td className="px-6 py-4">{dept.head}</td>
-                        <td className="px-6 py-4 italic text-gray-600">{dept.description}</td>
-                        <td className="px-6 py-4 italic text-gray-500">Coming Soon</td>
-                        <td className="px-6 py-4">
+                        <td className="px-3 sm:px-4 py-2 text-xs sm:text-sm">{dept.head}</td>
+                        <td className="px-3 sm:px-4 py-2 text-xs sm:text-sm italic text-gray-600">{dept.description}</td>
+                        <td className="px-3 sm:px-4 py-2 text-xs sm:text-sm italic text-gray-500">Coming Soon</td>
+                        <td className="px-3 sm:px-4 py-2 text-xs sm:text-sm">
                           <div className="flex justify-center items-center gap-4">
                             <button
                               onClick={() => handleUpdate(dept)}

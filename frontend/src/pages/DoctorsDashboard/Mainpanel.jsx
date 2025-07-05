@@ -15,7 +15,7 @@ const MainDashboard = () => {
 
       {/* Main Content Area */}
       <div className={`flex-1 flex flex-col transition-all duration-300 ${isSidebarOpen ? 'md:ml-72' : 'md:ml-72'}`}>
-        
+
         {/* Navbar */}
         <Navbar toggleSidebar={toggleSidebar} />
          <main className="p-4">

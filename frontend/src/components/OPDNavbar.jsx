@@ -19,15 +19,15 @@ const OPDNavbar = ({ toggleSidebar }) => {
 
   useEffect(() => {
     const handleCloseDropdown = (e) => {
-      const dropdown = document.getElementById('search-dropdown-container');
-      if(dropdown && !dropdown.contains(e.target)){
+      const dropdown = document.getElementById("search-dropdown-container");
+      if (dropdown && !dropdown.contains(e.target)) {
         setIsOpen(false);
       }
-    }
+    };
 
-    document.addEventListener('mousedown', handleCloseDropdown);
-    return () => document.removeEventListener('mousedown', handleCloseDropdown);
-   }, [])
+    document.addEventListener("mousedown", handleCloseDropdown);
+    return () => document.removeEventListener("mousedown", handleCloseDropdown);
+  }, []);
 
   const handleSearch = async (e) => {
     setIsOpen(true);
@@ -64,58 +64,77 @@ const OPDNavbar = ({ toggleSidebar }) => {
             ☰
           </button> */}
           <h1 className="text-2xl font-extrabold text-blue-700 tracking-wide select-none">
-            OPD System
+            <Link to={"/"}>OPD System </Link>
           </h1>
         </div>
 
         {/* Center Section: Search */}
-        <div className="flex-1 mx-6 hidden md:block">
+        <div className="flex-1 mx-6 hidden md:flex items-center">
           <input
             type="text"
             value={query}
-            onChange={(e) => {
-              setQuery(e.target.value);
-              // setIsOpen(true);
-            }}
+            onChange={(e) => setQuery(e.target.value)}
             onKeyDown={(e) => {
-              if (e.key === "Enter") {
-                handleSearch();
-              }
+              if (e.key === "Enter") handleSearch();
             }}
             placeholder="Search patients, doctors..."
             className="w-full px-5 py-2 text-gray-700 text-sm bg-white border border-blue-200 rounded-full shadow-sm placeholder-blue-400 focus:outline-none focus:ring-2 focus:ring-blue-300 focus:border-blue-300 transition"
           />
+          <button
+            onClick={handleSearch}
+            className="text-blue-600 hover:text-blue-800 ml-2"
+            aria-label="Search"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="h-5 w-5"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M21 21l-4.35-4.35M16.65 16.65A7.5 7.5 0 1116.65 2.5a7.5 7.5 0 010 14.15z"
+              />
+            </svg>
+          </button>
         </div>
-        <button onClick={handleSearch}>Search</button>
         {/* dropdown */}
         {isOpen && (
-          <div id="search-dropdown-container" className="absolute top-full mt-2 w-full bg-white rounded-lg shadow-xl border border-gray-100 z-50 max-h-96 overflow-y-auto">
-          {/* Trending Searches */}
-          <div className="p-4">
-            <h3 className="text-lg font-semibold text-gray-800 mb-3">SEARCH PATIENTS</h3>
-            <div className="mt-4">
-              {results.length > 0
-                ? results.map((patient, index) => (
-                    <div
-                      key={index}
-                      className="p-4 mb-2 bg-gray-100 rounded shadow-sm"
-                    >
-                      <p>
-                        <strong>Name:</strong> {patient.name}
-                      </p>
-                      <p>
-                        <strong>Mobile:</strong> {patient.mobile_no}
-                      </p>
-                      <p>
-                        <strong>PID:</strong> {patient.pid}
-                      </p>
-                    </div>
-                  ))
-                : query && (
-                    <p className="text-gray-500 mt-2">No patients found.</p>
-                  )}
+          <div
+            id="search-dropdown-container"
+            className="absolute top-full mt-2 w-full bg-white rounded-lg shadow-xl border border-gray-100 z-50 max-h-96 overflow-y-auto"
+          >
+            {/* Trending Searches */}
+            <div className="p-4">
+              <h3 className="text-lg font-semibold text-gray-800 mb-3">
+                SEARCH PATIENTS
+              </h3>
+              <div className="mt-4">
+                {results.length > 0
+                  ? results.map((patient, index) => (
+                      <div
+                        key={index}
+                        className="p-4 mb-2 bg-gray-100 rounded shadow-sm"
+                      >
+                        <p>
+                          <strong>Name:</strong> {patient.name}
+                        </p>
+                        <p>
+                          <strong>Mobile:</strong> {patient.mobile_no}
+                        </p>
+                        <p>
+                          <strong>PID:</strong> {patient.pid}
+                        </p>
+                      </div>
+                    ))
+                  : query && (
+                      <p className="text-gray-500 mt-2">No patients found.</p>
+                    )}
+              </div>
             </div>
-          </div>
           </div>
         )}
 
@@ -187,15 +206,40 @@ const OPDNavbar = ({ toggleSidebar }) => {
       </div>
 
       {/* Mobile Search Bar */}
-      {/* <div className="md:hidden px-6 pb-4 bg-blue-50">
-        <input
-          type="text"
-          value={query}
-          placeholder="Search..."
-          className="w-full px-4 py-2 text-gray-700 text-sm bg-white rounded-full placeholder-blue-400 focus:outline-none focus:ring-2 focus:ring-blue-300 shadow-sm"
-          onChange={(e) => console.log(e.target.value)}
-        />
-      </div> */}
+      <div className="md:hidden px-4 pt-2 pb-3 bg-white border-t border-blue-100">
+        <div className="flex items-center">
+          <input
+            type="text"
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") handleSearch();
+            }}
+            placeholder="Search patients or doctors..."
+            className="w-full px-4 py-2 text-gray-700 text-sm bg-white border border-blue-300 rounded-full shadow-sm placeholder-blue-400 focus:outline-none focus:ring-2 focus:ring-blue-300"
+          />
+          <button
+            onClick={handleSearch}
+            className="text-blue-600 hover:text-blue-800 ml-2"
+            aria-label="Search"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="h-5 w-5"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M21 21l-4.35-4.35M16.65 16.65A7.5 7.5 0 1116.65 2.5a7.5 7.5 0 010 14.15z"
+              />
+            </svg>
+          </button>
+        </div>
+      </div>
     </header>
   );
 };

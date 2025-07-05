@@ -78,70 +78,79 @@ const login = async (req, res) => {
   const { name, mobile_no, password } = req.body;
 
   try {
-    const roleWithMobile = ["patient", "doctor"];
+    const db = getDB();
+    const roleWithMobile = ["doctor", "patient"];
     const roleWithoutMobile = ["admin", "opd"];
-    // const allRoles = [...roleWithMobile, ...roleWithoutMobile];
+    let user = null;
 
-    let user;
+    if (mobile_no) {
+      // for doctor and patient
+      user = await db
+        .collection("management-registration")
+        .findOne({ name, mobile_no });
 
-    if (name) {
-      user = await db().collection("management-registration").findOne({ name });
-      // console.log("user value :", user);
-      if (user) {
-        if (user.role === "doctor") {
-          if (roleWithMobile.includes(user.role) && !mobile_no) {
-            return res
-              .status(400)
-              .json({ message: "Mobile number is required" });
-          }
-        } else {
-          if (roleWithoutMobile.includes(user.role) && mobile_no) {
-            return res
-              .status(400)
-              .json({ message: "Mobile number is not required" });
-          }
-        }
-      } else {
-        user = await db().collection("patient-registration").findOne({ name });
-        if (user) {
-          console.log(user.role);
-          if (roleWithMobile.includes(user.role) && !mobile_no) {
-            return res
-              .status(400)
-              .json({ message: "Mobile number is required" });
-          }
-        }
-        else{
-          return res.status(404).json({ message: "Invalid Credentials" });
-        }
+      if (!user) {
+        user = await db
+          .collection("patient-registration")
+          .findOne({ name, mobile_no });
+      }
+
+      // If still not found with correct name + mobile_no
+      if (!user) {
+        return res.status(401).json({ message: "Invalid Name or Mobile Number" });
       }
     } else {
-      return res.status(404).json({ message: "User Not Found" });
+      // for admin and opd
+      user = await db
+        .collection("management-registration")
+        .findOne({ name });
+
+      // If user is admin/opd and still not found
+      if (!user) {
+        return res.status(401).json({ message: "Invalid Credentials" });
+      }
+
+      // Validate that role does not require mobile
+      if (roleWithMobile.includes(user.role)) {
+        return res.status(400).json({ message: "Mobile number is required" });
+      }
+
+      if (roleWithoutMobile.includes(user.role) && mobile_no) {
+        return res.status(400).json({ message: "Mobile number is not required" });
+      }
     }
 
+    // Check password
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
-      return res.status(401).json({ message: "Invalid Credentials" });
+      return res.status(401).json({ message: "Invalid Password" });
     }
 
-    const token = jwt.sign(user, process.env.JWT_SECRET, { expiresIn: "1d" });
+    const { password: _, ...userData } = user;
+
+    const token = jwt.sign(userData, process.env.JWT_SECRET, {
+      expiresIn: "1d",
+    });
 
     const roleMessages = {
       admin: "Admin Login Successfully",
       opd: "OPD Management Login Successfully",
       doctor: "Doctor Login Successfully",
-      patient: "Login Successfully",
+      patient: "Patient Login Successfully",
     };
+
     return res.status(200).json({
-      message: roleMessages[user.role],
+      message: roleMessages[user.role] || "Login Success",
       token,
-      user,
+      user: userData,
     });
   } catch (error) {
-    console.error("Login error: ", error);
+    console.error("Login error:", error);
     return res.status(500).json({ message: "Internal Server Error" });
   }
 };
+
+
 
 const updatePatientProfile = async (req, res) => {
   const db = getDB();

@@ -4,12 +4,10 @@ const { ObjectId } = require("mongodb");
 // Get all visits assigned to this doctor
 const getDoctorAppointments = async (req, res) => {
   try {
-    const doctorName = req.user?.name;
-    if (!doctorName) {
-      return res
-        .status(400)
-        .json({ message: "Doctor name not found in token" });
-    }
+    const doctorName = req.query.doctor;
+if (!doctorName) {
+  return res.status(400).json({ message: "Doctor name is required" });
+}
 
     const db = getDB();
     const visits = await db
@@ -32,6 +30,7 @@ const getDoctorAppointments = async (req, res) => {
       pid: v.visitData.pid,
       visitDate: v.visitData.visitDate,
       diagnosis: v.visitData.diagnosis || "N/A", // default to "N/A" if null/undefined
+      status: v.visitData.status || "pending", // fallback if status missing
     }));
 
     return res
@@ -54,7 +53,7 @@ const updateAppointmentStatus = async (req, res) => {
 
     const result = await db
       .collection("visits")
-      .updateOne({ _id: visitId }, { $set: { status } });
+      .updateOne({ _id: visitId }, { $set: { "visitData.status": status } });
 
     if (result.modifiedCount === 0) {
       return res
@@ -125,69 +124,71 @@ const addDiagnosis = async (req, res) => {
 };
 
 // View profile of the logged-in doctor
-const getDoctorProfile = async (req, res) => {
-  try {
-    const db = getDB();
-    const doctor = await db
-      .collection("management-registration")
-      .findOne({ _id: new ObjectId(req.user._id) });
+// const getDoctorProfile = async (req, res) => {
+//   try {
+//     const db = getDB();
+//     const doctor = await db
+//       .collection("management-registration")
+//       .findOne({ _id: new ObjectId(req.user._id) });
 
-    if (!doctor || doctor.role !== "doctor") {
-      return res.status(404).json({ message: "Doctor not found" });
-    }
+//     if (!doctor || doctor.role !== "doctor") {
+//       return res.status(404).json({ message: "Doctor not found" });
+//     }
 
-    res.status(200).json({ profile: doctor });
-  } catch (error) {
-    return res
-      .status(500)
-      .json({ message: "Failed to fetch profile", error: error.message });
-  }
-};
+//     res.status(200).json({ profile: doctor });
+//   } catch (error) {
+//     return res
+//       .status(500)
+//       .json({ message: "Failed to fetch profile", error: error.message });
+//   }
+// };
 
 // Update logged-in doctor's profile
 const updateDoctorProfile = async (req, res) => {
-  const db = getDB();
-  const { id } = req.params;
-  const fields = req.body;
-  if (
-    !fields.name ||
-    !fields.mobile_no ||
-    !fields.gender ||
-    !fields.age ||
-    !fields.degree
-  ) {
-    return res.status(400).json({ message: "All Fields are Required" });
-  }
-  // const { name, email, gender, age, mobile_no, degree } = req.body;
-  if (!ObjectId.isValid(id)) {
-    return res.status(400).json({ message: "Invalid Doctor ID" });
-  }
-
   try {
-    const result = await db
-      .collection("management-registration")
-      .findOneAndUpdate(
-        { _id: new ObjectId(id), role: "doctor" },
-        {
-          $set: {
-            ...fields,
-            updatedAt: new Date(),
-          },
-        },
-        { returnDocument: "after" }
-      );
+    const db = getDB();
+    const { id } = req.params;
+    const updateFields = req.body;
 
-    if (!result) {
-      return res.status(404).json({ message: "Doctor not Found" });
+    if (
+      !updateFields.name ||
+      !updateFields.mobile_no ||
+      !updateFields.gender ||
+      !updateFields.age ||
+      !updateFields.degree
+    ) {
+      return res.status(400).json({ message: "All Fields are Required" });
     }
+
+    if (!ObjectId.isValid(id)) {
+      return res.status(400).json({ message: "Invalid Doctor ID" });
+    }
+
+    const result = await db.collection("management-registration").updateOne(
+      { _id: new ObjectId(id), role: "doctor" },
+      {
+        $set: {
+          ...updateFields,
+          updatedAt: new Date(),
+        },
+      }
+    );
+
+    if (result.modifiedCount === 0) {
+      return res.status(404).json({ message: "Doctor not updated" });
+    }
+
+    const updatedDoctor = await db
+      .collection("management-registration")
+      .findOne({ _id: new ObjectId(id) });
+
     return res
       .status(200)
-      .json({ message: "Profile updated successfully", doctor: result });
+      .json({ message: "Profile updated successfully", updatedDoctor });
   } catch (error) {
-    console.error("Error updating doctor profile:", error);
-    return res
+    res
       .status(500)
-      .json({ message: "Failed to update profile", error: error.message });
+      .json({ message: "Error updating profile", error: error.message });
   }
 };
 
@@ -196,6 +197,6 @@ module.exports = {
   updateAppointmentStatus,
   getMyPatients,
   addDiagnosis,
-  getDoctorProfile,
+  // getDoctorProfile,
   updateDoctorProfile,
 };

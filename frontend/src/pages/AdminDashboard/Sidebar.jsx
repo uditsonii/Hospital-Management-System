@@ -50,7 +50,7 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
               links={[
                 { icon: "➕", label: "Add Doctor", to: "/admin/add-doctor" },
                 { icon: "📋", label: "View Doctors", to: "/admin/view-doctor" },
-                { icon: "📅", label: "Doctor Schedule", to: "/doctordetails" },
+                // { icon: "📅", label: "Doctor Schedule", to: "/admin/doctordetails" },
               ]}
             />
 
