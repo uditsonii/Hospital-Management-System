@@ -140,10 +140,10 @@ const ContactUs = () => {
                 <div className="flex items-center">
                   <FaEnvelope className="text-2xl text-[var(--primary-start)] mr-3" />
                   <a
-                    href="mailto:info@jeevanjyoti.com"
+                    href="mailto:info@cityhospital.com"
                     className="hover:text-[var(--primary-end)] transition-colors"
                   >
-                    info@jeevanjyoti.com
+                    info@cityhospital.com
                   </a>
                 </div>
               </div>

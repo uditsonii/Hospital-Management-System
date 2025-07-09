@@ -100,9 +100,11 @@ const SendDetailThroughPID = async (req, res) => {
   //  console.log("PID : ",pid);
 
   try {
-    const patient = await db().collection("patient-registration").findOne({ pid });
+    const patient = await db()
+      .collection("patient-registration")
+      .findOne({ pid });
     if (!patient) {
-      return res.status(404).json({ message: "Patient not found" });
+      return res.status(404).json({ message: "Patient/slip not found" });
     }
 
     return res.json(patient);
@@ -112,12 +114,73 @@ const SendDetailThroughPID = async (req, res) => {
   }
 };
 
+// const SendSlipDetails = async (req, res) => {
+//   const { pid } = req.params;
+//   // console.log(pid)
+
+//   try {
+//     const patient = await db().collection("patient-registration").findOne({ pid: pid });
+//     const visit = await db()
+//       .collection("visits")
+//       .find({ pid: pid })
+//       .sort({ _id: -1 }) // latest visit
+//       .limit(1)
+//       .toArray();
+
+//     if (!patient || visit.length === 0) {
+//       return res.status(404).json({ message: "Slip not found" });
+//     }
+
+//     const fullSlip = {
+//       ...patient,
+//       ...visit[0],
+//     };
+
+//     return res.json(fullSlip);
+//   } catch (error) {
+//     console.error("Error fetching slip:", error);
+//     res.status(500).json({ message: "Server error" });
+//   }
+// };
+
+
 // Fills Visits or Fills OPD
+
+const SendSlipDetails = async (req, res) => {
+  const { pid } = req.params;
+
+  try {
+    const patient = await db().collection("patient-registration").findOne({ pid });
+    if (!patient) {
+      return res.status(404).json({ message: "Patient not found" });
+    }
+
+    const visit = await db()
+      .collection("visits")
+      .find({ pid })
+      .sort({ _id: -1 }) // latest first
+      .limit(1)
+      .toArray();
+
+    const visitData = visit[0] || {}; // may be empty for first-time patients
+
+    const fullSlip = {
+      ...patient,
+      ...visitData,
+    };
+
+    return res.json(fullSlip);
+  } catch (error) {
+    console.error("Error fetching slip:", error);
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
 const OPDRegister = async (req, res) => {
-  const { query, department, doctor, diagnosis, fee, referredBy, visitType } =
+  const { pid, department, doctor, diagnosis, fee, referredBy, visitType } =
     req.body;
 
-  if (!pid || !department || !doctor) {
+  if (!pid || !department || !doctor || !fee) {
     return res
       .status(400)
       .json({ message: "All required fields must be provided." });
@@ -144,7 +207,7 @@ const OPDRegister = async (req, res) => {
       referredBy: referredBy || null,
     };
 
-    const result = await db().collection("visits").insertOne({ visitData });
+    const result = await db().collection("visits").insertOne(visitData);
     return res.status(200).json({
       success: true,
       message: "OPD Added",
@@ -217,12 +280,10 @@ const bookAppointmentFromUser = async (req, res) => {
     });
 
     if (!result.acknowledged) {
-      return res
-        .status(500)
-        .send({
-          status: 500,
-          message: "problem while booking appointement from user",
-        });
+      return res.status(500).send({
+        status: 500,
+        message: "problem while booking appointement from user",
+      });
     }
 
     // Fetch the actual saved appointment
@@ -318,6 +379,7 @@ module.exports = {
   OPDRegister,
   searchPatientForOpd,
   SendDetailThroughPID,
+  SendSlipDetails,
   bookAppointmentFromUser,
   getPendingRequests,
   updateAppointmentStatus,

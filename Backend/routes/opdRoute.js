@@ -1,5 +1,5 @@
 const express = require("express");
-const { NewPatient, OPDRegister, SendDetailThroughPID, getPendingRequests, bookAppointmentFromUser, updateAppointmentStatus, searchPatientForOpd } = require("../controllers/PatientAppointmentController");
+const { NewPatient, OPDRegister, SendDetailThroughPID, getPendingRequests, bookAppointmentFromUser, updateAppointmentStatus, searchPatientForOpd, SendSlipDetails } = require("../controllers/PatientAppointmentController");
 
 const opdRoutes = express.Router();
 
@@ -8,6 +8,9 @@ opdRoutes.post("/fill-slip", OPDRegister);
 
 // send patient data through pid
 opdRoutes.get("/patient-pid/:pid", SendDetailThroughPID);
+
+//send data for print slip 
+opdRoutes.get("/slip/:pid", SendSlipDetails);
 
 //user books appointement
 opdRoutes.post('/book-appointments',bookAppointmentFromUser)

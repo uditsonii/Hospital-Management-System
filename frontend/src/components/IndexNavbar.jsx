@@ -41,7 +41,7 @@ const IndexNavbar = () => {
           {/* Logo */}
           <Link to="/" className="flex items-center text-white">
             <FaHeartbeat className="h-8 w-8 mr-2" />
-            <span className="font-bold text-2xl">Jeevan Jyoti Hospital</span>
+            <span className="font-bold text-2xl">City Hospital</span>
           </Link>
 
           {/* Desktop Menu */}
