@@ -8,7 +8,8 @@ import {
   Save,
   RefreshCw,
 } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import OPDSlipPreview from "./OPDSlipPreview";
 
 function OPDFillSlip() {
   const [formData, setFormData] = useState({
@@ -34,6 +35,8 @@ function OPDFillSlip() {
     // Additional Info
     insuranceNumber: "",
   });
+
+  const navigate = useNavigate();
 
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -109,7 +112,22 @@ function OPDFillSlip() {
         throw new Error(data.message || "OPD Slip fails. Please try again.");
       }
 
-      alert(`OPD Fills Successfully & PID: ${data.visitsDetails.pid}`); // or we take pid from formData.pid
+      const pid = data.visitsDetails.pid;
+
+
+         // 🔍 Verify slip actually exists before navigating
+    const slipRes = await fetch(`${import.meta.env.VITE_API_URL}/opd/slip/${pid}`);
+    const slipData = await slipRes.json();
+
+    if (!slipRes.ok || !slipData || Object.keys(slipData).length === 0) {
+      alert("Slip not found after submission. Please try again.");
+      return;
+    }
+
+      alert(`OPD Fills Successfully & PID: ${pid}`); // or we take pid from formData.pid
+      console.log(pid);
+      navigate(`/opd/slip-preview/${pid}`);
+      // console.log(`/opd/slip-preview/${pid}`)
       resetForm(); //clear the form
     } catch (error) {
       alert("OPD failed. Please try again.");

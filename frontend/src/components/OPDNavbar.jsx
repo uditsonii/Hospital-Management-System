@@ -181,20 +181,20 @@ const OPDNavbar = ({ toggleSidebar }) => {
                 className="absolute right-0 mt-2 w-56 bg-white rounded-lg shadow-lg border border-blue-200 z-50"
                 onMouseLeave={() => setDropdownOpen(false)}
               >
-                <div className="px-4 py-3 border-b border-blue-100 bg-blue-50 rounded-t-lg">
+                {/* <div className="px-4 py-3 border-b border-blue-100 bg-blue-50 rounded-t-lg">
                   <p className="text-sm font-semibold text-blue-800 truncate">
                     {userName}
                   </p>
                   <p className="text-xs text-blue-500 truncate">{userEmail}</p>
-                </div>
+                </div> */}
 
-                <Link
+                {/* <Link
                   to={`/profile/${userId}`}
                   className="block px-4 py-3 text-sm text-blue-700 hover:bg-blue-100 transition"
                   onClick={() => setDropdownOpen(false)}
                 >
                   👤 Profile
-                </Link>
+                </Link> */}
 
                 <div className="px-4 py-3 text-sm text-red-600 hover:bg-red-50 cursor-pointer flex items-center gap-2 transition rounded-b-lg">
                   🔓 <Logout />
